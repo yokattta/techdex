@@ -2,9 +2,16 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { CaughtButton } from "@/components/CaughtButton";
+import { RarityStars, rarityLabel } from "@/components/RarityStars";
 import { StatBars } from "@/components/StatBars";
 import { UnitBadge } from "@/components/UnitBadge";
-import { entries, evolutionChain, getEntry } from "@/lib/entries";
+import {
+  clashesFor,
+  entries,
+  evolutionChain,
+  getEntry,
+  rarityOf,
+} from "@/lib/entries";
 import { isLocale, locales, strings } from "@/lib/i18n";
 import { unitMap } from "@/lib/units";
 
@@ -42,6 +49,8 @@ export default async function EntryPage({
   const s = strings(locale);
   const primary = unitMap[entry.units[0]];
   const chain = evolutionChain(entry.id);
+  const clashes = clashesFor(entry.id);
+  const rarity = rarityOf(entry);
 
   return (
     <div
@@ -60,8 +69,14 @@ export default async function EntryPage({
       {/* Card face */}
       <aside className="card-outline-lg unit-tint mx-auto grid w-full max-w-sm gap-4 rounded-3xl bg-surface p-5 lg:sticky lg:top-6 lg:max-w-none">
         <div className="flex items-center justify-between">
-          <span className="font-mono text-sm font-bold text-muted">
-            #{String(entry.dex).padStart(3, "0")}
+          <span className="flex items-center gap-2">
+            <span className="font-mono text-sm font-bold text-muted">
+              #{String(entry.dex).padStart(3, "0")}
+            </span>
+            <RarityStars rarity={rarity} locale={locale} />
+            <span className="text-[10px] font-bold uppercase tracking-wide text-muted">
+              {rarityLabel(rarity, locale)}
+            </span>
           </span>
           <div className="flex flex-wrap justify-end gap-1.5">
             {entry.units.map((u) => (
@@ -89,6 +104,51 @@ export default async function EntryPage({
         <section className="card-outline rounded-2xl bg-surface p-5">
           <p className="text-base leading-relaxed">{entry.description[locale]}</p>
         </section>
+
+        <section className="card-outline rounded-2xl bg-surface p-5">
+          <h2 className="mb-3 text-sm font-black uppercase tracking-widest text-muted">
+            {s("howItWorks")}
+          </h2>
+          <p className="text-base leading-relaxed">{entry.deepDive[locale]}</p>
+        </section>
+
+        <section className="card-outline rounded-2xl bg-amber-50 p-5 dark:bg-amber-950/40">
+          <h2 className="mb-3 flex items-center gap-2 text-sm font-black uppercase tracking-widest text-muted">
+            <span aria-hidden="true">⚠️</span>
+            {s("pitfall")}
+          </h2>
+          <p className="text-base leading-relaxed">{entry.pitfall[locale]}</p>
+        </section>
+
+        {clashes.length > 0 && (
+          <section className="card-outline rounded-2xl bg-surface p-5">
+            <h2 className="flex items-center gap-2 text-sm font-black uppercase tracking-widest text-muted">
+              <span aria-hidden="true">⚡</span>
+              {s("clashes")}
+            </h2>
+            <p className="mt-1 mb-4 text-xs text-muted">{s("clashesHint")}</p>
+            <ul className="grid gap-3">
+              {clashes.map(({ entry: other, note }) => (
+                <li
+                  key={other.id}
+                  className="grid gap-3 rounded-xl border-2 border-black bg-[hsl(var(--unit)/0.06)] p-3 sm:grid-cols-[auto_1fr] sm:items-start"
+                >
+                  <Link
+                    href={`/${locale}/dex/${other.id}`}
+                    style={{ ["--unit" as string]: unitMap[other.units[0]].hue }}
+                    className="pop flex min-w-28 flex-col items-center gap-1 rounded-lg border-2 border-black bg-[hsl(var(--unit)/0.18)] p-2 text-center"
+                  >
+                    <span className="text-2xl" aria-hidden="true">
+                      {other.glyph}
+                    </span>
+                    <span className="text-xs font-extrabold">{other.name}</span>
+                  </Link>
+                  <p className="text-sm leading-relaxed">{note[locale]}</p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         <section className="card-outline rounded-2xl bg-surface p-5">
           <h2 className="mb-4 text-sm font-black uppercase tracking-widest text-muted">

@@ -37,6 +37,18 @@ export type Move = {
   effect: L10n;
 };
 
+/**
+ * Two technologies that compete for the same job while making opposite
+ * promises. Not "one is bad" — reaching for the wrong one usually fails
+ * quietly, which is what makes the pairing worth memorising.
+ */
+export type Clash = {
+  /** The other entry's id. */
+  with: string;
+  /** What the tension actually is. */
+  note: L10n;
+};
+
 export type Entry = {
   id: string;
   dex: number;
@@ -46,11 +58,24 @@ export type Entry = {
   name: string;
   glyph: string;
   tagline: L10n;
+  /** The one-paragraph answer to "what is this". */
   description: L10n;
+  /** How it actually works underneath, and what that costs. */
+  deepDive: L10n;
+  /** The specific way people get this wrong. */
+  pitfall: L10n;
   /** 0–100, rendered as species-stat bars. */
   stats: Stats;
   moves: Move[];
   /** Entry id this one builds on, forming an evolution chain. */
   evolvesFrom?: string;
+  /**
+   * Declared on one side only — `clashesFor()` resolves them in both
+   * directions, the same way `evolutionChain()` walks `evolvesFrom` backwards.
+   */
+  clashes?: Clash[];
   links?: { label: string; url: string }[];
 };
+
+/** Derived from `stats.impact` — see `rarityOf()`. Never stored on an entry. */
+export type Rarity = 1 | 2 | 3;

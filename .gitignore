@@ -40,8 +40,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# unrelated sibling project that keeps its own git repo in this folder
+# Unrelated sibling projects that keep their own git repos in this folder.
+# Add a line here if another one appears; eslint.config.mjs detects them itself.
 /realize-your-dream/
+/judgment-call/
 
 # per-machine Claude Code settings
 .claude/settings.local.json

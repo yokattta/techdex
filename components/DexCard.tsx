@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { rarityOf } from "@/lib/entries";
 import { unitMap } from "@/lib/units";
+import { RarityStars } from "./RarityStars";
 import { UnitBadge } from "./UnitBadge";
 import type { Entry, Locale } from "@/lib/types";
 
@@ -21,8 +23,11 @@ export function DexCard({
       className="pop card-outline unit-tint relative flex flex-col gap-3 rounded-2xl bg-surface p-4"
     >
       <div className="flex items-start justify-between gap-2">
-        <span className="font-mono text-xs font-bold text-muted">
-          #{String(entry.dex).padStart(3, "0")}
+        <span className="flex items-center gap-2">
+          <span className="font-mono text-xs font-bold text-muted">
+            #{String(entry.dex).padStart(3, "0")}
+          </span>
+          <RarityStars rarity={rarityOf(entry)} locale={locale} />
         </span>
         {caught && (
           <span

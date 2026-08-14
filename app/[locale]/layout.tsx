@@ -34,7 +34,15 @@ export default async function LocaleLayout({
               {s("title")}
             </span>
           </Link>
-          <LocaleSwitch current={locale} />
+          <div className="flex items-center gap-3">
+            <Link
+              href={`/${locale}/gacha`}
+              className="pop card-outline rounded-full bg-red-600 px-4 py-1.5 text-xs font-black uppercase tracking-wide text-white"
+            >
+              {s("gacha")}
+            </Link>
+            <LocaleSwitch current={locale} />
+          </div>
         </div>
       </header>
 

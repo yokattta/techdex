@@ -13,6 +13,12 @@
       "runtimeExecutable": "node",
       "runtimeArgs": ["realize-your-dream/serve.js"],
       "port": 4173
+    },
+    {
+      "name": "judgment-call",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["judgment-call/serve.js"],
+      "port": 4321
     }
   ]
 }

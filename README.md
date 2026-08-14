@@ -21,6 +21,26 @@ Entries carry base stats (difficulty, ubiquity, impact, ops cost), "moves" (the
 techniques worth knowing), and evolution lines — `Docker → Kubernetes`,
 `Transformer → Embeddings → RAG`, `React → Next.js`.
 
+## Clashes
+
+The other relationship, and the one worth reading for: two technologies that
+compete for the same job while making **opposite promises**, where reaching for
+the wrong one fails quietly rather than loudly. Kafka's replayable log against
+Redis Pub/Sub's fire-and-forget. RAG changing what a model can see against
+fine-tuning changing how it behaves. Terraform and Kubernetes both believing
+they own the same object.
+
+A clash is declared on one entry only; `clashesFor()` resolves it in both
+directions so each card shows the full picture.
+
+## Booster packs
+
+`/[locale]/gacha` deals five cards, with the last slot reserved for
+rare-or-better so the flips build toward something. Rarity is **derived** from
+`stats.impact`, never authored — a card is rare because the idea is
+load-bearing, not because someone tuned a drop table. It happens to split the
+current 24 entries evenly across ★ / ★★ / ★★★.
+
 ## Running it
 
 ```bash
@@ -49,10 +69,15 @@ number sets display order and must be unique; everything else follows the
 `Entry` type in [`lib/types.ts`](lib/types.ts). Setting `evolvesFrom` to another
 entry's id puts both of them in the same evolution line automatically.
 
+Each entry needs four pieces of prose, and they answer different questions:
+`tagline` (one line), `description` (what it is), `deepDive` (how it actually
+works and what that costs), and `pitfall` (the specific way people get it
+wrong). Optionally `clashes` — see above.
+
 Translation rule, worth keeping: `name` and `moves[].name` are plain strings and
 are **never** translated — a Chinese reader looking for "Kafka" should find the
-string "Kafka". Only prose (`tagline`, `description`, `moves[].effect`) has
-`en` / `zh` variants.
+string "Kafka". Only prose (`tagline`, `description`, `deepDive`, `pitfall`,
+`moves[].effect`, `clashes[].note`) has `en` / `zh` variants.
 
 ## Adding a unit
 
@@ -69,11 +94,13 @@ app/
     layout.tsx           header, footer, language switch
     page.tsx             the dex grid
     dex/[id]/page.tsx    one entry
-components/              cards, badges, stat bars, filters
+    gacha/page.tsx       booster pack opening
+components/              cards, badges, stat bars, filters, pack flip
 lib/
-  types.ts               Entry / Unit / L10n types
+  types.ts               Entry / Unit / Clash / L10n types
   units.ts               the six units and their colours
-  entries.ts             all content
+  entries.ts             all content, plus evolution and clash resolution
   i18n.ts                UI strings
   caught.ts              localStorage progress store
+  packs.ts               localStorage pack counter
 ```

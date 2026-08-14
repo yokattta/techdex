@@ -33,6 +33,25 @@ they own the same object.
 A clash is declared on one entry only; `clashesFor()` resolves it in both
 directions so each card shows the full picture.
 
+## Type chart
+
+`/[locale]/matrix` is a 6×6 grid read in one direction only: **a decision in the
+row unit forces a decision in the column unit**. Not damage — coupling. It
+answers "if I change this, what am I signing up to rewrite?"
+
+`×2` strongly constrains, `×1` normal, `×½` largely independent. Every non-`×1`
+cell carries a written reason, because a matrix without them is decoration.
+Concept is the closest thing to a Dragon type: consistency and idempotency
+decisions constrain almost every layer beneath them.
+
+## Battle
+
+`/[locale]/battle` puts up a scenario and three cards. The wrong options are the
+tempting ones, mostly drawn from the clash pairs, and every verdict says *how*
+the wrong pick would have failed — an hour of Pub/Sub messages gone with no
+error, a fine-tune that learns the shape of your policies instead of their
+content, an `async def` that is slower than the `def` it replaced.
+
 ## Booster packs
 
 `/[locale]/gacha` deals five cards, with the last slot reserved for
@@ -95,11 +114,15 @@ app/
     page.tsx             the dex grid
     dex/[id]/page.tsx    one entry
     gacha/page.tsx       booster pack opening
-components/              cards, badges, stat bars, filters, pack flip
+    matrix/page.tsx      the type chart
+    battle/page.tsx      scenario quiz
+components/              cards, badges, stat bars, filters, pack flip, chart
 lib/
   types.ts               Entry / Unit / Clash / L10n types
   units.ts               the six units and their colours
   entries.ts             all content, plus evolution and clash resolution
+  matrix.ts              the 6x6 coupling grid and its reasons
+  battles.ts             scenarios, options and verdicts
   i18n.ts                UI strings
   caught.ts              localStorage progress store
   packs.ts               localStorage pack counter

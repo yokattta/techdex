@@ -85,6 +85,54 @@ const dict = {
     en: "Draws are uniform across all 24 entries, with one slot reserved for a rare card.",
     zh: "抽取在 24 个条目上是均匀的，其中一个位置留给稀有卡。",
   },
+
+  // Navigation
+  navDex: { en: "Dex", zh: "图鉴" },
+  navMatrix: { en: "Type chart", zh: "相性表" },
+  navBattle: { en: "Battle", zh: "对战" },
+
+  // Type chart
+  matrixTitle: { en: "Type chart", zh: "相性表" },
+  matrixIntro: {
+    en: "Read one direction only: a decision in the row unit forces a decision in the column unit. Not damage — coupling. The question it answers is 'if I change this, what am I signing up to rewrite?'",
+    zh: "只按一个方向读：行单元里的一个决定，会逼着列单元也做出决定。这里不是伤害，是耦合。它回答的问题是：「我改了这个，等于签下了重写什么的合同？」",
+  },
+  matrixRowLabel: { en: "Change here ↓", zh: "这里变了 ↓" },
+  matrixColumnLabel: { en: "…and this follows →", zh: "…这里就得跟着变 →" },
+  matrixPickCell: {
+    en: "Pick a cell to see why.",
+    zh: "点一个格子看理由。",
+  },
+  matrixNoNote: {
+    en: "Some influence, nothing structural — no defence needed.",
+    zh: "有影响，但不涉及结构 —— 不需要额外解释。",
+  },
+  matrixSelfCell: {
+    en: "A unit against itself. Nothing to say here.",
+    zh: "单元对自己。这里没什么好说的。",
+  },
+  matrixLegend: { en: "Legend", zh: "图例" },
+
+  // Battle
+  battleTitle: { en: "Battle", zh: "对战" },
+  battleIntro: {
+    en: "A scenario, three cards. The wrong answers are the tempting ones — each explains how it would have failed, and most of them fail quietly.",
+    zh: "一个场景，三张卡。错的选项都是有诱惑力的那种 —— 每个都会解释它会怎么出事，而其中大多数出事时是静默的。",
+  },
+  battleScenario: { en: "Scenario", zh: "场景" },
+  battlePick: { en: "Which card do you send out?", zh: "你派哪张卡上场？" },
+  battleCorrect: { en: "Effective", zh: "打中了" },
+  battleWrong: { en: "It fails here", zh: "这里会出事" },
+  battleYourPick: { en: "Your pick", zh: "你选的" },
+  battleAnswerWas: { en: "The answer", zh: "正确答案" },
+  battleNext: { en: "Next battle", zh: "下一场" },
+  battleRestart: { en: "Start over", zh: "重新开始" },
+  battleStreak: { en: "Streak", zh: "连胜" },
+  battleScore: { en: "Score", zh: "战绩" },
+  battleDone: { en: "That's all of them.", zh: "全部打完了。" },
+  battleReadCard: { en: "Read the card", zh: "查看这张卡" },
+  battleProgress: { en: "Battle", zh: "第" },
+  battleOf: { en: "of", zh: "场 /" },
   learnMore: { en: "Learn more", zh: "延伸阅读" },
   backToDex: { en: "Back to the dex", zh: "返回图鉴" },
   entryNotFound: { en: "No such entry.", zh: "没有这个条目。" },

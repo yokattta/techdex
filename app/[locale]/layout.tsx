@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { HtmlLang } from "@/components/HtmlLang";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
+import { SiteNav } from "@/components/SiteNav";
 import { isLocale, locales, strings } from "@/lib/i18n";
 
 export function generateStaticParams() {
@@ -34,13 +35,8 @@ export default async function LocaleLayout({
               {s("title")}
             </span>
           </Link>
-          <div className="flex items-center gap-3">
-            <Link
-              href={`/${locale}/gacha`}
-              className="pop card-outline rounded-full bg-red-600 px-4 py-1.5 text-xs font-black uppercase tracking-wide text-white"
-            >
-              {s("gacha")}
-            </Link>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <SiteNav locale={locale} />
             <LocaleSwitch current={locale} />
           </div>
         </div>

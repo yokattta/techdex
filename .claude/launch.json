@@ -1,0 +1,18 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "techdex",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 3000,
+      "autoPort": true
+    },
+    {
+      "name": "dreambook",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["realize-your-dream/serve.js"],
+      "port": 4173
+    }
+  ]
+}

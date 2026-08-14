@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+/*
+ * Cartoon / trading-card look: thick outlines, hard offset shadows, no blur.
+ * Every unit colour is derived from a single `--unit` hue triple set inline by
+ * the components, so adding a unit means adding one line in lib/units.ts.
+ */
+
+:root {
+  --background: #fdf7ea;
+  --surface: #ffffff;
+  --foreground: #1a1720;
+  --muted: #6b6478;
+  --ink: #1a1720;
+  --line: #1a1720;
+  --shadow: 4px 4px 0 var(--line);
+  --shadow-lg: 7px 7px 0 var(--line);
+  --unit: 270 75% 60%;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #16131d;
+    --surface: #221d2e;
+    --foreground: #f4eeff;
+    --muted: #a79dbd;
+    --ink: #f4eeff;
+    --line: #000000;
+    --shadow: 4px 4px 0 rgba(0, 0, 0, 0.75);
+    --shadow-lg: 7px 7px 0 rgba(0, 0, 0, 0.75);
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-unit: hsl(var(--unit));
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family:
+    var(--font-geist-sans),
+    ui-sans-serif,
+    system-ui,
+    "PingFang SC",
+    "Hiragino Sans GB",
+    "Microsoft YaHei",
+    sans-serif;
+  background-image:
+    radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--foreground) 9%, transparent) 1px, transparent 0);
+  background-size: 22px 22px;
+}
+
+/* Elements that scope a unit colour set `--unit` inline; these read it. */
+@utility card-outline {
+  border: 3px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+@utility card-outline-lg {
+  border: 3px solid var(--line);
+  box-shadow: var(--shadow-lg);
+}
+
+@utility unit-tint {
+  background-image: linear-gradient(
+    160deg,
+    hsl(var(--unit) / 0.28),
+    hsl(var(--unit) / 0.06) 60%,
+    transparent
+  );
+}
+
+/* Hover lift used by dex cards. Disabled for reduced-motion users. */
+@utility pop {
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pop:hover {
+    transform: translate(-2px, -3px);
+    box-shadow: var(--shadow-lg);
+  }
+  .pop:active {
+    transform: translate(1px, 1px);
+    box-shadow: 2px 2px 0 var(--line);
+  }
+}
+
+:focus-visible {
+  outline: 3px solid hsl(var(--unit));
+  outline-offset: 3px;
+}

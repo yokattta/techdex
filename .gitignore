@@ -44,6 +44,7 @@ next-env.d.ts
 # Add a line here if another one appears; eslint.config.mjs detects them itself.
 /realize-your-dream/
 /judgment-call/
+/unsolved/
 
 # per-machine Claude Code settings
 .claude/settings.local.json

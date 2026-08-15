@@ -19,6 +19,12 @@
       "runtimeExecutable": "node",
       "runtimeArgs": ["judgment-call/serve.js"],
       "port": 4321
+    },
+    {
+      "name": "unsolved",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["unsolved/serve.js"],
+      "port": 4322
     }
   ]
 }

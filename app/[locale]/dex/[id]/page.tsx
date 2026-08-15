@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { BrandTile } from "@/components/BrandMark";
 import { CaughtButton } from "@/components/CaughtButton";
 import { RarityStars, rarityLabel } from "@/components/RarityStars";
 import { StatBars } from "@/components/StatBars";
@@ -85,12 +86,11 @@ export default async function EntryPage({
           </div>
         </div>
 
-        <div
-          className="grid aspect-[4/3] place-items-center rounded-2xl border-3 border-black bg-[hsl(var(--unit)/0.16)] text-7xl"
-          aria-hidden="true"
-        >
-          {entry.glyph}
-        </div>
+        <BrandTile
+          entry={entry}
+          size={84}
+          className="aspect-[4/3] rounded-2xl border-3!"
+        />
 
         <div className="grid gap-1">
           <h1 className="text-3xl leading-tight font-black">{entry.name}</h1>
@@ -136,11 +136,9 @@ export default async function EntryPage({
                   <Link
                     href={`/${locale}/dex/${other.id}`}
                     style={{ ["--unit" as string]: unitMap[other.units[0]].hue }}
-                    className="pop flex min-w-28 flex-col items-center gap-1 rounded-lg border-2 border-black bg-[hsl(var(--unit)/0.18)] p-2 text-center"
+                    className="pop flex min-w-28 flex-col items-center gap-1.5 rounded-lg border-2 border-black bg-[hsl(var(--unit)/0.12)] p-2 text-center"
                   >
-                    <span className="text-2xl" aria-hidden="true">
-                      {other.glyph}
-                    </span>
+                    <BrandTile entry={other} size={22} className="size-10 rounded-lg" />
                     <span className="text-xs font-extrabold">{other.name}</span>
                   </Link>
                   <p className="text-sm leading-relaxed">{note[locale]}</p>
@@ -194,15 +192,13 @@ export default async function EntryPage({
                     aria-current={step.id === entry.id ? "page" : undefined}
                     style={{ ["--unit" as string]: unitMap[step.units[0]].hue }}
                     className={[
-                      "pop flex min-w-32 flex-col items-center gap-1 rounded-xl border-2 border-black p-3 text-center",
+                      "pop flex min-w-32 flex-col items-center gap-1.5 rounded-xl border-2 border-black p-3 text-center",
                       step.id === entry.id
                         ? "bg-[hsl(var(--unit)/0.22)]"
                         : "bg-surface",
                     ].join(" ")}
                   >
-                    <span className="text-3xl" aria-hidden="true">
-                      {step.glyph}
-                    </span>
+                    <BrandTile entry={step} size={26} className="size-12 rounded-lg" />
                     <span className="text-xs font-extrabold">{step.name}</span>
                   </Link>
                 </li>

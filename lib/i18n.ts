@@ -141,6 +141,10 @@ const dict = {
     en: "Built with Next.js, TypeScript and Tailwind.",
     zh: "使用 Next.js、TypeScript 和 Tailwind 构建。",
   },
+  trademarks: {
+    en: "Product logos are trademarks of their respective owners and are used here only to identify the products described. Mark artwork from simple-icons (CC0-1.0).",
+    zh: "产品 logo 为各自所有者的商标，此处仅用于指代所描述的产品。图形来自 simple-icons（CC0-1.0）。",
+  },
   langSwitchLabel: { en: "Language", zh: "语言" },
 } satisfies Record<string, L10n>;
 

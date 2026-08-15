@@ -7,6 +7,7 @@ import { strings } from "@/lib/i18n";
 import { useCaught } from "@/lib/caught";
 import { usePacksOpened } from "@/lib/packs";
 import { unitMap } from "@/lib/units";
+import { BrandTile } from "./BrandMark";
 import { RarityStars, rarityLabel } from "./RarityStars";
 import { UnitBadge } from "./UnitBadge";
 import type { Entry, Locale } from "@/lib/types";
@@ -170,9 +171,7 @@ function PackCard({
           </div>
 
           <div className="grid place-items-center gap-1.5 text-center">
-            <span className="text-4xl" aria-hidden="true">
-              {entry.glyph}
-            </span>
+            <BrandTile entry={entry} size={34} className="size-16 rounded-xl" />
             <span className="text-sm leading-tight font-extrabold">{entry.name}</span>
             <span className="text-[10px] font-bold uppercase tracking-wide text-muted">
               {caught ? s("caught") : s("gachaNewToYou")}

@@ -33,6 +33,26 @@ they own the same object.
 A clash is declared on one entry only; `clashesFor()` resolves it in both
 directions so each card shows the full picture.
 
+## Logos and glyphs
+
+Products show their real logo; concepts show an emoji glyph. That split is
+content, not a fallback — half the dex is ideas (Observability, CAP Theorem,
+Idempotency, RAG, Design Tokens) that have no trademark and should not pretend
+to. Logos sit on a white tile in both themes so brand colours keep their
+contrast; several marks are near-black.
+
+Mark artwork comes from [simple-icons](https://simpleicons.org) (CC0-1.0) and is
+baked into `lib/logos.ts` at author time, so nothing extra ships at runtime —
+`dependencies` is still just `next`, `react` and `react-dom`. To add or refresh
+one, edit the list in `scripts/generate-logos.mjs` and run:
+
+```bash
+node scripts/generate-logos.mjs
+```
+
+The marks themselves remain trademarks of their respective owners and appear
+here nominatively, to identify the products described.
+
 ## Type chart
 
 `/[locale]/matrix` is a 6×6 grid read in one direction only: **a decision in the
@@ -123,6 +143,7 @@ lib/
   entries.ts             all content, plus evolution and clash resolution
   matrix.ts              the 6x6 coupling grid and its reasons
   battles.ts             scenarios, options and verdicts
+  logos.ts               generated brand marks — see scripts/generate-logos.mjs
   i18n.ts                UI strings
   caught.ts              localStorage progress store
   packs.ts               localStorage pack counter

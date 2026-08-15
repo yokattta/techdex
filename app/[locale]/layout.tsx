@@ -45,8 +45,9 @@ export default async function LocaleLayout({
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">{children}</main>
 
       <footer className="border-t-3 border-black bg-surface">
-        <div className="mx-auto max-w-6xl px-4 py-5 text-xs text-muted">
-          {s("builtWith")}
+        <div className="mx-auto grid max-w-6xl gap-1.5 px-4 py-5 text-xs text-muted">
+          <p>{s("builtWith")}</p>
+          <p className="max-w-3xl">{s("trademarks")}</p>
         </div>
       </footer>
     </>

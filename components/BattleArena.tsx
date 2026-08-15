@@ -6,6 +6,7 @@ import { battles } from "@/lib/battles";
 import { getEntry } from "@/lib/entries";
 import { strings } from "@/lib/i18n";
 import { unitMap } from "@/lib/units";
+import { BrandMark, BrandTile } from "./BrandMark";
 import { UnitBadge } from "./UnitBadge";
 import type { Locale } from "@/lib/types";
 
@@ -129,10 +130,8 @@ export function BattleArena({ locale }: { locale: Locale }) {
                   revealed && !isPicked && !isAnswer ? "bg-surface opacity-60" : "",
                 ].join(" ")}
               >
-                <span className="flex items-center gap-2">
-                  <span className="text-2xl" aria-hidden="true">
-                    {entry.glyph}
-                  </span>
+                <span className="flex items-center gap-2.5">
+                  <BrandTile entry={entry} size={22} className="size-10 shrink-0 rounded-lg" />
                   <span className="font-extrabold">{entry.name}</span>
                 </span>
                 <span className="flex flex-wrap gap-1">
@@ -178,7 +177,7 @@ export function BattleArena({ locale }: { locale: Locale }) {
                 ].join(" ")}
               >
                 <p className="mb-1 flex flex-wrap items-center gap-2 text-xs font-black uppercase tracking-wide">
-                  <span aria-hidden="true">{entry.glyph}</span>
+                  <BrandMark entry={entry} size={16} />
                   <span>{entry.name}</span>
                   {isAnswer && (
                     <span className="rounded-full border-2 border-black bg-emerald-500 px-2 py-0.5 text-[10px] text-white">

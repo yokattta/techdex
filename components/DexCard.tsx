@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { rarityOf } from "@/lib/entries";
 import { unitMap } from "@/lib/units";
+import { BrandTile } from "./BrandMark";
 import { RarityStars } from "./RarityStars";
 import { UnitBadge } from "./UnitBadge";
 import type { Entry, Locale } from "@/lib/types";
@@ -38,12 +39,7 @@ export function DexCard({
       </div>
 
       <div className="flex items-center gap-3">
-        <span
-          className="grid size-14 shrink-0 place-items-center rounded-xl border-2 border-black bg-[hsl(var(--unit)/0.18)] text-3xl"
-          aria-hidden="true"
-        >
-          {entry.glyph}
-        </span>
+        <BrandTile entry={entry} size={30} className="size-14 shrink-0 rounded-xl" />
         <h3 className="text-lg leading-tight font-extrabold">{entry.name}</h3>
       </div>
 

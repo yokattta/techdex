@@ -155,3 +155,24 @@ lib/
   caught.ts              localStorage progress store
   packs.ts               localStorage pack counter
 ```
+
+## Licence
+
+Split, because the two halves are worth different things.
+
+| | Licence | |
+| --- | --- | --- |
+| **Code** | [MIT](LICENSE) | Take the engine. It's Next.js and Tailwind — there's no secret in it. |
+| **Content** | [CC BY-NC-SA 4.0](LICENSE-CONTENT) | The written entries, clash notes, coupling reasons and battle verdicts. Credit it, share alike, don't sell it. |
+
+The moat here was never the idea — a Pokédex-shaped learning site is one of the
+most-built projects on the internet. It's the writing: every entry needs a real
+mechanism, a real pitfall, an honest clash and a story that encodes the property
+you're meant to remember. That's labour, not a secret, and labour doesn't
+benefit from being hidden. Contributions are the point.
+
+Brand marks in `lib/logos.ts` are trademarks of their respective owners, used
+nominatively to identify the products described, and are covered by neither
+licence.
+
+Want to use the content commercially? Open an issue — that's a conversation.

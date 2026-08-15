@@ -108,15 +108,22 @@ number sets display order and must be unique; everything else follows the
 `Entry` type in [`lib/types.ts`](lib/types.ts). Setting `evolvesFrom` to another
 entry's id puts both of them in the same evolution line automatically.
 
-Each entry needs four pieces of prose, and they answer different questions:
-`tagline` (one line), `description` (what it is), `deepDive` (how it actually
-works and what that costs), and `pitfall` (the specific way people get it
-wrong). Optionally `clashes` — see above.
+Each entry needs five pieces of prose, and they answer different questions:
+`tagline` (one line), `description` (what it is), `lore` (where it came from),
+`deepDive` (how it actually works and what that costs), and `pitfall` (the
+specific way people get it wrong). Optionally `clashes` — see above.
+
+One rule for `lore`, and it is the whole point of the field: **the story has to
+encode the property you need to remember.** Kafka is named after a novelist
+because it is "a system optimized for writing" — that is a mnemonic for an
+append-only log. Nginx exists because of the C10K problem, which is why it does
+not give each connection a thread. Trivia that doesn't hook onto a property of
+the thing does not belong here, however good the anecdote is.
 
 Translation rule, worth keeping: `name` and `moves[].name` are plain strings and
 are **never** translated — a Chinese reader looking for "Kafka" should find the
-string "Kafka". Only prose (`tagline`, `description`, `deepDive`, `pitfall`,
-`moves[].effect`, `clashes[].note`) has `en` / `zh` variants.
+string "Kafka". Only prose (`tagline`, `description`, `lore`, `deepDive`,
+`pitfall`, `moves[].effect`, `clashes[].note`) has `en` / `zh` variants.
 
 ## Adding a unit
 

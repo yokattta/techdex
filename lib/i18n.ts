@@ -55,6 +55,7 @@ const dict = {
   baseStats: { en: "Base stats", zh: "种族值" },
   moves: { en: "Moves", zh: "招式" },
   evolution: { en: "Evolution line", zh: "进化链" },
+  lore: { en: "Where it came from", zh: "它是怎么来的" },
   howItWorks: { en: "How it actually works", zh: "它究竟怎么运作" },
   pitfall: { en: "Common pitfall", zh: "常见坑" },
   clashes: { en: "Clashes with", zh: "相克" },

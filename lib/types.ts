@@ -64,6 +64,11 @@ export type Entry = {
   deepDive: L10n;
   /** The specific way people get this wrong. */
   pitfall: L10n;
+  /**
+   * Where it came from — but only the part that doubles as a mnemonic. Trivia
+   * that doesn't encode a property of the thing has no business being here.
+   */
+  lore: L10n;
   /** 0–100, rendered as species-stat bars. */
   stats: Stats;
   moves: Move[];

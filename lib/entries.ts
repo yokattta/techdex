@@ -26,6 +26,10 @@ export const entries: Entry[] = [
       en: "A container image is a frozen filesystem plus a command to run. Because the image carries its own libraries, the machine underneath stops mattering — the same artifact you built locally is the one that runs in production. That single property is what killed 'works on my machine'.",
       zh: "一个 container image 就是一份冻结的文件系统，加上一条启动命令。因为镜像自带依赖库，底下那台机器长什么样就不重要了 —— 你本地构建出来的那个产物，就是生产环境跑的那个。就是这一条性质终结了「在我机器上是好的」。",
     },
+    oneLiner: {
+      en: "Same image, different machine — that's the whole point. The moment we need a different image per environment, we've thrown the property away.",
+      zh: "同一个镜像，换台机器照跑 —— 这才是重点。一旦每个环境要用不同镜像，这个性质就已经被我们扔掉了。",
+    },
     deepDive: {
       en: "A container is not a small virtual machine. It is one ordinary Linux process that the kernel has lied to: namespaces give it a private view of the filesystem, network and process table, and cgroups cap how much CPU and memory it may take. There is no guest kernel, which is why a container starts in milliseconds while a VM takes tens of seconds. The image itself is a stack of read-only layers plus one thin writable layer on top — so a hundred containers from the same image share one copy on disk, and everything written into that top layer disappears when the container does.",
       zh: "容器不是一台小虚拟机。它就是一个普通的 Linux 进程，只不过内核对它撒了谎：namespace 给它一份私有的文件系统、网络和进程表视图，cgroup 限制它能占用多少 CPU 和内存。这里没有 guest kernel —— 所以容器启动是毫秒级，而虚拟机要几十秒。镜像本身是一叠只读 layer 加最上面一层很薄的可写层，因此同一个镜像跑一百个容器，磁盘上只有一份；而写进最上层的一切，在容器消失时也一起消失。",
@@ -86,6 +90,10 @@ export const entries: Entry[] = [
     description: {
       en: "You describe the desired state — ten replicas, this image, that much memory — and a control loop spends forever making reality match. Nothing is imperative: you never say 'start a container', you say what should be true and the reconciler figures out the diff. Powerful, and the reason the learning curve is a wall.",
       zh: "你描述期望状态 —— 十个副本、这个镜像、这么多内存 —— 然后一个控制循环永远在让现实向它靠拢。这里没有命令式的东西：你从不说「启动一个容器」，你说什么应该成立，由 reconciler 算出差异。很强大，也正是学习曲线陡成一堵墙的原因。",
+    },
+    oneLiner: {
+      en: "Don't ask what command ran — ask which controller owns the object and what it thinks the spec says.",
+      zh: "别问执行了什么命令 —— 问哪个 controller 拥有这个对象、它认为 spec 是什么。",
     },
     deepDive: {
       en: "Everything is one pattern repeated: an object in etcd says what should be true, a controller watches for changes, compares, and acts. The scheduler is a controller that assigns pods to nodes; the deployment controller is a controller that creates replica sets. Because the loop never stops, deleting a pod by hand does nothing lasting — one gets recreated within seconds. This is also why debugging means asking 'which controller owns this object, and what does it think the spec says', not 'what command ran'.",
@@ -156,6 +164,10 @@ export const entries: Entry[] = [
       en: "Infrastructure as code: the buckets, databases and networks live in files, and a state file remembers what was already created. `plan` shows you the diff before anything happens — which is the whole point, because clicking around a cloud console leaves no record of why anything exists.",
       zh: "Infrastructure as code：存储桶、数据库、网络都写在文件里，一份 state 文件记住已经创建过什么。`plan` 会在任何变更发生前把差异摆给你看 —— 这才是重点，因为在云控制台里点来点去，不会留下任何关于「这东西为什么存在」的记录。",
     },
+    oneLiner: {
+      en: "If it was urgent enough to click in the console, it's urgent enough to import back into state before you go home.",
+      zh: "如果紧急到要在控制台点鼠标，那也就紧急到下班前必须把它 import 回 state。",
+    },
     deepDive: {
       en: "The state file is the whole design and the whole risk. Terraform does not read your cloud account to decide what to do; it compares your config against state, and state against reality. That indirection is what makes `plan` fast and precise — and what makes a lost or stale state file catastrophic, because Terraform will happily propose creating a second copy of infrastructure it no longer remembers owning. Hence remote state with locking: two engineers applying at once against one state file is how you get half a network.",
       zh: "state 文件既是整个设计，也是整个风险所在。Terraform 不会去读你的云账号来决定该做什么；它拿配置和 state 比，再拿 state 和现实比。这层间接性让 `plan` 又快又准 —— 也让 state 文件丢失或过期变得灾难性，因为 Terraform 会心安理得地提议再创建一份它已经不记得自己拥有的基础设施。所以才要用带锁的 remote state：两个人同时对着一份 state apply，就是你得到半张网络的方式。",
@@ -206,6 +218,10 @@ export const entries: Entry[] = [
     description: {
       en: "Continuous integration runs your tests on every push; continuous delivery takes what passed and puts it somewhere real. The value is not automation for its own sake — it is that the feedback arrives in minutes instead of at the end of a release cycle, when the change is still fresh in your head.",
       zh: "Continuous integration 在每次 push 时跑测试；continuous delivery 把通过的产物真正部署出去。它的价值不在于「自动化」本身 —— 而在于反馈几分钟就到，而不是等到发布周期结束，那时候你脑子里还记得这次改了什么。",
+    },
+    oneLiner: {
+      en: "A suite that fails one run in twenty catches nothing — it just teaches everyone to hit re-run.",
+      zh: "二十次里失败一次的测试什么都拦不住 —— 它只是教会所有人去点重跑。",
     },
     deepDive: {
       en: "The number that decides whether a pipeline helps or hurts is how long it takes and how often it lies. Under ten minutes, people wait for it and act on the result. Past twenty, they context-switch, and the feedback loop you paid for is gone. Worse is flakiness: a suite that fails randomly one time in twenty teaches the whole team to re-run rather than read, and from then on it catches nothing. Speed and trustworthiness are not polish — they are the feature.",
@@ -259,6 +275,10 @@ export const entries: Entry[] = [
     description: {
       en: "Not a queue in the usual sense: messages are not deleted when read. Each consumer group keeps its own offset — a bookmark — into a partition, so a slow analytics job and a real-time service can read the same stream without interfering. Replay is therefore free, which is why Kafka ends up being the system of record.",
       zh: "它不是通常意义上的队列：消息被读走后并不会删除。每个 consumer group 在 partition 上维护自己的 offset（一个书签），所以一个慢吞吞的分析任务和一个实时服务可以读同一条流而互不干扰。因此重放是免费的 —— 这也是 Kafka 最后往往成为「事实来源」的原因。",
+    },
+    oneLiner: {
+      en: "Ordering is per partition, never per topic — so we key by user id and promise nothing across users.",
+      zh: "有序是 partition 级的，从来不是 topic 级 —— 所以我们用 user id 做 key，跨用户不做任何承诺。",
     },
     deepDive: {
       en: "Ordering is the detail everyone gets wrong. Kafka guarantees order within a partition, never across a topic. Which partition a message lands in comes from hashing its key, so all events for one user stay in order relative to each other — and say nothing about their order relative to another user's. This is the trade that makes it fast: partitions are independent, so throughput scales by adding them. But partition count also caps parallelism, since one partition is read by at most one consumer in a group, and raising it later rehashes keys and breaks the ordering you were relying on.",
@@ -323,6 +343,10 @@ export const entries: Entry[] = [
       en: "A relational database that has quietly absorbed JSON documents, full-text search, geospatial queries and time-series extensions. The reason to reach for it first is transactional integrity: either the whole change lands or none of it does, and no amount of clever application code buys you that after the fact.",
       zh: "一个关系型数据库，悄悄地把 JSON 文档、全文检索、地理空间查询和时序扩展都吃了进来。优先选它的理由是事务完整性：一次变更要么整体生效，要么完全不生效 —— 这一点，事后再写多聪明的应用代码都补不回来。",
     },
+    oneLiner: {
+      en: "An idle session sitting on an open BEGIN will bloat the table — VACUUM can't reclaim anything newer than the oldest open transaction.",
+      zh: "一个开着 BEGIN 不动的空闲会话会让表膨胀 —— VACUUM 回收不了任何比最老的未结束事务更新的东西。",
+    },
     deepDive: {
       en: "MVCC is the mechanism worth understanding, because it explains most surprising behaviour. An UPDATE does not overwrite a row; it writes a new version and leaves the old one for transactions that started earlier. That is how readers never block writers. The cost is dead rows, which VACUUM must reclaim — and if a long-running transaction sits open, VACUUM cannot clean up anything newer than it, so the table quietly bloats. A forgotten `BEGIN` in an idle session is a genuine production incident, not a curiosity.",
       zh: "MVCC 是最值得理解的机制，因为它能解释大多数令人意外的行为。一次 UPDATE 并不覆盖原行；它写一个新版本，把旧版本留给更早开始的事务。这就是读不阻塞写的原因。代价是死行，需要 VACUUM 来回收 —— 而如果有一个长事务一直开着，VACUUM 就清理不掉任何比它新的东西，表会悄悄膨胀。一个空闲会话里被遗忘的 `BEGIN`，是货真价实的生产事故，不是奇闻。",
@@ -383,6 +407,10 @@ export const entries: Entry[] = [
       en: "Think of it as a shared dictionary your whole fleet can reach in under a millisecond, with lists, sets, sorted sets and counters built in. The tradeoff is honest and worth saying out loud: it is memory-bound, and anything you have not deliberately persisted is gone when the process restarts.",
       zh: "把它想成一本共享字典，整个集群都能在一毫秒内访问，还内置了 list、set、sorted set 和计数器。它的取舍很坦白，值得说明白：它受内存容量限制，而且任何你没有刻意持久化的东西，进程重启后就没了。",
     },
+    oneLiner: {
+      en: "It's single-threaded, so KEYS * on a live instance stalls every other command. SCAN, or don't.",
+      zh: "它是单线程的，所以在活着的实例上跑 KEYS * 会卡住其他每一条命令。要么用 SCAN，要么别做。",
+    },
     deepDive: {
       en: "Command execution is single-threaded, and that is a feature: every command is atomic without you asking, so an increment or a set-add can never interleave badly. The flip side is that one slow command blocks everything — `KEYS *` on a large database will stall the entire instance for seconds, and so will deleting a huge collection. Anything O(n) over a big structure should be a `SCAN` loop instead. Fast by default, catastrophically slow the moment you forget the model.",
       zh: "命令执行是单线程的，而这是个特性：每条命令天然原子，你不用做什么，自增或者往集合里加元素永远不会错误地交叉执行。反面是一条慢命令会阻塞所有东西 —— 在大库上执行 `KEYS *` 会让整个实例停顿好几秒，删除一个巨大的集合也一样。任何对大结构的 O(n) 操作都应该换成 `SCAN` 循环。默认很快，一旦忘了这个模型就慢得灾难性。",
@@ -433,6 +461,10 @@ export const entries: Entry[] = [
     description: {
       en: "A reverse proxy terminates TLS, spreads requests across backends, serves static files and shields slow application servers from slow clients. It is unglamorous and it is everywhere, because putting one process in front of many is the cheapest way to add routing, caching and rate limiting at once.",
       zh: "反向代理负责终止 TLS、把请求分发到多个后端、直接吐静态文件，并且把慢客户端挡在慢应用服务器之外。它一点也不炫，但到处都是 —— 因为在一堆服务前面放一个进程，是同时获得路由、缓存和限流的最便宜方式。",
+    },
+    oneLiner: {
+      en: "Before blaming the backend, check proxy_read_timeout — the client got a 504 while the backend carried on and succeeded.",
+      zh: "怪后端之前先看 proxy_read_timeout —— 客户端收到 504 的时候，后端可能一直在干活并且成功了。",
     },
     deepDive: {
       en: "The reason it survives absurd connection counts is an event loop rather than a thread per request. A worker process handles thousands of sockets by only touching the ones with data ready, so idle connections cost a few kilobytes instead of a whole stack. That is also the real job it does for you: a mobile client on a bad network takes eight seconds to send its request body, and Nginx absorbs those eight seconds so your application worker — which probably is one-request-per-thread — is occupied for milliseconds instead.",
@@ -487,6 +519,10 @@ export const entries: Entry[] = [
       en: "Monitoring answers questions you wrote down in advance; observability is whether the system emits enough detail to answer new ones. The practical difference shows up at 3am: a dashboard tells you error rate is up, but only high-cardinality data — this user, this endpoint, this deploy — tells you which change caused it.",
       zh: "Monitoring 回答的是你事先写好的问题；observability 说的是系统吐出的细节够不够回答新问题。区别在凌晨三点最明显：仪表盘告诉你错误率上升了，但只有高基数的数据 —— 这个用户、这个 endpoint、这次发布 —— 才能告诉你是哪次变更导致的。",
     },
+    oneLiner: {
+      en: "A dashboard tells you the error rate moved. Only high-cardinality data tells you which deploy moved it.",
+      zh: "仪表盘告诉你错误率动了。只有高基数的数据能告诉你是哪次发布让它动的。",
+    },
     deepDive: {
       en: "Cardinality is where the money goes and where the answers come from, and those are the same place. A metric tagged with user id has millions of series and costs accordingly; a metric tagged only with region has twelve and cannot tell you that the outage is one customer's traffic. The usual resolution is to split by signal: cheap low-cardinality metrics for alerting, expensive high-cardinality traces sampled for investigation — and to make sure the sampling keeps the errors rather than a uniform slice, since the interesting requests are by definition rare.",
       zh: "基数既是钱花的地方，也是答案来的地方，而这两处是同一处。一个带 user id 标签的指标有几百万条时间序列，成本也相应地高；一个只带 region 标签的指标只有十二条，但它没法告诉你这次故障其实是某一个客户的流量造成的。通常的解法是按信号拆开：用便宜的低基数指标做告警，用昂贵的高基数 trace 做采样排查 —— 并且要确保采样保留的是错误请求，而不是均匀切一刀，因为有意思的请求按定义就是稀有的。",
@@ -539,6 +575,10 @@ export const entries: Entry[] = [
       en: "Consistency, availability, partition tolerance — pick two, except partitions are not optional in a real network, so the real choice is only between the other two. It is less a design menu than a warning: any distributed system claiming all three is quietly making the tradeoff somewhere you haven't looked.",
       zh: "Consistency、availability、partition tolerance，三选二 —— 但在真实网络里 partition 不是可选项，所以真正的选择只在另外两个之间。它与其说是一份设计菜单，不如说是一句警告：任何号称三者兼得的分布式系统，都只是把取舍藏在了你没看的地方。",
     },
+    oneLiner: {
+      en: "'We're AP' means nothing on its own — say what a client sees during a partition: a stale read, a rejected write, or a conflict resolved later.",
+      zh: "光说「我们是 AP」等于什么都没说 —— 要说清分区时客户端看到什么：读到旧值、写被拒绝，还是留一个之后再解决的冲突。",
+    },
     deepDive: {
       en: "The theorem only describes the moment a partition is actually happening, which is rare — and that is exactly why it is so often misapplied. The more useful extension is PACELC: during a Partition, choose Availability or Consistency; Else, in normal operation, choose Latency or Consistency. Most of your system's felt behaviour comes from that second clause, because 'else' is 99.9% of the time. A system that waits for a quorum on every read is not partitioned, it is just slower, forever, by design.",
       zh: "这个定理描述的只是分区正在发生的那一刻，而那种时刻很罕见 —— 这恰恰是它经常被误用的原因。更有用的扩展是 PACELC：在 Partition 时，选 Availability 还是 Consistency；Else，也就是正常运行时，选 Latency 还是 Consistency。你的系统给人的实际体感，大部分来自第二个分句，因为「Else」占了 99.9% 的时间。一个每次读都要等 quorum 的系统并没有分区，它只是被设计成了永远更慢一点。",
@@ -582,6 +622,10 @@ export const entries: Entry[] = [
     description: {
       en: "If writes stop, all replicas converge on the same value — eventually. Chosen deliberately, it buys enormous availability: your post appears immediately for you and a moment later for everyone else. Chosen by accident, it produces the bug where a user updates a setting, reloads, and sees the old one.",
       zh: "如果写入停止，所有副本最终会收敛到同一个值 —— 最终。有意识地选它，能换来巨大的可用性：你发的帖子对你立刻可见，对别人稍后可见。无意识地撞上它，就会出现那个 bug：用户改了设置、刷新、看到的还是旧值。",
+    },
+    oneLiner: {
+      en: "'Eventually consistent' isn't a guarantee. Name which one: read-your-writes, monotonic reads, or causal.",
+      zh: "「最终一致」不是一个保证。说清是哪一个：read-your-writes、单调读，还是因果一致。",
     },
     deepDive: {
       en: "'Eventually' is not one guarantee but a family of them, and the useful skill is naming which one you have. Read-your-writes says you at least see your own changes. Monotonic reads says time never appears to run backwards for one client. Causal consistency says a reply never shows up before the message it answers. Each is cheaper than full linearizability and each rules out a specific class of bug that users actually notice — 'eventual' alone rules out none of them.",
@@ -628,6 +672,10 @@ export const entries: Entry[] = [
       en: "Networks retry. A payment request that times out may or may not have succeeded, and the client has no way to tell. An idempotency key makes the retry safe: the server recognises it has already processed that exact request and returns the original result instead of charging the card again.",
       zh: "网络会重试。一个超时的支付请求可能成功了也可能没有，客户端无从判断。Idempotency key 让重试变得安全：服务端认出自己已经处理过这个请求，于是返回原来的结果，而不是再扣一次款。",
     },
+    oneLiner: {
+      en: "The key has to come from the client before the first attempt. A server-generated id can't work — the client never saw it.",
+      zh: "key 必须由客户端在第一次尝试之前生成。服务端生成的 id 没用 —— 客户端根本没收到过它。",
+    },
     deepDive: {
       en: "The key must be generated by the client, before the first attempt, and reused unchanged across every retry — a server-generated id cannot work, because the whole problem is that the client never learned it. Storing the key is not enough either: you have to store the response alongside it, atomically with the effect, or a crash between charging and recording leaves the retry free to charge again. In practice the dedupe record and the business write belong in one transaction.",
       zh: "这个 key 必须由客户端生成，在第一次尝试之前，并且在每次重试中原样复用 —— 服务端生成的 id 是不行的，因为问题的核心恰恰是客户端从来没收到过它。只存 key 也不够：你得把响应和它一起存下来，而且要和副作用原子地一起完成，否则「扣款成功但记录失败」之间的一次崩溃，会让重试可以自由地再扣一次。实践上，去重记录和业务写入应该在同一个事务里。",
@@ -673,6 +721,10 @@ export const entries: Entry[] = [
     description: {
       en: "Attention lets each position weigh all the others directly, instead of passing information down a chain the way a recurrent network does. Two consequences follow: long-range relationships survive, and the whole sequence can be processed in parallel — which is what made training on internet-scale text affordable.",
       zh: "Attention 让每个位置直接对其他所有位置加权，而不是像循环网络那样沿着一条链传递信息。由此有两个结果：长距离关系不会丢失，而且整个序列可以并行处理 —— 正是这一点让在互联网规模文本上训练变得可负担。",
+    },
+    oneLiner: {
+      en: "Long input is cheap, long output isn't — the prompt is one parallel pass, and every output token is a full forward.",
+      zh: "长输入便宜，长输出不便宜 —— prompt 是一次并行走完的，而每个输出 token 都要一次完整前向。",
     },
     deepDive: {
       en: "Attention compares every token to every other one, so the work grows with the square of sequence length: double the context and you quadruple the cost. That single fact explains most of the field's engineering — why context windows were small for years, why serving long prompts is expensive, and why so much research is about approximating attention cheaply. Note the asymmetry at inference time: the prompt is processed in one parallel pass, but output tokens come one at a time, each requiring a full forward pass. Long input is cheap relative to long output.",
@@ -728,6 +780,10 @@ export const entries: Entry[] = [
       en: "A model maps text to a vector such that similar meanings land near each other. That single property replaces keyword matching with semantic search: 'how do I cancel' finds the refund policy page even though the two share no words at all.",
       zh: "模型把文本映射成向量，让含义相近的东西落在相近的位置。就这一条性质，把关键词匹配换成了语义检索：搜「怎么取消」能找到退款政策页，哪怕两者一个字都不重合。",
     },
+    oneLiner: {
+      en: "Which embedding model, though? A paraphrase-trained one will hand you other questions instead of the answers.",
+      zh: "不过用的是哪个 embedding 模型？拿改写任务训出来的模型，会把一堆其他问题递给你，而不是答案。",
+    },
     deepDive: {
       en: "Similarity is not one thing, and the embedding model decides which one you get. Some are trained so that a question lands near its answer; others so that two paraphrases land together. Use a paraphrase model for question-answering retrieval and it will confidently return other questions rather than the answers, because that is what it was taught 'similar' means. Vectors from different models are also not comparable at all — reindexing is mandatory when you swap models, and a half-migrated index degrades silently rather than erroring.",
       zh: "「相似」不是一件事，而是由 embedding 模型决定你拿到的是哪一种。有的模型被训练成让问题和它的答案靠近；有的则是让两句同义改写靠在一起。拿一个改写模型去做问答检索，它会自信地返回一堆其他问题而不是答案，因为它学到的「相似」就是那个意思。此外，不同模型产出的向量完全不可比 —— 换模型时必须重建索引，而一个迁移到一半的索引会静默地劣化，不会报错。",
@@ -779,6 +835,10 @@ export const entries: Entry[] = [
     description: {
       en: "Retrieval-Augmented Generation fetches relevant documents and puts them in the prompt, so the model reasons over text it can actually see rather than what it half-remembers from training. Most RAG failures are retrieval failures, not model failures — if the right chunk never made it into the context, no amount of prompt tuning saves the answer.",
       zh: "Retrieval-Augmented Generation 先取回相关文档、塞进 prompt，让模型基于它真正看得见的文本推理，而不是训练时半记不记的东西。大多数 RAG 的失败是检索的失败，不是模型的失败 —— 如果正确的片段压根没进上下文，再怎么调 prompt 也救不了那个答案。",
+    },
+    oneLiner: {
+      en: "Measure retrieval on its own first — if the right chunk isn't in the top k, no prompt change is going to save that answer.",
+      zh: "先单独度量检索 —— 正确的片段没进 top k，再怎么改 prompt 都救不了那个答案。",
     },
     deepDive: {
       en: "Debug it as two separate systems or you will tune the wrong one for weeks. Measure retrieval on its own: for a set of real questions, is the correct chunk in the top k at all? If recall is bad, no prompt change helps. If recall is good and answers are still wrong, the problem is in generation — ordering, conflicting chunks, or a model that is not being told it may say 'not in the documents'. The second failure mode is subtler than the first and much more dangerous, because a confident answer built from retrieved-but-irrelevant text looks exactly like a correct one.",
@@ -841,6 +901,10 @@ export const entries: Entry[] = [
       en: "Further training on your own examples shifts how a model behaves — tone, format, a narrow classification boundary. It is a poor way to add knowledge, which is what RAG is for; the useful question to ask first is whether your problem is the model not knowing something, or the model not answering the way you want.",
       zh: "用你自己的样本继续训练，会改变模型的行为方式 —— 语气、格式、某个很窄的分类边界。它并不适合用来灌输知识，那是 RAG 的活；先该问的问题是：你的问题究竟是模型不知道某件事，还是模型没按你要的方式回答。",
     },
+    oneLiner: {
+      en: "What's the eval set? Without one, 'it seems better' is the only measurement you have, and it's the one a week of work bends the most.",
+      zh: "评测集是什么？没有它，「感觉好像好一点」就是你唯一的度量 —— 而它恰恰最容易被「我刚花了一周」掰弯。",
+    },
     deepDive: {
       en: "Data quality dominates data quantity, by a lot. A few hundred examples that are consistent with each other will outperform tens of thousands that disagree, because the model faithfully learns the inconsistency too — including the parts your labellers got wrong. This is why the expensive part of a fine-tune is never the GPU time; it is building an evaluation set you trust before you start, so you can tell whether the new model is actually better or merely different.",
       zh: "数据质量的重要性远远压过数据数量。几百条彼此一致的样本，会胜过几万条互相矛盾的 —— 因为模型会忠实地把矛盾也学下来，包括标注员标错的那部分。这就是为什么一次 fine-tune 里贵的从来不是 GPU 时间，而是在开始之前构建一套你信得过的评测集，好让你能判断新模型究竟是更好了，还是只是变得不一样了。",
@@ -886,6 +950,10 @@ export const entries: Entry[] = [
     description: {
       en: "Routing, request parsing, templating — and then it stops and lets you choose everything else. That minimalism is the appeal and the catch: the first hundred lines are delightful, and by the tenth thousand you have assembled your own opinionated framework anyway, just undocumented.",
       zh: "路由、请求解析、模板 —— 然后它就停下了，其余的全让你自己选。这种极简既是吸引力也是陷阱：前一百行写得很愉快，到了第一万行，你其实已经攒出了一个自己的有主见的框架，只是没有文档。",
+    },
+    oneLiner: {
+      en: "`request` is a proxy bound to a per-request context, not a global — which is exactly why it blows up in a background thread.",
+      zh: "`request` 是一个绑定到「每请求上下文」的代理，不是全局变量 —— 这正是它在后台线程里会炸的原因。",
     },
     deepDive: {
       en: "The thing that confuses newcomers most is the request context. `request` is importable as a global yet somehow holds the current request — it is a proxy bound to a context that Flask pushes per request, per thread. That design makes handlers pleasantly free of plumbing, and it is exactly why background threads and async code blow up with 'working outside of request context': the object was never global, it just looked like it. Under WSGI each worker handles one request start to finish, so concurrency is worker count, and one slow database call occupies a whole worker.",
@@ -938,6 +1006,10 @@ export const entries: Entry[] = [
       en: "Your function signature is the contract. Python type annotations drive request validation, response serialisation and the generated OpenAPI docs at once, so the three cannot silently disagree. Add async handlers and it holds far more concurrent connections than a thread-per-request server.",
       zh: "你的函数签名就是接口契约。Python 的类型标注同时驱动请求校验、响应序列化和自动生成的 OpenAPI 文档，于是这三者不可能悄悄对不上。再加上 async 处理函数，它能撑住的并发连接远多于「一请求一线程」的服务器。",
     },
+    oneLiner: {
+      en: "Is that driver actually async? One blocking call inside `async def` freezes every concurrent request on the worker.",
+      zh: "那个驱动真的是异步的吗？`async def` 里一次阻塞调用，会冻住这个 worker 上所有并发请求。",
+    },
     deepDive: {
       en: "Async only helps if nothing blocks the event loop, and one blocking call is enough to erase the benefit for every concurrent request on that worker. A synchronous database driver, `requests`, or a CPU-heavy loop inside `async def` freezes everything until it returns. FastAPI does hand plain `def` handlers to a thread pool, which makes mixed codebases work — but a blocking call inside an `async def` handler gets no such rescue. Know which of your libraries are actually async before assuming you got concurrency.",
       zh: "async 只有在没有任何东西阻塞事件循环时才有用，而一次阻塞调用就足以抹掉那个 worker 上所有并发请求的收益。一个同步数据库驱动、`requests`，或者 `async def` 里一段吃 CPU 的循环，都会把一切冻住直到它返回。FastAPI 确实会把普通的 `def` handler 丢进线程池，这让混合代码库能工作 —— 但写在 `async def` handler 里的阻塞调用得不到这份搭救。在认为自己拿到了并发之前，先搞清楚你的库里哪些是真的异步。",
@@ -989,6 +1061,10 @@ export const entries: Entry[] = [
     description: {
       en: "You never write 'now hide that element'. You describe what the screen looks like for a given state, change the state, and let the library work out the minimum DOM edits. The mental shift is the entire lesson — most React bugs are really someone still thinking imperatively about the DOM.",
       zh: "你从不写「现在把那个元素藏起来」。你描述给定 state 下屏幕长什么样，然后改 state，剩下的最小 DOM 修改交给库去算。这个思维转变就是全部要点 —— 大多数 React 的 bug，其实是有人还在用命令式的方式想 DOM。",
+    },
+    oneLiner: {
+      en: "If you're setting state in a `useEffect` because state changed, it should have been computed during render.",
+      zh: "如果你在 `useEffect` 里因为 state 变了而去 set state，那它本来就该在渲染的时候算出来。",
     },
     deepDive: {
       en: "Most state does not need to be state. If a value can be computed from props and existing state during render, computing it is always correct; copying it into `useState` creates a second source of truth that must be resynchronised, and that resynchronisation is where `useEffect` bugs breed. The rule that removes whole categories of bug: `useEffect` is for synchronising with something outside React — a subscription, the document title, a network request — not for reacting to your own state changing.",
@@ -1050,6 +1126,10 @@ export const entries: Entry[] = [
       en: "Components run on the server by default and stream HTML down; only the pieces that need interactivity ship JavaScript to the browser. The payoff is a page that is fast and indexable on first load. The cost is a new boundary you must hold in your head — what runs where, and what can cross.",
       zh: "组件默认在服务端运行并流式下发 HTML，只有真正需要交互的那部分才把 JavaScript 送到浏览器。回报是首屏又快又可被索引。代价是你脑子里得多装一条边界 —— 什么在哪边跑，以及什么能跨过去。",
     },
+    oneLiner: {
+      en: "`'use client'` marks an entry point, not a leaf — everything imported below it ships to the browser too.",
+      zh: "`'use client'` 标记的是入口，不是叶子 —— 它下面 import 的一切也会一起发到浏览器。",
+    },
     deepDive: {
       en: "`'use client'` marks an entry point, not a leaf. Everything imported below that file joins the client bundle too, so one `'use client'` near the top of a tree quietly ships the whole subtree to the browser and undoes the reason you chose this framework. The pattern that keeps it honest is to push the directive as far down as possible and pass server-rendered content in as `children` — a client component can wrap server-rendered children without turning them into client components.",
       zh: "`'use client'` 标记的是一个入口，不是一个叶子。那个文件往下 import 的所有东西也会一起进客户端 bundle，所以在树顶附近写一个 `'use client'`，会悄悄把整棵子树送到浏览器，把你选这个框架的理由抵消掉。让它保持诚实的做法是把这条指令尽量往下推，并把服务端渲染的内容作为 `children` 传进去 —— 一个客户端组件可以包裹服务端渲染的 children，而不会把它们变成客户端组件。",
@@ -1104,6 +1184,10 @@ export const entries: Entry[] = [
       en: "A token is a named decision — `color.danger`, `space.4` — rather than a raw value scattered through the code. Once the name is the interface, dark mode, rebrands and density modes become a matter of swapping the values underneath instead of hunting hex codes across a hundred files.",
       zh: "一个 token 是一个有名字的决策 —— `color.danger`、`space.4` —— 而不是散落在代码各处的字面值。一旦名字成为接口，暗色模式、品牌换新、紧凑模式就变成了换掉底下那层值的事，而不是在一百个文件里翻十六进制色号。",
     },
+    oneLiner: {
+      en: "Name by role, not appearance — `color.danger`, never `red-500`, or dark mode will come and find you.",
+      zh: "按角色命名，不按外观 —— 叫 `color.danger`，绝不叫 `red-500`，否则暗色模式迟早会来找你。",
+    },
     deepDive: {
       en: "Two layers, and skipping the split is the mistake. The primitive layer is the palette — `blue.600`, `gray.100` — and it describes appearance. The semantic layer is `color.text.danger` or `color.surface.raised`, and it describes role. Components only ever reference the semantic layer, so a theme swap repoints semantics at different primitives and nothing else changes. A component that reaches straight for `red.500` has hardcoded a look, and it will be the one thing that stays bright red in dark mode.",
       zh: "两层，而跳过这个拆分就是那个错误。primitive 层是调色板 —— `blue.600`、`gray.100` —— 它描述外观。semantic 层是 `color.text.danger` 或 `color.surface.raised`，它描述角色。组件只引用 semantic 层，于是换主题就是把 semantic 重新指向不同的 primitive，其余什么都不用改。一个直接去拿 `red.500` 的组件是把外观写死了，它会成为暗色模式下唯一还亮着大红色的那个东西。",
@@ -1157,6 +1241,10 @@ export const entries: Entry[] = [
       en: "Tokens plus components plus the written rules for when to use which. The hard part was never building the button — it is the governance: who approves a new variant, how a change rolls out, and what stops each team from quietly forking their own copy.",
       zh: "Token 加组件，再加上「什么时候该用哪个」的成文规则。难的从来不是把按钮做出来 —— 难的是治理：谁批准新的变体、变更怎么推广，以及靠什么阻止每个团队悄悄 fork 一份自己的。",
     },
+    oneLiner: {
+      en: "The metric is adoption, not component count. Forty components with three teams quietly maintaining their own buttons is a failed system.",
+      zh: "指标是采纳率，不是组件数量。四十个组件，同时三个团队在偷偷维护自己的按钮 —— 这套系统是失败的。",
+    },
     deepDive: {
       en: "The health metric is adoption, not component count, and the two often move in opposite directions. Teams fork when the system is slower to change than their deadline — so the fix is almost never stricter rules, it is a shorter path from 'I need a variant' to 'it shipped'. A system with forty components and three teams quietly maintaining their own buttons has failed; one with twelve components that everyone actually imports has not.",
       zh: "健康度指标是采纳率，不是组件数量，而这两者经常朝相反方向走。团队去 fork，是因为这套系统改起来比他们的 deadline 还慢 —— 所以解法几乎从来不是更严的规矩，而是把「我需要一个变体」到「它上线了」的路径缩短。一个有四十个组件、同时有三个团队在偷偷维护自己按钮的系统是失败的；一个只有十二个组件但所有人真的在 import 的系统不是。",
@@ -1201,6 +1289,10 @@ export const entries: Entry[] = [
     description: {
       en: "Semantic HTML, keyboard reachability, sufficient contrast, and labels a screen reader can announce. Almost all of it is free if you use the right element and expensive if you retrofit it — a `div` with a click handler needs four extra attributes to do what a `button` did for nothing.",
       zh: "语义化 HTML、键盘可达、足够的对比度，以及读屏软件念得出来的标签。只要用对元素，这些几乎都是免费的；等到事后补救就很贵 —— 一个挂了 click 的 `div`，要额外加四个属性，才能做到 `button` 白送的事。",
+    },
+    oneLiner: {
+      en: "Automated checkers find maybe a third of it. Unplug the mouse and walk your own main flow — the rest shows up in a minute.",
+      zh: "自动检查工具大概能查出三分之一。拔掉鼠标，把自己产品的主流程走一遍 —— 剩下的一分钟内就会现形。",
     },
     deepDive: {
       en: "Automated checkers find perhaps a third of real problems, and knowing which third keeps you honest. Contrast, missing alt text and unlabelled inputs are detectable by a machine. Whether the focus order matches the visual order, whether a modal traps focus, whether an alt text is useful rather than merely present — those need a person with a keyboard. The cheapest habit worth building: unplug the mouse and complete your own main flow. Most of what is broken becomes obvious within a minute.",
@@ -1255,6 +1347,10 @@ export const entries: Entry[] = [
     description: {
       en: "Multiplayer design in the browser, but the part that matters to engineers is that components, variants and auto-layout map closely onto how the front-end is actually built. When the file is structured like the code, handoff stops being a translation step.",
       zh: "浏览器里的多人协作设计工具，但对工程师真正重要的是：component、variant 和 auto-layout 和前端实际的搭法高度对应。当设计文件的结构和代码一致时，交付就不再是一次翻译了。",
+    },
+    oneLiner: {
+      en: "The mockup is one state at one width. What does it look like empty, mid-load, errored, at 200% text zoom?",
+      zh: "稿子是一个宽度下的一个状态。空的时候长什么样？加载中呢？报错呢？文字放大到 200% 呢？",
     },
     deepDive: {
       en: "A mockup is one state of one screen at one width, and shipped software is the full cross-product of states. The gap between them is where handoff arguments live: what does this look like empty, mid-load, with an error, with a name forty characters long, at 320px, at 200% text zoom? None of that is Figma's fault — it is simply not in the artefact. The teams that ship cleanly agree upfront that the mockup covers the happy path and that the other states get decided together, not discovered in review.",

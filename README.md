@@ -108,10 +108,17 @@ number sets display order and must be unique; everything else follows the
 `Entry` type in [`lib/types.ts`](lib/types.ts). Setting `evolvesFrom` to another
 entry's id puts both of them in the same evolution line automatically.
 
-Each entry needs five pieces of prose, and they answer different questions:
-`tagline` (one line), `description` (what it is), `lore` (where it came from),
-`deepDive` (how it actually works and what that costs), and `pitfall` (the
-specific way people get it wrong). Optionally `clashes` — see above.
+Each entry needs six pieces of prose, and they answer different questions:
+`tagline` (one line), `description` (what it is), `oneLiner` (what to say),
+`lore` (where it came from), `deepDive` (how it actually works and what that
+costs), and `pitfall` (the specific way people get it wrong). Optionally
+`clashes` — see above.
+
+One rule for `oneLiner`: it has to carry something specific — a mechanism, a
+limit, the question a practitioner asks first. "Kafka is good for streaming" is
+worthless; "ordering is per partition, never per topic, so we key by user id and
+promise nothing across users" is the sentence that shows you have run it.
+Generic wisdom signals nothing, which is the entire test.
 
 One rule for `lore`, and it is the whole point of the field: **the story has to
 encode the property you need to remember.** Kafka is named after a novelist
@@ -140,6 +147,7 @@ app/
     layout.tsx           header, footer, language switch
     page.tsx             the dex grid
     dex/[id]/page.tsx    one entry
+    lines/page.tsx       one-liner cheat sheet
     gacha/page.tsx       booster pack opening
     matrix/page.tsx      the type chart
     battle/page.tsx      scenario quiz

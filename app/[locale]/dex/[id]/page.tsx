@@ -105,6 +105,19 @@ export default async function EntryPage({
           <p className="text-base leading-relaxed">{entry.description[locale]}</p>
         </section>
 
+        {/* The payoff for reading the description, and the most quotable thing
+            on the page — so it gets pulled out rather than buried in prose. */}
+        <section className="card-outline rounded-2xl bg-[hsl(var(--unit)/0.12)] p-5">
+          <h2 className="mb-1 flex items-center gap-2 text-sm font-black uppercase tracking-widest text-muted">
+            <span aria-hidden="true">💬</span>
+            {s("oneLiner")}
+          </h2>
+          <p className="mb-3 text-xs text-muted">{s("oneLinerHint")}</p>
+          <blockquote className="border-l-4 border-black pl-4 text-lg leading-snug font-bold">
+            {entry.oneLiner[locale]}
+          </blockquote>
+        </section>
+
         {/* Sits right after the description: the hook lands before the detail. */}
         <section className="card-outline unit-tint rounded-2xl bg-surface p-5">
           <h2 className="mb-3 flex items-center gap-2 text-sm font-black uppercase tracking-widest text-muted">

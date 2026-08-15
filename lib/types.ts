@@ -60,6 +60,12 @@ export type Entry = {
   tagline: L10n;
   /** The one-paragraph answer to "what is this". */
   description: L10n;
+  /**
+   * The sentence that shows you have actually operated this, rather than read
+   * its docs. It has to carry something specific — a mechanism, a limit, a
+   * question a practitioner would ask — because generic wisdom signals nothing.
+   */
+  oneLiner: L10n;
   /** How it actually works underneath, and what that costs. */
   deepDive: L10n;
   /** The specific way people get this wrong. */

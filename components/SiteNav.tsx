@@ -9,6 +9,7 @@ import type { Locale } from "@/lib/types";
 /** `segment` is the path after `/{locale}`; the dex lives at the root. */
 const sections: { segment: string; label: DictKey; glyph: string }[] = [
   { segment: "", label: "navDex", glyph: "📕" },
+  { segment: "lines", label: "navLines", glyph: "💬" },
   { segment: "gacha", label: "gacha", glyph: "🎴" },
   { segment: "matrix", label: "navMatrix", glyph: "🧮" },
   { segment: "battle", label: "navBattle", glyph: "⚔️" },

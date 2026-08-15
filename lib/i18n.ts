@@ -55,7 +55,24 @@ const dict = {
   baseStats: { en: "Base stats", zh: "种族值" },
   moves: { en: "Moves", zh: "招式" },
   evolution: { en: "Evolution line", zh: "进化链" },
+  oneLiner: { en: "Say this", zh: "说这句" },
+  oneLinerHint: {
+    en: "The sentence that shows you've operated it, not just read the docs.",
+    zh: "证明你真的用过、而不是只读过文档的那句话。",
+  },
   lore: { en: "Where it came from", zh: "它是怎么来的" },
+
+  // One-liner cheat sheet
+  navLines: { en: "Lines", zh: "一句话" },
+  linesTitle: { en: "One-liners", zh: "一句话速查" },
+  linesIntro: {
+    en: "Every card's give-away sentence in one place. Each one carries something specific — a mechanism, a limit, the question a practitioner asks first — because generic wisdom signals nothing.",
+    zh: "把每张卡那句「露底」的话集中在一处。每句都带着具体的东西 —— 一个机制、一个限制、或者内行会先问的那个问题 —— 因为泛泛的道理什么也证明不了。",
+  },
+  linesSearch: { en: "Filter lines…", zh: "筛选…" },
+  linesCopy: { en: "Copy", zh: "复制" },
+  linesCopied: { en: "Copied", zh: "已复制" },
+  linesEmpty: { en: "Nothing matches.", zh: "没有匹配的。" },
   howItWorks: { en: "How it actually works", zh: "它究竟怎么运作" },
   pitfall: { en: "Common pitfall", zh: "常见坑" },
   clashes: { en: "Clashes with", zh: "相克" },

@@ -12,19 +12,22 @@
       "name": "dreambook",
       "runtimeExecutable": "node",
       "runtimeArgs": ["realize-your-dream/serve.js"],
-      "port": 4173
+      "port": 4173,
+      "autoPort": true
     },
     {
       "name": "judgment-call",
       "runtimeExecutable": "node",
       "runtimeArgs": ["judgment-call/serve.js"],
-      "port": 4321
+      "port": 4321,
+      "autoPort": true
     },
     {
       "name": "unsolved",
       "runtimeExecutable": "node",
       "runtimeArgs": ["unsolved/serve.js"],
-      "port": 4322
+      "port": 4322,
+      "autoPort": true
     }
   ]
 }

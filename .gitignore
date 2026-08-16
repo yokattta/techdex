@@ -40,11 +40,19 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Unrelated sibling projects that keep their own git repos in this folder.
-# Add a line here if another one appears; eslint.config.mjs detects them itself.
-/realize-your-dream/
-/judgment-call/
-/unsolved/
+# This folder collects unrelated projects, each with its own git repo, and they
+# keep appearing. Listing them one by one lost that race once already, so:
+# ignore every top-level directory by default and opt this project's own back
+# in. A new sibling can no longer be swept into a commit.
+# Adding a real top-level directory to this project means adding a line here.
+/*/
+!/app/
+!/components/
+!/lib/
+!/public/
+!/scripts/
+!/.github/
+!/.claude/
 
 # per-machine Claude Code settings
 .claude/settings.local.json

@@ -53,6 +53,31 @@ node scripts/generate-logos.mjs
 The marks themselves remain trademarks of their respective owners and appear
 here nominatively, to identify the products described.
 
+## Generations
+
+`/[locale]/eras` places every card on a timeline. An entry's generation is
+**when it became something a working engineer had to know**, not when it was
+invented — Postgres is from 1986 and CAP was proved in 2002, and neither
+mattered to most people then.
+
+| | | |
+| --- | --- | --- |
+| Gen 1 | Monolith | one machine you could physically point at |
+| Gen 2 | Cloud | capacity became a dial, so distribution became everyone's problem |
+| Gen 3 | Containers | the artifact started carrying its own environment |
+| Gen 4 | Managed | running things became someone else's job; choosing became yours |
+| Gen 5 | LLM-native | output stopped being a function of input |
+
+The test for whether a boundary is real: if nothing about the job changed, it
+isn't a generation, it's a fashion.
+
+`status` is the second axis — `rising` or `settled`, answering a question a
+learner actually has: *will what I learn here still be true in five years?*
+Postgres knowledge keeps. RAG tooling knowledge may not.
+
+The timeline currently shows one entry in Gen 5, and the page says so rather
+than padding it out. A visible gap is a to-do list.
+
 ## Type chart
 
 `/[locale]/matrix` is a 6×6 grid read in one direction only: **a decision in the
@@ -148,6 +173,7 @@ app/
     page.tsx             the dex grid
     dex/[id]/page.tsx    one entry
     lines/page.tsx       one-liner cheat sheet
+    eras/page.tsx        the generation timeline
     gacha/page.tsx       booster pack opening
     matrix/page.tsx      the type chart
     battle/page.tsx      scenario quiz
@@ -156,6 +182,7 @@ lib/
   types.ts               Entry / Unit / Clash / L10n types
   units.ts               the six units and their colours
   entries.ts             all content, plus evolution and clash resolution
+  eras.ts                the five generations and what each one changed
   matrix.ts              the 6x6 coupling grid and its reasons
   battles.ts             scenarios, options and verdicts
   logos.ts               generated brand marks — see scripts/generate-logos.mjs

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { rarityOf } from "@/lib/entries";
 import { unitMap } from "@/lib/units";
 import { BrandTile } from "./BrandMark";
+import { EraBadge, StatusBadge } from "./EraBadge";
 import { RarityStars } from "./RarityStars";
 import { UnitBadge } from "./UnitBadge";
 import type { Entry, Locale } from "@/lib/types";
@@ -49,6 +50,8 @@ export function DexCard({
         {entry.units.map((u) => (
           <UnitBadge key={u} unit={u} locale={locale} />
         ))}
+        <EraBadge era={entry.era} locale={locale} />
+        <StatusBadge status={entry.status} locale={locale} />
       </div>
     </Link>
   );

@@ -11,6 +11,7 @@ const sections: { segment: string; label: DictKey; glyph: string }[] = [
   { segment: "", label: "navDex", glyph: "📕" },
   { segment: "lines", label: "navLines", glyph: "💬" },
   { segment: "gacha", label: "gacha", glyph: "🎴" },
+  { segment: "eras", label: "navEras", glyph: "🕰️" },
   { segment: "matrix", label: "navMatrix", glyph: "🧮" },
   { segment: "battle", label: "navBattle", glyph: "⚔️" },
 ];

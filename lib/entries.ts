@@ -42,6 +42,8 @@ export const entries: Entry[] = [
       en: "Solomon Hykes first showed Docker in a five-minute lightning talk at PyCon in 2013, when it was still an internal tool at dotCloud, a company that was running out of runway. Five minutes was enough because the whole demo was watching things start instantly — which is the property.",
       zh: "Solomon Hykes 第一次公开 Docker，是 2013 年 PyCon 上一个五分钟的闪电演讲 —— 当时它还只是 dotCloud 这家快烧完钱的公司的内部工具。五分钟够用，是因为整个演示就是看着东西瞬间起来 —— 而那正是它的性质。",
     },
+    era: 3,
+    status: "settled",
     stats: { difficulty: 35, ubiquity: 95, impact: 90, ops: 30 },
     moves: [
       {
@@ -107,6 +109,8 @@ export const entries: Entry[] = [
       en: "Greek for 'helmsman'. Its ancestor inside Google was Borg, and the project's original codename was Seven — after Seven of Nine, the Star Trek character freed from the Borg collective. The logo has seven spokes.",
       zh: "希腊语里的「舵手」。它在 Google 内部的前身叫 Borg，而项目最初的代号是 Seven —— 取自《星际迷航》里那个从 Borg 集合体中被解放出来的角色 Seven of Nine。logo 上正好七根辐条。",
     },
+    era: 3,
+    status: "settled",
     stats: { difficulty: 88, ubiquity: 78, impact: 92, ops: 85 },
     moves: [
       {
@@ -180,6 +184,8 @@ export const entries: Entry[] = [
       en: "Named after terraforming: turning a barren planet into a habitable one. That is literally the job — you write down the planet you want, and something else spends its time dragging reality toward it.",
       zh: "名字来自科幻里的「地球化改造」：把一颗荒芜的行星改造成可居住的。这就是它字面上的工作 —— 你把想要的星球写下来，然后由别的东西花时间把现实往那儿拽。",
     },
+    era: 3,
+    status: "settled",
     stats: { difficulty: 55, ubiquity: 70, impact: 75, ops: 45 },
     moves: [
       {
@@ -235,6 +241,8 @@ export const entries: Entry[] = [
       en: "Grady Booch coined 'continuous integration' in 1991, but he meant once a day. Extreme Programming pushed it to every commit — and frequency turned out to be the whole variable. The idea did not change; the interval did.",
       zh: "Grady Booch 在 1991 年造了 continuous integration 这个词，但他说的是「每天一次」。是极限编程把它推到了「每次提交」—— 而频率才是那个真正起作用的变量。想法没变，变的是间隔。",
     },
+    era: 2,
+    status: "settled",
     stats: { difficulty: 40, ubiquity: 90, impact: 82, ops: 35 },
     moves: [
       {
@@ -292,6 +300,8 @@ export const entries: Entry[] = [
       en: "Jay Kreps at LinkedIn named it after Franz Kafka, on the grounds that it was 'a system optimized for writing'. A novelist's name on an append-only log: the name is the mnemonic.",
       zh: "LinkedIn 的 Jay Kreps 用弗朗茨·卡夫卡给它命名，理由是「这是一个为写入优化的系统」。用一个作家的名字，装一份只能追加的日志 —— 名字本身就是助记符。",
     },
+    era: 2,
+    status: "settled",
     stats: { difficulty: 72, ubiquity: 74, impact: 88, ops: 78 },
     moves: [
       {
@@ -359,6 +369,8 @@ export const entries: Entry[] = [
       en: "Michael Stonebraker built Ingres at Berkeley, then called the follow-up POSTGRES — literally 'post-Ingres'. Forty years later the sequel is everywhere and the original is a footnote.",
       zh: "Michael Stonebraker 在伯克利做完 Ingres，把下一个项目叫 POSTGRES —— 字面意思就是「Ingres 之后」。四十年过去，续集到处都是，原作成了脚注。",
     },
+    era: 1,
+    status: "settled",
     stats: { difficulty: 45, ubiquity: 92, impact: 90, ops: 50 },
     moves: [
       {
@@ -423,6 +435,8 @@ export const entries: Entry[] = [
       en: "Short for REmote DIctionary Server. Salvatore Sanfilippo wrote it for his own real-time analytics product because he needed something faster than disk — and because a dictionary was all he actually needed.",
       zh: "REmote DIctionary Server 的缩写。Salvatore Sanfilippo 是为自己那个实时分析产品写的，因为他需要比磁盘快的东西 —— 也因为他真正需要的就只是一本字典。",
     },
+    era: 2,
+    status: "settled",
     stats: { difficulty: 30, ubiquity: 85, impact: 72, ops: 40 },
     moves: [
       {
@@ -478,6 +492,8 @@ export const entries: Entry[] = [
       en: "Igor Sysoev started it in 2002 against the C10K problem: how does one machine hold ten thousand connections at once? The answer was to stop giving each connection a thread, and that answer is still the whole design.",
       zh: "Igor Sysoev 在 2002 年开始写它，为了对付 C10K 问题：一台机器怎么同时扛住一万个连接？答案是别再给每个连接分配一个线程 —— 而这个答案至今仍是它的全部设计。",
     },
+    era: 1,
+    status: "settled",
     stats: { difficulty: 38, ubiquity: 88, impact: 70, ops: 32 },
     moves: [
       {
@@ -535,6 +551,8 @@ export const entries: Entry[] = [
       en: "Rudolf Kálmán defined the word in control theory in 1960: can you infer a system's internal state from its external outputs? Software borrowed it around 2016 without changing a word of the definition.",
       zh: "Rudolf Kálmán 1960 年在控制论里定义了这个词：你能不能从系统的外部输出推断出它的内部状态？软件行业 2016 年前后把它借了过来，定义一个字都没改。",
     },
+    era: 4,
+    status: "rising",
     stats: { difficulty: 60, ubiquity: 68, impact: 86, ops: 55 },
     moves: [
       {
@@ -591,6 +609,8 @@ export const entries: Entry[] = [
       en: "Eric Brewer floated it as a conjecture in a conference keynote in 2000. Two years later Seth Gilbert and Nancy Lynch at MIT proved it, which is how a hunch from a talk became a theorem you are not allowed to argue with.",
       zh: "Eric Brewer 在 2000 年一场大会主题演讲上把它作为一个猜想抛了出来。两年后 MIT 的 Seth Gilbert 和 Nancy Lynch 证明了它 —— 一个演讲上的直觉，就这样变成了你没法反驳的定理。",
     },
+    era: 2,
+    status: "settled",
     stats: { difficulty: 55, ubiquity: 62, impact: 80, ops: 10 },
     moves: [
       {
@@ -639,6 +659,8 @@ export const entries: Entry[] = [
       en: "Amazon's Werner Vogels popularised it after the Dynamo paper, and the shopping cart is the canonical example: better that you briefly see a stale item than that 'add to cart' ever refuses to work.",
       zh: "Amazon 的 Werner Vogels 在 Dynamo 论文之后把它推广开来，而购物车是那个经典例子：宁可让你短暂地看到一件旧商品，也不能让「加入购物车」这个按钮有一刻点不动。",
     },
+    era: 2,
+    status: "settled",
     stats: { difficulty: 65, ubiquity: 70, impact: 78, ops: 20 },
     moves: [
       {
@@ -688,6 +710,8 @@ export const entries: Entry[] = [
       en: "Benjamin Peirce coined 'idempotent' in 1870 for algebraic elements that equal themselves when squared. A hundred and fifty years later Stripe turned it into an HTTP header — same property, applied to a retry.",
       zh: "Benjamin Peirce 在 1870 年造了 idempotent 这个词，用来指「自乘等于自身」的代数元素。一百五十年后Stripe 把它变成了一个 HTTP header —— 同一条性质，只是拿去对付重试。",
     },
+    era: 3,
+    status: "settled",
     stats: { difficulty: 42, ubiquity: 66, impact: 84, ops: 15 },
     moves: [
       {
@@ -738,6 +762,8 @@ export const entries: Entry[] = [
       en: "The 2017 paper is called 'Attention Is All You Need' — eight authors at Google, and a title riffing on the Beatles. An entire field ended up built on top of that joke.",
       zh: "2017 年那篇论文的标题是《Attention Is All You Need》—— 八个 Google 作者，标题在玩 Beatles 的《All You Need Is Love》。后来整个领域都建在这个玩笑上面。",
     },
+    era: 4,
+    status: "settled",
     stats: { difficulty: 85, ubiquity: 80, impact: 96, ops: 40 },
     moves: [
       {
@@ -796,6 +822,8 @@ export const entries: Entry[] = [
       en: "word2vec became famous for one subtraction: king − man + woman ≈ queen. Meaning turned into coordinates, so you can do arithmetic on it — that single line is enough to remember what an embedding is.",
       zh: "word2vec 出名靠的是一个减法：king − man + woman ≈ queen。含义变成了坐标，于是可以对它做算术 —— 就这一行，足够记住 embedding 是什么了。",
     },
+    era: 4,
+    status: "rising",
     stats: { difficulty: 50, ubiquity: 82, impact: 85, ops: 35 },
     moves: [
       {
@@ -852,6 +880,8 @@ export const entries: Entry[] = [
       en: "The acronym comes from a 2020 Facebook AI paper. Its first author, Patrick Lewis, has said publicly that had he known it would catch on, he would have picked a better-sounding name.",
       zh: "这个缩写来自 2020 年 Facebook AI 的一篇论文。第一作者 Patrick Lewis 后来公开说过，早知道它会这么火，当初就取个好听点的名字了。",
     },
+    era: 5,
+    status: "rising",
     stats: { difficulty: 58, ubiquity: 76, impact: 88, ops: 50 },
     moves: [
       {
@@ -917,6 +947,8 @@ export const entries: Entry[] = [
       en: "Its ancestor is transfer learning in computer vision: take a model trained on ImageNet and replace only the last layer. The core has never changed — you are borrowing learned representations, not knowledge.",
       zh: "它的祖宗是计算机视觉里的迁移学习：拿一个在 ImageNet 上训好的模型，只换掉最后一层。核心从来没变过 —— 你借的是已经学会的表示，不是知识。",
     },
+    era: 4,
+    status: "rising",
     stats: { difficulty: 78, ubiquity: 48, impact: 66, ops: 65 },
     moves: [
       {
@@ -967,6 +999,8 @@ export const entries: Entry[] = [
       en: "Released on 1 April 2010 as an April Fools' joke: Armin Ronacher built a 'single-file microframework' to mock the microframework craze. The joke was too popular, so he had to go and make it real.",
       zh: "2010 年 4 月 1 日作为愚人节玩笑发布：Armin Ronacher 做了个「单文件微框架」来嘲讽当时的微框架热潮。玩笑太受欢迎了，他只好回过头去把它做成真的。",
     },
+    era: 2,
+    status: "settled",
     stats: { difficulty: 22, ubiquity: 72, impact: 62, ops: 25 },
     moves: [
       {
@@ -1022,6 +1056,8 @@ export const entries: Entry[] = [
       en: "Sebastián Ramírez did not write it from scratch — he glued Starlette (async) to Pydantic (type validation). All of FastAPI's magic is one idea: make the type annotations you were already writing do actual work.",
       zh: "Sebastián Ramírez 并不是从零写的 —— 他把 Starlette（异步）和 Pydantic（类型校验）粘在了一起。FastAPI 的全部魔法其实只有一个想法：让你本来就在写的类型标注真的干活。",
     },
+    era: 4,
+    status: "rising",
     stats: { difficulty: 40, ubiquity: 70, impact: 74, ops: 30 },
     moves: [
       {
@@ -1078,6 +1114,8 @@ export const entries: Entry[] = [
       en: "Jordan Walke's prototype at Facebook was called FaxJS, built for the ads system — a place with more state than imperative DOM code could survive. When it was open-sourced in 2013, the community's first reaction was to hate JSX.",
       zh: "Jordan Walke 在 Facebook 的原型叫 FaxJS，最初是为广告系统做的 —— 一个状态多到命令式 DOM 代码已经撑不住的地方。2013 年开源时，社区的第一反应是讨厌 JSX。",
     },
+    era: 3,
+    status: "settled",
     stats: { difficulty: 48, ubiquity: 94, impact: 90, ops: 20 },
     moves: [
       {
@@ -1142,6 +1180,8 @@ export const entries: Entry[] = [
       en: "Shipped by ZEIT (now Vercel) in 2016 to fix one thing: React apps that showed a blank screen first and could not be crawled. Server rendering was the starting point, not a feature bolted on later.",
       zh: "2016 年由 ZEIT（现在的 Vercel）发布，只为解决一件事：React 应用首屏白屏、搜索引擎抓不到。服务端渲染是它的起点，不是后来加上去的功能。",
     },
+    era: 4,
+    status: "rising",
     stats: { difficulty: 62, ubiquity: 80, impact: 82, ops: 35 },
     moves: [
       {
@@ -1200,6 +1240,8 @@ export const entries: Entry[] = [
       en: "Jina Anne coined the term at Salesforce around 2014, because one set of design decisions had to ship to web, iOS and Android at once. Cross-platform is why it exists — which is why it was never just CSS variables.",
       zh: "这个词是 Salesforce 的 Jina Anne 在 2014 年前后造的，起因是同一套设计决策要同时输出到 web、iOS 和 Android。跨平台是它诞生的原因 —— 所以它从来就不只是 CSS 变量。",
     },
+    era: 4,
+    status: "rising",
     stats: { difficulty: 25, ubiquity: 64, impact: 70, ops: 15 },
     moves: [
       {
@@ -1257,6 +1299,8 @@ export const entries: Entry[] = [
       en: "Its ancestor is the 1975 NASA Graphics Standards Manual: a thick binder specifying the logo, the typeface, the spacing, and how to apply them to a rocket. Governance was the hard part then too.",
       zh: "它的祖先是 1975 年的《NASA Graphics Standards Manual》—— 一本厚册子，规定了标志、字体、间距，以及这些东西怎么用在火箭上。那时候难的部分也是治理。",
     },
+    era: 4,
+    status: "settled",
     stats: { difficulty: 55, ubiquity: 58, impact: 76, ops: 45 },
     moves: [
       {
@@ -1306,6 +1350,8 @@ export const entries: Entry[] = [
       en: "Remember the curb cut: the dip in the pavement cut for wheelchairs, which ended up used most by people with strollers, suitcases and skateboards. Design for the edge case and the benefit lands on everyone.",
       zh: "记住「路缘坡」：为轮椅在人行道上切开的那个缺口，最后用得最多的是推婴儿车的、拖行李箱的和踩滑板的人。为边缘情况设计，收益落在所有人身上。",
     },
+    era: 1,
+    status: "settled",
     stats: { difficulty: 44, ubiquity: 60, impact: 88, ops: 20 },
     moves: [
       {
@@ -1364,6 +1410,8 @@ export const entries: Entry[] = [
       en: "Dylan Field and Evan Wallace took a Thiel Fellowship in 2012 to drop out and bet that WebGL could run a real design tool in a browser. It took them four years to ship the first version.",
       zh: "Dylan Field 和 Evan Wallace 在 2012 年拿了 Thiel Fellowship 辍学，赌的是 WebGL 能在浏览器里跑起一个真正的设计工具。他们做了四年才发布第一个版本。",
     },
+    era: 4,
+    status: "settled",
     stats: { difficulty: 30, ubiquity: 86, impact: 68, ops: 10 },
     moves: [
       {

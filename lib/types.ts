@@ -1,3 +1,5 @@
+import type { EraId, Status } from "./eras";
+
 export const locales = ["en", "zh"] as const;
 export type Locale = (typeof locales)[number];
 
@@ -75,6 +77,13 @@ export type Entry = {
    * that doesn't encode a property of the thing has no business being here.
    */
   lore: L10n;
+  /**
+   * The generation this became something a working engineer had to know — not
+   * when it was invented. See lib/eras.ts.
+   */
+  era: EraId;
+  /** Whether the ground under it is still moving. */
+  status: Status;
   /** 0–100, rendered as species-stat bars. */
   stats: Stats;
   moves: Move[];

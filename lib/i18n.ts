@@ -62,6 +62,21 @@ const dict = {
   },
   lore: { en: "Where it came from", zh: "它是怎么来的" },
 
+  // Eras
+  navEras: { en: "Eras", zh: "世代" },
+  erasTitle: { en: "Generations", zh: "世代" },
+  erasIntro: {
+    en: "An entry's generation is when it became something a working engineer had to know — not when it was invented. Postgres is from 1986 and CAP was proved in 2002; neither mattered to most people then. Each boundary is one shift in what you got to stop thinking about.",
+    zh: "一个条目的世代，是它变成「上班的人不得不懂」的那一刻 —— 不是它被发明的时候。Postgres 是 1986 年的，CAP 2002 年就被证明了，但那时它们对大多数人都不重要。每一条世代边界，都是一次「你从此可以不用再想某件事」的转变。",
+  },
+  erasShift: { en: "What changed", zh: "变了什么" },
+  erasCount: { en: "entries", zh: "条" },
+  erasGap: {
+    en: "Thin, and that's the honest state of it: the dex under-covers the era we're actually in. This is the queue.",
+    zh: "很单薄，而这就是它诚实的状态：图鉴对我们正身处的这个世代覆盖不足。这里就是待办清单。",
+  },
+  statusLabel: { en: "Ground", zh: "地基" },
+
   // One-liner cheat sheet
   navLines: { en: "Lines", zh: "一句话" },
   linesTitle: { en: "One-liners", zh: "一句话速查" },

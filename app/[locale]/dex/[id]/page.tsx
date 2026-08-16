@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { BrandTile } from "@/components/BrandMark";
 import { CaughtButton } from "@/components/CaughtButton";
+import { EraBadge, StatusBadge } from "@/components/EraBadge";
 import { RarityStars, rarityLabel } from "@/components/RarityStars";
 import { StatBars } from "@/components/StatBars";
 import { UnitBadge } from "@/components/UnitBadge";
@@ -83,6 +84,8 @@ export default async function EntryPage({
             {entry.units.map((u) => (
               <UnitBadge key={u} unit={u} locale={locale} />
             ))}
+            <EraBadge era={entry.era} locale={locale} />
+            <StatusBadge status={entry.status} locale={locale} />
           </div>
         </div>
 

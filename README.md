@@ -11,10 +11,10 @@ Every entry belongs to one or two units, the way a Pokémon has one or two types
 | Unit | What lives there |
 | --- | --- |
 | 🚀 DevOps | Docker, Kubernetes, Terraform, CI/CD |
-| 🧠 Model | Transformer, Embeddings, RAG, Fine-tuning |
-| 🏗️ Platform | Kafka, PostgreSQL, Redis, Nginx |
-| 💡 Concept | Observability, CAP Theorem, Idempotency, Eventual Consistency |
-| 🧩 App | Flask, FastAPI, React, Next.js |
+| 🧠 Model | Transformer, Embeddings, RAG, Fine-tuning, Prompt Engineering, Agents, Model Eval |
+| 🏗️ Platform | Kafka, PostgreSQL, Redis, Nginx, Vector Database, Load Balancing, Sharding |
+| 💡 Concept | Observability, CAP Theorem, Idempotency, Eventual Consistency, Caching, Rate Limiting, Backpressure, Guardrails, Hallucination |
+| 🧩 App | Flask, FastAPI, React, Next.js, Pydantic |
 | 🎨 UI / UX | Design Tokens, Design System, Accessibility, Figma |
 
 Entries carry base stats (difficulty, ubiquity, impact, ops cost), "moves" (the
@@ -75,8 +75,9 @@ isn't a generation, it's a fashion.
 learner actually has: *will what I learn here still be true in five years?*
 Postgres knowledge keeps. RAG tooling knowledge may not.
 
-The timeline currently shows one entry in Gen 5, and the page says so rather
-than padding it out. A visible gap is a to-do list.
+The page shows how many entries each generation has and points at the
+thinnest one rather than padding it out. A visible gap is a to-do list — the
+first batch of new entries was written by reading that page.
 
 ## Type chart
 
@@ -102,8 +103,7 @@ content, an `async def` that is slower than the `def` it replaced.
 `/[locale]/gacha` deals five cards, with the last slot reserved for
 rare-or-better so the flips build toward something. Rarity is **derived** from
 `stats.impact`, never authored — a card is rare because the idea is
-load-bearing, not because someone tuned a drop table. It happens to split the
-current 24 entries evenly across ★ / ★★ / ★★★.
+load-bearing, not because someone tuned a drop table.
 
 ## Running it
 

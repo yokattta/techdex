@@ -1,4 +1,16 @@
-@import "tailwindcss";
+/*
+ * `source(none)` turns off Tailwind's automatic source detection and the
+ * @source lines below replace it. This project shares a folder with several
+ * unrelated projects, and auto-detection scans the whole project root — it
+ * picks up their binaries and emits utilities from the garbage it reads out of
+ * them, which then fails to parse as CSS. Listing our own directories is both
+ * the fix and the honest description of where class names actually live.
+ */
+@import "tailwindcss" source(none);
+
+@source "../app";
+@source "../components";
+@source "../lib";
 
 /*
  * Cartoon / trading-card look: thick outlines, hard offset shadows, no blur.

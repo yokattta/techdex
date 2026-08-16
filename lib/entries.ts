@@ -1430,6 +1430,770 @@ export const entries: Entry[] = [
       },
     ],
   },
+  // ── Platform, continued ───────────────────────────────────────────────────
+  {
+    id: "vector-database",
+    dex: 25,
+    units: ["platform", "model"],
+    name: "Vector Database",
+    glyph: "🗃️",
+    tagline: {
+      en: "A database whose index is built for 'near', not 'equal'.",
+      zh: "一个索引是为「相近」而不是「相等」建的数据库。",
+    },
+    description: {
+      en: "A traditional index answers 'which rows hold this value'. A vector index answers 'which rows are closest to this point in a thousand-dimensional space' — a different question that needs a different structure. Approximate nearest-neighbour search trades exactness for speed, and the approximation is not a caveat, it is the product.",
+      zh: "传统索引回答的是「哪些行等于这个值」。向量索引回答的是「哪些行在一千多维空间里离这个点最近」—— 不同的问题，需要不同的结构。近似最近邻检索用精确性换速度，而这个「近似」不是附注，它就是产品本身。",
+    },
+    oneLiner: {
+      en: "What recall are we running at? Approximate search returns plausible neighbours whether or not they're the right ones.",
+      zh: "我们的 recall 设成多少？近似检索返回的邻居看起来都合理，不管它们是不是对的那几个。",
+    },
+    deepDive: {
+      en: "The word doing the work is *approximate*. Exact nearest-neighbour over millions of high-dimensional vectors means comparing against all of them, so every production index gives that up: HNSW builds a navigable graph you descend toward the query, IVF splits the space into cells and searches only a few. Both expose a recall knob — search wider and you find more of the true neighbours, slower. This is why 'the vector database returned the wrong thing' is usually a recall setting rather than a bug, and why retrieval quality cannot be evaluated without knowing what recall you configured.",
+      zh: "起作用的那个词是「近似」。在几百万个高维向量上做精确最近邻，意味着要和所有向量比一遍，所以每个生产级索引都放弃了这一点：HNSW 建一张可导航的图，你朝查询点一路往下走；IVF 把空间切成格子，只搜其中几个。两者都暴露一个 recall 旋钮 —— 搜得更宽就能找回更多真正的近邻，代价是更慢。所以「向量库返回错了」通常是 recall 的设置问题而不是 bug，也所以不知道自己配的 recall 是多少，就没法评估检索质量。",
+    },
+    pitfall: {
+      en: "Treating recall as a fixed property of the engine. Defaults are tuned for demo-sized data; at your scale the same settings may return the true nearest neighbour only four times in five — and that missing fifth is invisible, because what comes back still looks like reasonable neighbours.",
+      zh: "把 recall 当成引擎的固有属性。默认值是按演示规模的数据调的；在你的规模上，同样的设置可能五次里只有四次返回真正的最近邻 —— 而缺掉的那一次是看不见的，因为回来的东西看上去仍然是合理的邻居。",
+    },
+    lore: {
+      en: "The algorithms are older than the hype: HNSW was published in 2016 and Facebook open-sourced FAISS in 2017, both aimed at image search. The 2023 wave did not invent the index — it gave one that already worked a very large customer.",
+      zh: "算法比热潮老得多：HNSW 2016 年发表，Facebook 2017 年开源 FAISS，两者最初都是冲着图像检索去的。2023 年那波浪潮并没有发明这个索引 —— 它只是给一个早就能用的东西送来了一个非常大的客户。",
+    },
+    era: 5,
+    status: "rising",
+    stats: { difficulty: 55, ubiquity: 62, impact: 74, ops: 58 },
+    moves: [
+      {
+        name: "HNSW",
+        effect: {
+          en: "A navigable graph you walk downhill toward the query — the default index in most engines.",
+          zh: "一张可导航的图，你朝着查询点一路往下走 —— 多数引擎的默认索引。",
+        },
+      },
+      {
+        name: "Recall knob",
+        effect: {
+          en: "Search wider for more of the true neighbours, at proportional latency.",
+          zh: "搜得更宽就能找回更多真正的近邻，延迟同比上升。",
+        },
+      },
+      {
+        name: "Metadata filter",
+        effect: {
+          en: "Restricts candidates before or during search — and pre- versus post-filtering changes what you get.",
+          zh: "在检索前或检索中限制候选集 —— 而先过滤还是后过滤，拿到的结果不一样。",
+        },
+      },
+    ],
+    clashes: [
+      {
+        with: "postgresql",
+        note: {
+          en: "pgvector puts vector search inside the database you already run, sharing its transactions, backups and access control. A dedicated engine wins on scale and on index tuning — but 'we need a vector database' is usually said at a scale where one more column would have done, and the price is a second store that must be kept in step with the first.",
+          zh: "pgvector 把向量检索放进你本来就在跑的数据库，共用它的事务、备份和权限。专用引擎在规模和索引调优上更强 —— 但「我们需要一个向量数据库」这句话，通常是在「加一列就够了」的规模上说出来的，而代价是多一个必须和主库保持同步的存储。",
+        },
+      },
+    ],
+  },
+  {
+    id: "load-balancing",
+    dex: 26,
+    units: ["platform", "concept"],
+    name: "Load Balancing",
+    glyph: "🔀",
+    tagline: {
+      en: "Spreading work across machines that are not equally able to do it.",
+      zh: "把工作分给一群并不同样有能力做它的机器。",
+    },
+    description: {
+      en: "Something in front of your servers decides which one handles each request. The naive picture is even distribution. The useful picture is that your backends differ — one is still warming up, one is on older hardware, one is about to fall over — and a good algorithm notices before your users do.",
+      zh: "在你的服务器前面，有个东西决定每个请求交给谁。天真的图景是「平均分配」。有用的图景是：你的后端本来就不一样 —— 一台还在预热、一台跑在旧硬件上、一台快撑不住了 —— 而好的算法会在用户之前发现这件事。",
+    },
+    oneLiner: {
+      en: "What does the health check actually check? If it only proves the port is open, you'll keep routing into an exhausted connection pool.",
+      zh: "健康检查到底在查什么？如果它只证明端口开着，你会一直把流量送进一个已经耗尽的连接池。",
+    },
+    deepDive: {
+      en: "Round-robin assumes every request costs the same, which stops being true the moment one endpoint is slow. Least-connections adapts by sending work to whoever has the least in flight, a decent proxy for spare capacity. The subtle failure is the health check itself: too shallow and it passes while the app cannot reach its database; too deep and one slow dependency marks the entire fleet unhealthy and takes you down without a single process crashing. Session affinity is the other trap — pinning a user to one backend is easy, and it converts that backend's death into a visible logout.",
+      zh: "轮询假设每个请求成本相同，而只要有一个 endpoint 变慢，这个假设就不成立了。最少连接数则会把工作发给在途请求最少的那台，这是对「剩余容量」一个不错的近似。隐蔽的失败出在健康检查本身：查得太浅，应用连不上数据库它也照样通过；查得太深，一个慢依赖就会把整个集群标成不健康，一个进程都没崩你就下线了。另一个陷阱是会话粘性 —— 把用户固定到一台后端很容易，而它会把那台后端的死亡变成用户眼里的一次登出。",
+    },
+    pitfall: {
+      en: "A health check that only proves the process is listening. It will happily keep routing traffic to a server whose connection pool is exhausted, because the port is open and that is all you asked about.",
+      zh: "只证明进程在监听的健康检查。它会心安理得地继续把流量送给一台连接池已经耗尽的服务器 —— 因为端口是开的，而你问的就只有这个。",
+    },
+    lore: {
+      en: "The problem is older than the web; it is scheduling, which operating systems had been doing for decades. What changed is that the workers became separate machines that could fail independently, so the scheduler had to start asking whether they were still alive.",
+      zh: "这个问题比 web 老得多，它本质是调度 —— 操作系统已经做了几十年。变化在于「工人」变成了可以各自独立故障的机器，于是调度器不得不开始追问：你还活着吗？",
+    },
+    era: 1,
+    status: "settled",
+    stats: { difficulty: 42, ubiquity: 90, impact: 78, ops: 40 },
+    moves: [
+      {
+        name: "Least connections",
+        effect: {
+          en: "Routes by in-flight work, which tracks real capacity better than taking turns does.",
+          zh: "按在途请求数分发 —— 这比轮流来更贴近真实容量。",
+        },
+      },
+      {
+        name: "Deep health check",
+        effect: {
+          en: "Verifies dependencies, not just that the process accepted a socket.",
+          zh: "验证依赖是否真的可用，而不只是进程接受了一个连接。",
+        },
+      },
+      {
+        name: "Session affinity",
+        effect: {
+          en: "Pins a user to one backend, and makes that backend's death visible to them.",
+          zh: "把用户固定到一台后端上 —— 也让那台后端的死亡直接被他看见。",
+        },
+      },
+    ],
+  },
+  {
+    id: "sharding",
+    dex: 27,
+    units: ["platform", "concept"],
+    name: "Sharding",
+    glyph: "🧊",
+    tagline: {
+      en: "One database becomes many, and 'which one' becomes your problem.",
+      zh: "一个数据库变成很多个，而「是哪一个」成了你的问题。",
+    },
+    description: {
+      en: "Split the data across independent databases by some key, so no single machine has to hold or serve all of it. It is the standard answer to outgrowing one box, and it converts a capacity problem into a routing problem that touches every query you have ever written.",
+      zh: "按某个 key 把数据切分到互相独立的数据库上，这样就没有哪台机器需要装下或扛住全部数据。这是「单机装不下了」的标准答案，代价是把一个容量问题变成了一个路由问题 —— 而这个问题会碰到你写过的每一条查询。",
+    },
+    oneLiner: {
+      en: "What's the shard key, and which queries become scatter-gather? That choice is close to irreversible.",
+      zh: "shard key 是什么，哪些查询会变成 scatter-gather？这个选择基本不可逆。",
+    },
+    deepDive: {
+      en: "Choosing the shard key is the whole decision, and it is close to irreversible once data is in place. It determines which queries stay cheap — anything filtered by that key touches one shard — and which become scatter-gather across all of them, which is as slow as your slowest shard and gets slower as you add more. Two failure modes follow. The hot shard: one tenant or one very popular user is a disproportionate share of traffic, and no hashing can spread a single key. The cross-shard transaction: the place your ACID guarantees quietly stop applying, because no shard can commit on behalf of another.",
+      zh: "选 shard key 就是全部的决策，而且一旦数据落进去就基本不可逆。它决定了哪些查询依然便宜 —— 凡是按这个 key 过滤的都只碰一个分片 —— 以及哪些会变成跨所有分片的 scatter-gather，那种查询慢得和最慢的分片一样，而且你加的分片越多它越慢。由此有两种失败。热点分片：某一个租户或某一个特别热门的用户占了不成比例的流量，而任何哈希都摊不开单个 key。跨分片事务：你的 ACID 保证在这里悄悄失效了，因为没有哪个分片能代表另一个提交。",
+    },
+    pitfall: {
+      en: "Sharding before you have exhausted one machine. Modern hardware plus a well-indexed database goes remarkably far, and the operational cost — rebalancing, backups, migrations, cross-shard queries — all lands on day one while the capacity benefit stays theoretical for another year.",
+      zh: "在单机还没榨干之前就分片。现代硬件加一个索引建得好的数据库能走得非常远，而分片的运维成本 —— 再平衡、备份、迁移、跨分片查询 —— 第一天就全部到账，容量收益却还要再等一年才可能兑现。",
+    },
+    lore: {
+      en: "The word comes from Ultima Online in 1997, where the fiction explained multiple parallel server worlds as shards of a shattered crystal. It is the rare piece of database jargon that began as a fantasy plot device.",
+      zh: "这个词来自 1997 年的《网络创世纪》，游戏设定把多个平行的服务器世界解释为一颗碎裂水晶的碎片（shards）。这是数据库术语里少见的、起源于奇幻剧情设定的一个。",
+    },
+    era: 2,
+    status: "settled",
+    stats: { difficulty: 72, ubiquity: 55, impact: 80, ops: 82 },
+    moves: [
+      {
+        name: "Shard key",
+        effect: {
+          en: "Decides which queries stay on one shard and which have to touch all of them.",
+          zh: "决定哪些查询只落一个分片，哪些不得不碰所有分片。",
+        },
+      },
+      {
+        name: "Scatter-gather",
+        effect: {
+          en: "Queries every shard and merges — as slow as the slowest one, always.",
+          zh: "查询每个分片再合并 —— 永远和最慢的那个一样慢。",
+        },
+      },
+      {
+        name: "Rebalancing",
+        effect: {
+          en: "Moves data between shards without stopping writes, which is the genuinely hard part.",
+          zh: "在不停止写入的情况下在分片间搬数据 —— 真正难的就是这一步。",
+        },
+      },
+    ],
+    clashes: [
+      {
+        with: "cap-theorem",
+        note: {
+          en: "Sharding is the moment CAP stops being a reading assignment. One machine gave you transactions across all your data for free; the instant there are two, a write spanning both needs coordination, and you are choosing between a distributed transaction's latency and giving the guarantee up. Most teams pick the second by accident and discover it during an incident.",
+          zh: "分片是 CAP 从「读物」变成「现实」的那一刻。一台机器时，跨全部数据的事务是白送的；一旦变成两台，跨两边的写就需要协调，你得在分布式事务的延迟和放弃这个保证之间做选择。多数团队是无意中选了后者，然后在一次事故里才发现。",
+        },
+      },
+    ],
+  },
+
+  // ── Concept, continued ────────────────────────────────────────────────────
+  {
+    id: "caching",
+    dex: 28,
+    units: ["concept"],
+    name: "Caching",
+    glyph: "🧺",
+    tagline: {
+      en: "A faster copy that is allowed to be wrong.",
+      zh: "一份更快的副本，而它被允许是错的。",
+    },
+    description: {
+      en: "Keep the result somewhere cheap so you don't compute it again. Every cache is a deliberate decision to serve possibly-stale data in exchange for latency, and the whole design problem is bounding how stale, for how long, and who notices.",
+      zh: "把结果放在一个便宜的地方，省得再算一遍。每一个缓存都是一次有意的决定：用可能过期的数据换延迟。而全部的设计问题就是给「多旧、旧多久、谁会发现」划上界。",
+    },
+    oneLiner: {
+      en: "What happens when that key expires under load? A thousand simultaneous misses is how a cache schedules an outage.",
+      zh: "那个 key 在高负载下过期时会发生什么？一千个同时 miss，就是缓存给故障排的日程。",
+    },
+    deepDive: {
+      en: "Invalidation is hard because it is a distributed agreement problem wearing a small hat: the moment the truth changes, every copy of it is wrong, and there is no atomic way to reach them all. So every strategy is about what to give up. TTL gives up freshness for simplicity, and is right far more often than people admit. Explicit invalidation gives up simplicity and quietly misses the paths you forgot to instrument. Versioned keys sidestep the problem entirely by never reusing a key — the old value simply stops being asked for and ages out — which is why it is the least error-prone of the three.",
+      zh: "失效之所以难，是因为它本质是一个戴着小帽子的分布式一致性问题：真相改变的那一刻，它的每一份副本都错了，而你没有任何原子的手段能同时通知到所有副本。所以每种策略都是在选择放弃什么。TTL 放弃新鲜度换简单，而它正确的次数比人们愿意承认的多得多。显式失效放弃简单，并且会悄悄漏掉那些你忘了埋点的路径。版本化 key 干脆绕开了这个问题 —— 永不复用 key，旧值只是不再被问起，然后自然老去 —— 所以它是三者里最不容易出错的。",
+    },
+    pitfall: {
+      en: "The stampede. A popular key expires, a thousand concurrent requests all miss, and all thousand hit the database at the same instant — so the cache you added to protect it is the thing that scheduled the outage.",
+      zh: "缓存击穿。一个热点 key 过期，一千个并发请求同时 miss，然后一千个请求在同一瞬间砸向数据库 —— 于是你为了保护它而加的缓存，正是给这次故障排好日程的那个东西。",
+    },
+    lore: {
+      en: "The famous line is Phil Karlton's: there are only two hard things in computer science, cache invalidation and naming things. It survives because both are the same problem — keeping a name and the thing it refers to in agreement as time passes.",
+      zh: "那句名言来自 Phil Karlton：计算机科学里只有两件难事，缓存失效和命名。它流传下来，是因为这两件其实是同一件事 —— 让一个名字和它所指的东西，在时间流逝中保持一致。",
+    },
+    era: 1,
+    status: "settled",
+    stats: { difficulty: 40, ubiquity: 92, impact: 84, ops: 30 },
+    moves: [
+      {
+        name: "TTL",
+        effect: {
+          en: "Trades freshness for not having to know when anything changed.",
+          zh: "用新鲜度换「不需要知道什么时候变过」。",
+        },
+      },
+      {
+        name: "Versioned key",
+        effect: {
+          en: "Never reuses a key, so invalidation becomes expiry and stops being a problem.",
+          zh: "永不复用 key，于是失效变成了自然过期，不再是个问题。",
+        },
+      },
+      {
+        name: "Stampede protection",
+        effect: {
+          en: "One request recomputes while the rest wait or are served the stale value.",
+          zh: "让一个请求去重算，其余的要么等着，要么先吃旧值。",
+        },
+      },
+    ],
+    clashes: [
+      {
+        with: "eventual-consistency",
+        note: {
+          en: "A cache is not something you add near eventual consistency — it *is* eventual consistency, introduced by you, on purpose, with a TTL as the convergence bound. Teams who chose a strongly consistent database and then put a cache in front of it now have the guarantees of the cache, not of the database, and usually have not noticed the swap.",
+          zh: "缓存不是你放在最终一致性旁边的东西 —— 它**就是**最终一致性，由你有意引入，用 TTL 当收敛上界。选了强一致数据库、然后在前面加一层缓存的团队，现在拿到的是缓存的保证而不是数据库的保证，而且通常没意识到这次调包。",
+        },
+      },
+    ],
+  },
+  {
+    id: "rate-limiting",
+    dex: 29,
+    units: ["concept"],
+    name: "Rate Limiting",
+    glyph: "🚧",
+    tagline: {
+      en: "Saying no early, so you don't have to say nothing later.",
+      zh: "早点说不，免得之后什么都说不出来。",
+    },
+    description: {
+      en: "Cap how much any one caller can consume in a window. It reads as a restriction on users and is actually a promise to them: a system that cleanly rejects the top one percent of traffic stays up for the other ninety-nine, and one that doesn't goes down for everybody at once.",
+      zh: "限制单个调用方在一个时间窗口内能消耗多少。它读起来像是对用户的限制，实际上是给用户的承诺：一个能干净利落拒掉最高那 1% 流量的系统，会为剩下的 99% 保持在线；做不到的那个，则是所有人一起下线。",
+    },
+    oneLiner: {
+      en: "Does the 429 carry Retry-After? Without it, well-behaved clients retry immediately and you've added load, not shed it.",
+      zh: "那个 429 带 Retry-After 吗？不带的话，守规矩的客户端会立刻重试 —— 你加的是负载，不是保护。",
+    },
+    deepDive: {
+      en: "The algorithm choice is really a choice about bursts. A fixed window is trivial to implement and has an ugly edge: a caller can spend the whole budget at the end of one window and again at the start of the next, so '100 per minute' quietly permits 200 in two seconds. A sliding window fixes that and costs more to track. A token bucket — refilling at a steady rate up to a cap — is usually the right default because it states the useful thing directly: sustained rate here, burst allowance there. Where you enforce matters as much as how: a per-user limit shared across a cluster needs shared state, and that state is now in the path of every single request.",
+      zh: "选算法其实是在选「怎么对待突发」。固定窗口实现起来最简单，但有个难看的边界：调用方可以在一个窗口的末尾把额度花光，紧接着在下一个窗口的开头再花一遍 —— 于是「每分钟 100 次」悄悄允许了两秒内 200 次。滑动窗口修掉了这一点，代价是记账更贵。令牌桶 —— 以固定速率补充、上限封顶 —— 通常是正确的默认值，因为它直接说出了有用的那件事：这里是持续速率，那里是突发额度。而在哪里执行和怎么执行同样重要：跨集群共享的按用户限流需要共享状态，而这个状态现在挡在每一个请求的必经之路上。",
+    },
+    pitfall: {
+      en: "Returning 429 without `Retry-After`. Well-behaved clients will retry immediately and repeatedly, so the limit you added to shed load generates more requests than it stopped.",
+      zh: "返回 429 却不带 `Retry-After`。守规矩的客户端会立刻、反复地重试，于是你为了卸载而加的限流，产生的请求比它挡掉的还多。",
+    },
+    lore: {
+      en: "The idea is lifted straight from network traffic shaping, where token buckets were smoothing packet flows long before anyone pointed them at an API. The vocabulary gives it away — buckets, tokens and leaks are plumbing metaphors, not web ones.",
+      zh: "这个想法是从网络流量整形里原样搬来的，令牌桶在被用到 API 上之前，已经给数据包流量做了很多年平滑。词汇本身就露了馅 —— 桶、令牌、漏水，这些是水管工的比喻，不是 web 的。",
+    },
+    era: 2,
+    status: "settled",
+    stats: { difficulty: 38, ubiquity: 74, impact: 76, ops: 28 },
+    moves: [
+      {
+        name: "Token bucket",
+        effect: {
+          en: "A sustained rate plus a burst allowance, stated directly rather than implied.",
+          zh: "一个持续速率加一个突发额度，直白说出来而不是隐含着。",
+        },
+      },
+      {
+        name: "Retry-After",
+        effect: {
+          en: "Tells the client when to come back, turning a rejection into a schedule.",
+          zh: "告诉客户端什么时候再来，把一次拒绝变成一份时间表。",
+        },
+      },
+      {
+        name: "Per-key limits",
+        effect: {
+          en: "Isolates one noisy caller instead of penalising everyone equally.",
+          zh: "隔离掉某一个吵闹的调用方，而不是让所有人平摊惩罚。",
+        },
+      },
+    ],
+    clashes: [
+      {
+        with: "backpressure",
+        note: {
+          en: "Both protect a system from more work than it can do, and they answer the excess differently. Rate limiting rejects — fast, fair, and the caller has to cope. Backpressure slows the producer and keeps the work. Rejecting a batch job that would happily have waited throws it away; queueing interactive traffic that already timed out at the client is work nobody will ever collect.",
+          zh: "两者都在保护系统不被超出能力的工作压垮，但对多出来的部分给了相反的答案。限流是拒绝 —— 快、公平，代价由调用方承担。背压是让生产者慢下来，把工作留住。拒绝一个本来乐意等的批处理任务，等于白扔掉它；而给一个客户端早已超时的交互请求排队，是在做没人会来取的工作。",
+        },
+      },
+    ],
+  },
+  {
+    id: "backpressure",
+    dex: 30,
+    units: ["concept"],
+    name: "Backpressure",
+    glyph: "⏸️",
+    tagline: {
+      en: "Telling the fast thing to slow down, instead of dropping what it sends.",
+      zh: "让快的那一头慢下来，而不是把它发来的东西丢掉。",
+    },
+    description: {
+      en: "When a consumer cannot keep up, the pressure has to go somewhere. Backpressure sends it upstream — the producer is slowed or blocked until there is room. The alternative is an unbounded queue, which is not the absence of the problem, only a delay before it becomes a memory problem.",
+      zh: "当消费者跟不上时，压力总得去某个地方。背压把它送回上游 —— 生产者被减速或阻塞，直到腾出空间。另一种选择是无界队列，而那并不是问题的消失，只是它变成内存问题之前的一段延迟。",
+    },
+    oneLiner: {
+      en: "What happens when that queue is full? 'It won't be' isn't a policy, it's an OOM waiting for traffic.",
+      zh: "那个队列满了会怎样？「它不会满」不是一种策略，是一个正在等流量的 OOM。",
+    },
+    deepDive: {
+      en: "Every queue encodes a decision about what to do when it is full, and 'it won't be' is not one of the available answers. Unbounded moves the failure from a visible slowdown to an out-of-memory kill, which is far harder to diagnose because the crash happens a long way from the cause. A bounded queue forces the choice into the open: block the producer, drop the oldest, drop the newest, or reject outright. TCP has been doing exactly this since the beginning through its receive window, and reactive stream libraries make it explicit for the same reason — the alternative was never stability, only a slower route to the same failure.",
+      zh: "每一个队列都编码了一个「满了怎么办」的决定，而「它不会满」不在可选答案里。无界队列把失败从一次可见的变慢，挪成了一次 OOM 击杀 —— 后者难查得多，因为崩溃发生的地方离原因很远。有界队列则逼你把选择摊到台面上：阻塞生产者、丢最老的、丢最新的，还是直接拒绝。TCP 从一开始就在用接收窗口做这件事，响应式流库把它显式化也是同一个理由 —— 另一条路从来不是稳定，只是通往同一次失败的更慢的路。",
+    },
+    pitfall: {
+      en: "An unbounded queue as the default. It looks like it makes the problem go away, and what it actually does is convert a graceful slowdown into an OOM kill at 3am with a stack trace pointing nowhere near the real cause.",
+      zh: "把无界队列当默认值。它看起来让问题消失了，实际做的是把一次优雅的变慢，转换成凌晨三点的一次 OOM 击杀 —— 而堆栈指向的地方离真正的原因十万八千里。",
+    },
+    lore: {
+      en: "The term is from fluid dynamics: resistance transmitted back against the direction of flow. It reached software through TCP flow control, where a receiver advertises how much it can still accept, and every well-behaved sender has been obeying that number since the 1970s.",
+      zh: "这个词来自流体力学：沿着流动的反方向传回来的阻力。它经由 TCP 流量控制进入软件 —— 接收方公布自己还能收多少，而从 1970 年代起，每个守规矩的发送方都在服从那个数字。",
+    },
+    era: 3,
+    status: "settled",
+    stats: { difficulty: 55, ubiquity: 62, impact: 78, ops: 35 },
+    moves: [
+      {
+        name: "Bounded queue",
+        effect: {
+          en: "Forces the full-queue policy to be chosen deliberately instead of discovered at 3am.",
+          zh: "逼你主动选定「队列满了怎么办」，而不是凌晨三点才发现。",
+        },
+      },
+      {
+        name: "Blocking producer",
+        effect: {
+          en: "Slows the source, so the pressure lands where something can actually handle it.",
+          zh: "让源头慢下来，把压力送到真正能处理它的地方。",
+        },
+      },
+      {
+        name: "Drop policy",
+        effect: {
+          en: "Oldest or newest — and which is right depends on whether stale work still has value.",
+          zh: "丢最老的还是最新的 —— 哪个对，取决于过期的工作还有没有价值。",
+        },
+      },
+    ],
+  },
+  {
+    id: "guardrails",
+    dex: 31,
+    units: ["concept", "model"],
+    name: "Guardrails",
+    glyph: "🛡️",
+    tagline: {
+      en: "Checking the output, because you cannot check the process.",
+      zh: "检查输出 —— 因为过程你检查不了。",
+    },
+    description: {
+      en: "A deterministic layer wrapped around a non-deterministic one: validating that what came back is well-formed, on-topic, free of things it shouldn't contain, and safe to act on. It exists because the model gives you no way to assert anything about how it reached the answer, so the output is the only place left to stand.",
+      zh: "包在一个非确定性层外面的确定性层：校验回来的东西格式对不对、有没有跑题、含不含不该含的内容、能不能安全地拿去执行。它之所以存在，是因为模型没给你任何手段去断言「它是怎么得出这个答案的」—— 于是输出成了唯一还站得住脚的地方。",
+    },
+    oneLiner: {
+      en: "Treat the model like untrusted user input — fluent output is still output you didn't write.",
+      zh: "把模型当成不可信的用户输入 —— 说得再流利，那也是不是你写的输出。",
+    },
+    deepDive: {
+      en: "The useful distinction is structural versus semantic. Structural checks — is this valid JSON, does it match the schema, is that enum one of the four allowed values — are cheap, exact, and worth running on everything. Semantic checks — is this actually answering the question, is it grounded in the retrieved text, is the tone acceptable — need a model to evaluate a model, which costs another call and inherits the same unreliability you were trying to contain. Most teams over-invest in the second and skip the first, when the first catches more real incidents per unit of effort by a wide margin.",
+      zh: "有用的区分是结构性 vs 语义性。结构性检查 —— 这是不是合法 JSON、符不符合 schema、那个枚举值是不是四个允许值之一 —— 便宜、精确，值得对所有输出都跑一遍。语义性检查 —— 它到底有没有回答问题、有没有基于检索到的文本、语气可不可接受 —— 需要用一个模型去评估另一个模型，既多花一次调用，又继承了你本想遏制的那份不可靠。多数团队在第二种上投入过度、把第一种跳过了，而按「每单位投入拦下的真实事故」算，第一种远远更划算。",
+    },
+    pitfall: {
+      en: "A validator that rejects with no repair path. A blocked response with no retry, no fallback and no explanation is an outage the user experiences as the product being broken — which is often worse than whatever output you were protecting them from.",
+      zh: "一个只会拒绝、没有修复路径的校验器。一个被拦下的响应，没有重试、没有降级、没有解释，在用户眼里就是产品坏了 —— 而这往往比你想替他挡掉的那个输出更糟。",
+    },
+    lore: {
+      en: "The idea is borrowed wholesale from validating untrusted user input, and the mental shift that makes it click is treating the model as exactly that: an untrusted source whose output happens to be fluent. Fluency is not trustworthiness, and mistaking one for the other is precisely why this layer gets skipped.",
+      zh: "这个想法是从「校验不可信的用户输入」原样搬来的，而让它一下子说得通的思维转变是：把模型就当成那个东西 —— 一个碰巧说话很流利的不可信来源。流利不等于可信，而把两者搞混，恰恰就是这一层经常被跳过的原因。",
+    },
+    era: 5,
+    status: "rising",
+    stats: { difficulty: 45, ubiquity: 60, impact: 82, ops: 35 },
+    moves: [
+      {
+        name: "Schema validation",
+        effect: {
+          en: "Structural, exact, and cheap enough to run on every single response.",
+          zh: "结构性的、精确的，而且便宜到可以对每一条响应都跑。",
+        },
+      },
+      {
+        name: "Grounding check",
+        effect: {
+          en: "Verifies the claim appears in the retrieved text rather than merely sounding like it does.",
+          zh: "核实这个说法真的出现在检索到的文本里，而不只是听起来像。",
+        },
+      },
+      {
+        name: "Repair loop",
+        effect: {
+          en: "Hands the validation error back and asks again, instead of failing the user.",
+          zh: "把校验错误递回去再问一次，而不是直接让用户吃一次失败。",
+        },
+      },
+    ],
+    clashes: [
+      {
+        with: "pydantic",
+        note: {
+          en: "Pydantic will tell you the response is a valid object with the right fields and types. It cannot tell you those fields contain the right answer — a confidently invented price parses exactly as cleanly as a correct one. Teams that add schema validation and stop have made the output machine-readable, not correct, and the two get confused constantly.",
+          zh: "Pydantic 能告诉你这个响应是一个字段和类型都对的合法对象。它没法告诉你这些字段里装的是不是正确答案 —— 一个自信编造出来的价格，解析起来和正确的价格一样干净。加完 schema 校验就收手的团队，只是让输出变得机器可读，不是变得正确，而这两件事经常被混为一谈。",
+        },
+      },
+    ],
+  },
+  {
+    id: "hallucination",
+    dex: 32,
+    units: ["concept", "model"],
+    name: "Hallucination",
+    glyph: "🌫️",
+    tagline: {
+      en: "Fluent, confident, and made up.",
+      zh: "流利、自信、而且是编的。",
+    },
+    description: {
+      en: "The model produces something that reads exactly like a fact and isn't. Calling it a bug misleads: the system is doing precisely what it was built to do, which is produce likely-looking text. A citation that doesn't exist is not a malfunction — it is a very plausible-looking citation, which was the objective all along.",
+      zh: "模型产出了一段读起来完全像事实、而其实不是的东西。把它叫做 bug 会误导人：系统做的恰恰是它被造出来要做的事 —— 产出看起来很可能的文本。一条不存在的引用不是故障，它是一条看起来非常合理的引用 —— 而那从一开始就是目标。",
+    },
+    oneLiner: {
+      en: "It isn't lying — it has no representation of not knowing, so 'the policy says' is followed by a policy.",
+      zh: "它不是在撒谎 —— 它压根没有「不知道」这个表示，所以「政策规定」后面跟的必然是一条政策。",
+    },
+    deepDive: {
+      en: "That reframing is what makes the problem tractable. The model has no representation of 'I don't know' unless something taught it to produce one; absent training or instruction, the most likely continuation after 'the refund policy states' is a refund policy, not a refusal. So every lever is about changing what is likely: put the real text in the context so the grounded answer becomes the probable one, explicitly permit 'not in the provided documents' so that refusal has probability mass at all, and check the output against a source afterwards. Asking the model to 'be accurate' changes almost nothing, because it was never trying to be inaccurate.",
+      zh: "这个重新框定，正是让问题变得可解的地方。除非有什么东西教过它，否则模型并没有「我不知道」这个表示；在没有训练也没有指令的情况下，「退款政策规定」之后最可能的续写是一条退款政策，而不是一次拒答。所以所有的杠杆都是在改变「什么是最可能的」：把真实文本放进上下文，让基于文本的答案同时成为概率最高的那个；明确允许「所提供的文档里没有」，好让拒答至少分到一点概率质量；以及事后拿输出去和来源核对。而让模型「请准确一点」几乎不改变任何事，因为它从来就没有在试图不准确。",
+    },
+    pitfall: {
+      en: "Judging reliability by how confident the output sounds. Confidence and correctness are produced by the same process and are uncorrelated — the most fluent paragraph in a response is exactly as likely to be the invented one as any other.",
+      zh: "用「听起来多自信」来判断可靠性。自信和正确是同一个过程产出的，两者不相关 —— 一段回答里最流利的那一段，是编造的概率和其他任何一段完全一样。",
+    },
+    lore: {
+      en: "The word is borrowed from psychiatry and has been criticised ever since for implying the system perceives something. 'Confabulation' fits better — the clinical term for filling a gap in memory with a plausible story, told sincerely — but hallucination is the one that stuck.",
+      zh: "这个词是从精神病学借来的，也因此一直被批评：它暗示系统「感知」到了什么。「虚构症」（confabulation）其实更贴切 —— 那是「用一个合情合理的故事填补记忆空缺、并且真诚地讲出来」的临床术语 —— 但流传下来的是 hallucination。",
+    },
+    era: 5,
+    status: "rising",
+    stats: { difficulty: 40, ubiquity: 88, impact: 90, ops: 25 },
+    moves: [
+      {
+        name: "Grounding",
+        effect: {
+          en: "Puts the real text in context so the true answer is also the likely one.",
+          zh: "把真实文本放进上下文，让正确答案同时也是概率最高的答案。",
+        },
+      },
+      {
+        name: "Permission to abstain",
+        effect: {
+          en: "Gives 'not in the documents' probability mass it otherwise would not have.",
+          zh: "给「文档里没有」分配一点概率质量 —— 否则它一点也分不到。",
+        },
+      },
+      {
+        name: "Citation check",
+        effect: {
+          en: "Verifies the source exists and says what the answer claims it says.",
+          zh: "核实来源真的存在，而且真的说了答案声称它说过的话。",
+        },
+      },
+    ],
+  },
+
+  // ── Model, continued ──────────────────────────────────────────────────────
+  {
+    id: "prompt-engineering",
+    dex: 33,
+    units: ["model", "app"],
+    name: "Prompt Engineering",
+    glyph: "🎛️",
+    tagline: {
+      en: "Programming in a language with no compiler and no error messages.",
+      zh: "用一门没有编译器、也没有报错信息的语言编程。",
+    },
+    description: {
+      en: "Everything you can change about a model's behaviour without touching its weights: the instructions, the examples, what order things appear in, what you allow it to output. It feels unserious because the medium is prose, and it is the highest-leverage knob available — a rewritten prompt routinely beats a fine-tune that cost a thousand times more.",
+      zh: "在不碰权重的前提下，你能改变模型行为的一切：指令、示例、东西出现的顺序、你允许它输出什么。因为媒介是散文，它显得不够正经；而它是你手上杠杆率最高的旋钮 —— 重写一遍 prompt，经常能打赢一次贵一千倍的 fine-tune。",
+    },
+    oneLiner: {
+      en: "What are we measuring the prompt against? Three examples you keep rereading isn't an eval, it's a memory test.",
+      zh: "这个 prompt 是拿什么在衡量？三个你反复看的例子不是评测，是记忆力测试。",
+    },
+    deepDive: {
+      en: "The techniques that reliably work are all about giving the model somewhere to put its work. Few-shot examples define the shape of an acceptable answer far more precisely than any adjective can. Asking for reasoning before the answer helps because the tokens it generates become context it can then condition on — the 'thinking' is not a metaphor, it is literally more computation spent on the problem. And position effects are real: instructions at the very start and the very end of a long prompt carry measurably more weight than the same words buried in the middle.",
+      zh: "真正稳定有效的技巧，都是在给模型一个放置工作的地方。Few-shot 示例定义「什么样的回答可接受」，比任何形容词都精确得多。要求先给推理再给答案之所以有用，是因为它生成出来的 token 会变成它接下来可以依赖的上下文 —— 那个「思考」不是比喻，它确实是在这个问题上多花了算力。位置效应也是真的：放在长 prompt 最前面和最后面的指令，权重明显高于同样的话埋在中间。",
+    },
+    pitfall: {
+      en: "Tuning a prompt against three examples you keep rereading. Prompts overfit exactly the way models do; without a held-out set you are optimising for the cases you already remember and quietly losing ground on the ones you don't.",
+      zh: "对着三个你反复看的例子调 prompt。Prompt 会过拟合，方式和模型一模一样；没有留出集，你就是在为自己已经记住的那些情况优化，同时在没记住的那些上悄悄退步。",
+    },
+    lore: {
+      en: "The term was half a joke in 2020 — a 'job' people enjoyed mocking. It survived because the underlying claim turned out to be true: the same model, given a better-structured request, is a measurably different product.",
+      zh: "2020 年时这个词有一半是玩笑 —— 一个大家很爱嘲笑的「职业」。它活下来了，因为底下那个说法后来被证明是真的：同一个模型，给它一个结构更好的请求，就是一个可被度量的不同产品。",
+    },
+    era: 5,
+    status: "rising",
+    stats: { difficulty: 30, ubiquity: 80, impact: 78, ops: 20 },
+    moves: [
+      {
+        name: "Few-shot examples",
+        effect: {
+          en: "Shows the shape of an acceptable answer, which no adjective conveys as precisely.",
+          zh: "展示什么样的回答是可接受的 —— 这件事没有任何形容词能说得同样精确。",
+        },
+      },
+      {
+        name: "Reasoning before answer",
+        effect: {
+          en: "The generated tokens become context, so it is literally more compute on the problem.",
+          zh: "生成出来的 token 变成上下文，所以这确实是在这个问题上多花了算力。",
+        },
+      },
+      {
+        name: "Structured output",
+        effect: {
+          en: "Constrains the response to a schema, turning a parsing problem into a validation one.",
+          zh: "把响应约束到一个 schema，于是解析问题变成了校验问题。",
+        },
+      },
+    ],
+    clashes: [
+      {
+        with: "fine-tuning",
+        note: {
+          en: "Both change how a model behaves, and prompting is the one to exhaust first — free, reversible, testable in minutes. A fine-tune bakes the behaviour in, which is what strands you at the next model release: a prompt moves to a better base model for nothing, a fine-tune has to be redone from scratch.",
+          zh: "两者都在改变模型的行为，而 prompt 是应该先榨干的那一个 —— 免费、可逆、几分钟就能测。Fine-tune 把行为烤死了，所以下一次模型发布时它把你困住：prompt 可以零成本迁到更好的底座上，fine-tune 得从头再来一遍。",
+        },
+      },
+    ],
+  },
+  {
+    id: "agents",
+    dex: 34,
+    units: ["model", "app"],
+    name: "Agents & Tool Use",
+    glyph: "🦾",
+    tagline: {
+      en: "The model stops answering and starts doing.",
+      zh: "模型不再只是回答，而是开始动手。",
+    },
+    description: {
+      en: "Give a model a set of functions it may call and a loop that feeds the results back, and it can search, query, write files and take actions until the task is done. The capability is real. The difficulty is that every iteration of the loop is another chance to go wrong, and the errors compound rather than cancel.",
+      zh: "给模型一组它可以调用的函数，再加一个把结果喂回去的循环，它就能搜索、查询、写文件、执行动作，直到任务完成。能力是真的。难点在于循环的每一轮都是一次出错的机会，而这些错误是相乘的，不是相互抵消的。",
+    },
+    oneLiner: {
+      en: "How many steps before it gives up? At 95% per step, ten steps is a coin flip.",
+      zh: "跑几步之后它会放弃？每步 95% 成功率，十步下来就是抛硬币。",
+    },
+    deepDive: {
+      en: "Reliability falls off with the number of steps, and it falls off multiplicatively. A step that succeeds ninety-five times in a hundred gives you about sixty percent over ten steps and thirty-six over twenty. This is why the agents that survive production have short loops, hard step limits, and tools that fail loudly — a tool returning an empty result instead of an error lets the model invent a plausible continuation from nothing. Designing tools for an agent turns out to be mostly about making failure unambiguous.",
+      zh: "可靠性随步数下降，而且是乘法式下降。一个百次里成功九十五次的步骤，十步下来大约剩六成，二十步剩三成六。所以能在生产环境里活下来的 agent，都是短循环、硬性步数上限、以及会大声失败的工具 —— 一个失败时返回空结果而不是错误的工具，会让模型从虚无里编出一段看似合理的后续。给 agent 设计工具，最后发现主要是在做一件事：让失败变得毫不含糊。",
+    },
+    pitfall: {
+      en: "Tools that return empty on failure. The model cannot distinguish 'there are no results' from 'the query was malformed', so it proceeds confidently down a branch built on nothing — and the transcript reads as entirely reasonable the whole way.",
+      zh: "失败时返回空结果的工具。模型分不清「确实没有结果」和「这个查询写错了」，于是它自信地沿着一条建立在虚无之上的分支往下走 —— 而整段对话记录从头到尾读起来都非常合理。",
+    },
+    lore: {
+      en: "The pattern got its name from ReAct, a 2022 paper interleaving reasoning and acting. The structure had been reinvented independently many times before — a loop with a tool call in it is not a hard idea — but naming it gave people a thing to build.",
+      zh: "这个模式的名字来自 2022 年那篇把推理和行动交替起来的论文 ReAct。这个结构在此之前已经被独立重新发明过很多次 —— 一个里面带工具调用的循环并不是什么难想法 —— 但给它起了名字，人们才有了一个可以去建造的东西。",
+    },
+    era: 5,
+    status: "rising",
+    stats: { difficulty: 68, ubiquity: 58, impact: 80, ops: 62 },
+    moves: [
+      {
+        name: "Tool schema",
+        effect: {
+          en: "Describes the function precisely enough that the model calls it correctly the first time.",
+          zh: "把函数描述得足够精确，让模型第一次就调对。",
+        },
+      },
+      {
+        name: "Step limit",
+        effect: {
+          en: "Caps the loop, because a stuck agent will happily spend your entire budget.",
+          zh: "给循环设上限 —— 一个卡住的 agent 会心安理得地把你的预算全花光。",
+        },
+      },
+      {
+        name: "Loud failure",
+        effect: {
+          en: "Returns an error the model can read, instead of an empty result it will paper over.",
+          zh: "返回一个模型读得懂的错误，而不是一个它会自行圆过去的空结果。",
+        },
+      },
+    ],
+    clashes: [
+      {
+        with: "rag",
+        note: {
+          en: "Both get a model information it lacks, and they fail differently. RAG fetches once: cheap, bounded, easy to debug. An agent can go and look repeatedly: more capable, and it multiplies both the cost and the number of ways to be wrong. Reaching for an agent where one retrieval would have done buys a slower, less reliable version of the same answer.",
+          zh: "两者都在给模型补它没有的信息，而失败方式不同。RAG 取一次：便宜、有界、好排查。Agent 可以反复去找：能力更强，同时把成本和出错的方式一起翻倍。在一次检索就够的地方上 agent，你买到的是同一个答案的更慢、更不可靠的版本。",
+        },
+      },
+    ],
+  },
+  {
+    id: "model-eval",
+    dex: 35,
+    units: ["model", "concept"],
+    name: "Model Eval",
+    glyph: "📐",
+    tagline: {
+      en: "Deciding whether the new one is better, or just different.",
+      zh: "判断新的那个是更好了，还是只是变得不一样了。",
+    },
+    description: {
+      en: "A held-out set of cases with known-good outcomes, plus a way to score against it. Without one, every change is judged by whoever looked at the last three outputs — and that judgement is dominated by whatever they just spent a week building.",
+      zh: "一组留出的、结果已知为好的样例，加上一套对着它打分的办法。没有它，每一次改动都由「最后看了三条输出的那个人」来裁决 —— 而这个裁决会被「他刚花了一周做的东西」彻底左右。",
+    },
+    oneLiner: {
+      en: "Does the automatic grader agree with a hundred you graded by hand? If you never checked, the number means nothing.",
+      zh: "自动评分器和你手工评的那一百条一致吗？没核对过的话，那个数字什么也不代表。",
+    },
+    deepDive: {
+      en: "The hard part is never running the eval, it is deciding what 'correct' means for an open-ended output. Three graders, in ascending cost and descending noise: exact match works only for classification and extraction; an LLM judge scales to prose but carries its own biases — it prefers longer answers, and it prefers answers that look like its own; human grading is the ground truth everything else gets calibrated against. Which is why the move that actually works is grading a hundred by hand once, then checking that your automatic grader agrees with those hundred before trusting it on ten thousand.",
+      zh: "难的从来不是「跑评测」，而是对一个开放式输出决定「什么叫正确」。三种评分方式，成本递增、噪声递减：精确匹配只在分类和抽取上管用；LLM 评委能扩展到散文，但带着自己的偏好 —— 它偏爱更长的回答，也偏爱看起来像它自己写的回答；人工评分则是其他一切用来校准的基准真值。所以真正管用的做法是：先手工评一百条，然后确认你的自动评分器和这一百条的判断一致，再拿它去跑一万条。",
+    },
+    pitfall: {
+      en: "Building the eval set out of cases the system already handles. It will show ninety-five percent and stay at ninety-five through every change you make, because the cases that would have moved the number are exactly the ones you left out.",
+      zh: "用系统本来就能处理的样例去搭评测集。它会显示 95%，然后在你做的每一次改动之后依然是 95% —— 因为真正能让这个数字动起来的样例，恰恰是你没放进去的那些。",
+    },
+    lore: {
+      en: "It is the oldest idea in machine learning — a train/test split — wearing new clothes. The reason it feels new in LLM work is that you can now ship something impressive without ever making one, which was never possible back when you had to train the model yourself.",
+      zh: "这是机器学习里最老的想法 —— 训练/测试集划分 —— 换了身新衣服。它在 LLM 时代显得新鲜，是因为你现在可以完全不做评测集就上线一个看起来很唬人的东西；而在你还得自己训模型的年代，这是不可能的。",
+    },
+    era: 5,
+    status: "rising",
+    stats: { difficulty: 58, ubiquity: 55, impact: 86, ops: 45 },
+    moves: [
+      {
+        name: "Held-out set",
+        effect: {
+          en: "Cases the system has never been tuned against — the only kind that measures anything.",
+          zh: "系统从没针对它调过的样例 —— 只有这一种才真的在度量什么。",
+        },
+      },
+      {
+        name: "LLM-as-judge",
+        effect: {
+          en: "Scales to open-ended output, and brings its own preferences for length and style.",
+          zh: "能扩展到开放式输出，同时也带来了它自己对长度和风格的偏好。",
+        },
+      },
+      {
+        name: "Golden set",
+        effect: {
+          en: "A small hand-graded core used to calibrate whatever automatic grader you rely on.",
+          zh: "一小撮手工评过的核心样例，用来校准你所依赖的任何自动评分器。",
+        },
+      },
+    ],
+    clashes: [
+      {
+        with: "observability",
+        note: {
+          en: "Offline eval tells you quickly and cheaply whether a change is better on cases you chose. Production telemetry tells you slowly and truthfully what happens on the cases you didn't. Teams pick one and get blindsided by the other — a model that gains four points offline and loses users to a latency regression was measured on the wrong axis from the start.",
+          zh: "离线评测又快又便宜地告诉你：在你挑的样例上，这次改动是不是更好。线上遥测又慢又真实地告诉你：在你没挑到的样例上，实际发生了什么。团队通常只选一个，然后被另一个打个措手不及 —— 一个离线涨了四个点、却因为延迟退化流失用户的模型，从一开始就在错误的轴上被度量。",
+        },
+      },
+    ],
+  },
+
+  // ── App, continued ────────────────────────────────────────────────────────
+  {
+    id: "pydantic",
+    dex: 36,
+    units: ["app"],
+    name: "Pydantic",
+    glyph: "📋",
+    tagline: {
+      en: "Your type hints stop being documentation and start being enforcement.",
+      zh: "你的类型标注不再是文档，开始变成强制。",
+    },
+    description: {
+      en: "Declare a class with annotated fields and you get parsing, validation, coercion and serialisation out of that one declaration. It is why FastAPI can generate API docs that cannot drift, and why a great many Python codebases stopped hand-writing dictionary-checking code.",
+      zh: "声明一个带类型标注的类，你就从这一处声明里同时得到解析、校验、类型转换和序列化。这是 FastAPI 能生成永不脱节的 API 文档的原因，也是很多 Python 代码库不再手写字典检查代码的原因。",
+    },
+    oneLiner: {
+      en: "It parses, it doesn't just check — \"3\" becomes 3 unless you asked for strict mode.",
+      zh: "它是在解析而不只是校验 —— 除非你开了 strict 模式，\"3\" 会变成 3。",
+    },
+    deepDive: {
+      en: "The thing to internalise is that it *parses* rather than validates: the output is a new object, not a blessed version of the input. The string \"3\" becomes the integer 3 if the field says int, and that coercion is a convenience right up until it silently accepts something you meant to reject — which is what strict mode exists for. The v2 rewrite moved the core to Rust for a large speed win and changed enough of the API that migrating is a genuine project rather than a version bump.",
+      zh: "需要内化的一点是：它在**解析**而不是校验 —— 输出是一个新对象，不是被盖了章的原输入。如果字段声明为 int，字符串 \"3\" 会变成整数 3；这种类型转换一直是便利，直到它悄悄接受了一个你本想拒绝的东西 —— strict 模式就是为此而存在的。v2 的重写把核心换成了 Rust，带来很大的速度提升，同时改动了足够多的 API，使得迁移是一个真正的项目，而不是一次版本号变更。",
+    },
+    pitfall: {
+      en: "Assuming validation means the data is right. It means the data has the declared shape — an `int` field will hold a quantity of negative five thousand quite happily unless you said otherwise.",
+      zh: "以为「校验通过」等于「数据是对的」。它只意味着数据符合声明的形状 —— 除非你另外说明，一个 `int` 字段会心安理得地装下 -5000 这个数量。",
+    },
+    lore: {
+      en: "Samuel Colvin started it in 2017 to make Python's then-new type annotations actually do something at runtime, since the language itself ignores them entirely. FastAPI's later popularity pulled it into an enormous number of codebases that never chose it directly.",
+      zh: "Samuel Colvin 在 2017 年开始做它，目的是让 Python 当时刚有的类型标注在运行时真的干点事 —— 因为语言本身完全无视它们。后来 FastAPI 的流行，把它带进了大量从未主动选择过它的代码库。",
+    },
+    era: 4,
+    status: "settled",
+    stats: { difficulty: 25, ubiquity: 76, impact: 68, ops: 12 },
+    moves: [
+      {
+        name: "Field constraints",
+        effect: {
+          en: "Bounds, lengths and patterns declared right next to the type.",
+          zh: "取值范围、长度、格式，都声明在类型旁边。",
+        },
+      },
+      {
+        name: "Model validator",
+        effect: {
+          en: "Cross-field rules that no single annotation can express.",
+          zh: "跨字段的规则 —— 任何单个标注都表达不了。",
+        },
+      },
+      {
+        name: "Strict mode",
+        effect: {
+          en: "Turns off coercion, for when quietly accepting the wrong type is worse than failing.",
+          zh: "关掉类型转换 —— 当「悄悄接受错误类型」比直接失败更糟的时候。",
+        },
+      },
+    ],
+    links: [{ label: "docs.pydantic.dev", url: "https://docs.pydantic.dev/" }],
+  },
 ];
 
 export const entriesByDex = [...entries].sort((a, b) => a.dex - b.dex);

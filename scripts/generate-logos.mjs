@@ -25,6 +25,7 @@ const wanted = {
   nginx: "nginx",
   flask: "flask",
   fastapi: "fastapi",
+  pydantic: "pydantic",
   react: "react",
   nextjs: "nextdotjs",
   figma: "figma",

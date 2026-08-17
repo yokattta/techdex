@@ -79,6 +79,23 @@ The page shows how many entries each generation has and points at the
 thinnest one rather than padding it out. A visible gap is a to-do list — the
 first batch of new entries was written by reading that page.
 
+## Routes
+
+`/[locale]/routes` is five ordered paths through the dex: system design, AI
+engineering, shipping and running things, a Python backend, a frontend that
+lasts. Every entry sits on at least one.
+
+The ordered list is the cheap part. Each step carries a `why` that has to
+justify its **position** — what the previous step left you holding, and what
+problem this one answers. Kafka comes before idempotency because at-least-once
+delivery is precisely what makes idempotency necessary. Accessibility sits in
+the middle of the frontend route rather than at the end, because that is when
+it is cheap. A step whose `why` merely re-describes the card is a playlist
+entry, not a route, and should be rewritten.
+
+Progress reuses the existing caught store, so marking a card anywhere moves
+every route it appears on.
+
 ## Type chart
 
 `/[locale]/matrix` is a 6×6 grid read in one direction only: **a decision in the
@@ -172,6 +189,8 @@ app/
     layout.tsx           header, footer, language switch
     page.tsx             the dex grid
     dex/[id]/page.tsx    one entry
+    routes/page.tsx      the five learning paths
+    routes/[id]/page.tsx one path, step by step
     lines/page.tsx       one-liner cheat sheet
     eras/page.tsx        the generation timeline
     gacha/page.tsx       booster pack opening
@@ -182,6 +201,7 @@ lib/
   types.ts               Entry / Unit / Clash / L10n types
   units.ts               the six units and their colours
   entries.ts             all content, plus evolution and clash resolution
+  routes.ts              curated paths, and why each step sits where it does
   eras.ts                the five generations and what each one changed
   matrix.ts              the 6x6 coupling grid and its reasons
   battles.ts             scenarios, options and verdicts

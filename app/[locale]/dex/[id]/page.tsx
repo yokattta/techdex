@@ -15,6 +15,7 @@ import {
   rarityOf,
 } from "@/lib/entries";
 import { isLocale, locales, strings } from "@/lib/i18n";
+import { routesContaining } from "@/lib/routes";
 import { unitMap } from "@/lib/units";
 
 export function generateStaticParams() {
@@ -53,6 +54,7 @@ export default async function EntryPage({
   const chain = evolutionChain(entry.id);
   const clashes = clashesFor(entry.id);
   const rarity = rarityOf(entry);
+  const onRoutes = routesContaining(entry.id);
 
   return (
     <div
@@ -229,6 +231,29 @@ export default async function EntryPage({
                 </li>
               ))}
             </ol>
+          </section>
+        )}
+
+        {onRoutes.length > 0 && (
+          <section className="card-outline rounded-2xl bg-surface p-5">
+            <h2 className="mb-3 flex items-center gap-2 text-sm font-black uppercase tracking-widest text-muted">
+              <span aria-hidden="true">🧭</span>
+              {s("routeAppearsOn")}
+            </h2>
+            <ul className="flex flex-wrap gap-2">
+              {onRoutes.map((route) => (
+                <li key={route.id}>
+                  <Link
+                    href={`/${locale}/routes/${route.id}`}
+                    style={{ ["--route" as string]: route.hue }}
+                    className="pop flex items-center gap-1.5 rounded-full border-2 border-black bg-[hsl(var(--route)/0.14)] px-3 py-1.5 text-xs font-bold"
+                  >
+                    <span aria-hidden="true">{route.glyph}</span>
+                    {route.name[locale]}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </section>
         )}
 

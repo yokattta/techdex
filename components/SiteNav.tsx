@@ -7,13 +7,16 @@ import type { DictKey } from "@/lib/i18n";
 import type { Locale } from "@/lib/types";
 
 /** `segment` is the path after `/{locale}`; the dex lives at the root. */
+// Ordered by what a newcomer needs first: browse, then a path through it, then
+// the drills, then the reference material.
 const sections: { segment: string; label: DictKey; glyph: string }[] = [
   { segment: "", label: "navDex", glyph: "📕" },
+  { segment: "routes", label: "navRoutes", glyph: "🧭" },
   { segment: "lines", label: "navLines", glyph: "💬" },
+  { segment: "battle", label: "navBattle", glyph: "⚔️" },
   { segment: "gacha", label: "gacha", glyph: "🎴" },
   { segment: "eras", label: "navEras", glyph: "🕰️" },
   { segment: "matrix", label: "navMatrix", glyph: "🧮" },
-  { segment: "battle", label: "navBattle", glyph: "⚔️" },
 ];
 
 export function SiteNav({ locale }: { locale: Locale }) {

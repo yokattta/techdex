@@ -62,6 +62,21 @@ const dict = {
   },
   lore: { en: "Where it came from", zh: "它是怎么来的" },
 
+  // Routes
+  navRoutes: { en: "Routes", zh: "路线" },
+  routesTitle: { en: "Routes", zh: "路线" },
+  routesIntro: {
+    en: "Ordered paths through the dex. The order is the point: each step creates the problem the next one solves, and every step says why it sits where it does. A list without that is a playlist.",
+    zh: "穿过图鉴的有序路径。顺序本身就是重点：每一步都制造出下一步要解决的问题，而每一步都会说明它为什么在这个位置。没有这个的清单只是歌单。",
+  },
+  routeOutcome: { en: "At the end of this", zh: "走完之后" },
+  routeWhyHere: { en: "Why here", zh: "为什么在这里" },
+  routeSteps: { en: "steps", zh: "步" },
+  routeProgress: { en: "Caught on this route", zh: "本路线已收服" },
+  routeStart: { en: "Start the route", zh: "开始这条路线" },
+  routeBackToRoutes: { en: "All routes", zh: "全部路线" },
+  routeAppearsOn: { en: "On these routes", zh: "出现在这些路线上" },
+
   // Eras
   navEras: { en: "Eras", zh: "世代" },
   erasTitle: { en: "Generations", zh: "世代" },

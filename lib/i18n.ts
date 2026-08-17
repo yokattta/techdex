@@ -61,6 +61,11 @@ const dict = {
     zh: "证明你真的用过、而不是只读过文档的那句话。",
   },
   lore: { en: "Where it came from", zh: "它是怎么来的" },
+  practice: { en: "Training", zh: "特训" },
+  practiceHint: {
+    en: "Something to run. Having read this card and having done this are different states, and only one of them survives a follow-up question.",
+    zh: "一个能跑的东西。「读过这张卡」和「做过这件事」是两种不同的状态 —— 而只有一种扛得住追问。",
+  },
 
   // Gyms and tracks
   navGyms: { en: "Gyms", zh: "道馆" },

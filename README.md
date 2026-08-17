@@ -33,6 +33,26 @@ they own the same object.
 A clash is declared on one entry only; `clashesFor()` resolves it in both
 directions so each card shows the full picture.
 
+## Training
+
+`practice` is the depth layer, and the rule is that it must be **something you
+run, not something you read**. If the reader could have got the same thing by
+reading harder, it does not belong in the field.
+
+Open two psql sessions, `BEGIN` in one and leave it, hammer the table from the
+other, and watch it bloat. Give an agent a tool that returns an empty list on
+failure and watch it build a confident plan on nothing. Unplug the mouse and try
+to finish your own checkout flow.
+
+It renders collapsed. That is the whole design: depth has to be available
+without making the basic page heavier, because the page is for the reader who
+is not going to open it. A beginner/expert toggle would have been the obvious
+alternative and the wrong one — it doubles the content to maintain and the
+second copy always rots.
+
+The field is optional, on the same principle that concepts don't get invented
+logos: an entry with no honest experiment should not be given a fabricated one.
+
 ## Migrations
 
 The third edge type, and it sits between the other two. `evolvesFrom` is a
@@ -197,7 +217,7 @@ Each entry needs six pieces of prose, and they answer different questions:
 `tagline` (one line), `description` (what it is), `oneLiner` (what to say),
 `lore` (where it came from), `deepDive` (how it actually works and what that
 costs), and `pitfall` (the specific way people get it wrong). Optionally
-`clashes` and `migrations` — see above.
+`practice`, `clashes` and `migrations` — see above.
 
 One rule for `oneLiner`: it has to carry something specific — a mechanism, a
 limit, the question a practitioner asks first. "Kafka is good for streaming" is

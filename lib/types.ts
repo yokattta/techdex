@@ -93,6 +93,15 @@ export type Entry = {
   /** The specific way people get this wrong. */
   pitfall: L10n;
   /**
+   * Something to run, not something to read. This is the depth layer: reading a
+   * card and having done the thing are different states, and only one of them
+   * survives a follow-up question.
+   *
+   * Optional on purpose — an entry with no honest experiment should not get a
+   * fabricated one, the same way concepts don't get invented logos.
+   */
+  practice?: L10n;
+  /**
    * Where it came from — but only the part that doubles as a mnemonic. Trivia
    * that doesn't encode a property of the thing has no business being here.
    */

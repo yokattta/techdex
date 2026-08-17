@@ -241,6 +241,21 @@ export default async function EntryPage({
           </section>
         )}
 
+        {/* Collapsed by default: the depth layer must not make the basic page
+            heavier, or it costs the readers it was not written for. */}
+        {entry.practice && (
+          <details className="card-outline rounded-2xl bg-[hsl(var(--unit)/0.08)] p-5">
+            <summary className="flex cursor-pointer items-center gap-2 text-sm font-black uppercase tracking-widest text-muted">
+              <span aria-hidden="true">🏋️</span>
+              {s("practice")}
+            </summary>
+            <p className="mt-3 mb-2 text-xs text-muted">{s("practiceHint")}</p>
+            <p className="text-base leading-relaxed">
+              {entry.practice[locale]}
+            </p>
+          </details>
+        )}
+
         <MigrationList items={movesOut} locale={locale} direction="out" />
         <MigrationList items={movesIn} locale={locale} direction="in" />
 

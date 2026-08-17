@@ -61,6 +61,10 @@ export const entries: Entry[] = [
         },
       },
     ],
+    practice: {
+      en: "Build an image, run it, `docker exec` in and write a file to /tmp. Restart the container and go looking for it. Two minutes, and \"the writable layer is not storage\" stops being advice you were given.",
+      zh: "构建一个镜像跑起来，`docker exec` 进去往 /tmp 写个文件。重启容器，再去找那个文件。两分钟，「可写层不是存储」就不再是一句别人告诉你的话了。",
+    },
     stats: { difficulty: 35, ubiquity: 95, impact: 90, ops: 30 },
     moves: [
       {
@@ -128,6 +132,10 @@ export const entries: Entry[] = [
     },
     era: 3,
     status: "settled",
+    practice: {
+      en: "Run `kubectl delete pod` on something owned by a Deployment, then immediately `kubectl get pods -w`. Watch it come back under a new name. Now try to make it stay dead without touching the Deployment.",
+      zh: "对一个属于 Deployment 的 pod 执行 `kubectl delete pod`，然后立刻 `kubectl get pods -w`。看着它换个名字回来。接着试试：在不碰 Deployment 的前提下，让它保持死亡。",
+    },
     stats: { difficulty: 88, ubiquity: 78, impact: 92, ops: 85 },
     moves: [
       {
@@ -203,6 +211,10 @@ export const entries: Entry[] = [
     },
     era: 3,
     status: "settled",
+    practice: {
+      en: "Apply a config, then change one thing by hand in the console. Run `terraform plan` and read what it intends to do to your change. That output is drift, and it is the whole argument against the console.",
+      zh: "apply 一份配置，然后在控制台里手动改一个东西。跑 `terraform plan`，读一读它打算怎么处理你的改动。那份输出就是 drift，也就是「别用控制台」的全部论据。",
+    },
     stats: { difficulty: 55, ubiquity: 70, impact: 75, ops: 45 },
     moves: [
       {
@@ -260,6 +272,10 @@ export const entries: Entry[] = [
     },
     era: 2,
     status: "settled",
+    practice: {
+      en: "Add a test that fails one run in ten — a random assertion will do. Leave it for a week. Then count how many times you or someone else hit re-run instead of reading the failure.",
+      zh: "加一个十次里失败一次的测试 —— 一个随机断言就够了。放一周。然后数一数，你或者别人有多少次是直接点了重跑，而不是去读那个失败。",
+    },
     stats: { difficulty: 40, ubiquity: 90, impact: 82, ops: 35 },
     moves: [
       {
@@ -319,6 +335,10 @@ export const entries: Entry[] = [
     },
     era: 2,
     status: "settled",
+    practice: {
+      en: "Produce 100 messages across two keys into a three-partition topic. Start two consumers in one group and log which key lands where. Then add a fourth partition and produce the same keys again.",
+      zh: "往一个 3 partition 的 topic 里，用两个 key 发 100 条消息。在同一个 group 里起两个 consumer，记录哪个 key 落到哪。然后加第四个 partition，再发一遍同样的 key。",
+    },
     stats: { difficulty: 72, ubiquity: 74, impact: 88, ops: 78 },
     moves: [
       {
@@ -420,6 +440,10 @@ export const entries: Entry[] = [
         },
       },
     ],
+    practice: {
+      en: "Open two psql sessions. `BEGIN` in one and then leave it alone. In the other, update the same table a few thousand times. Watch `pg_total_relation_size` grow and find the idle transaction in `pg_stat_activity`.",
+      zh: "开两个 psql 会话。在其中一个里 `BEGIN`，然后就放着不管。在另一个里对同一张表更新几千次。盯着 `pg_total_relation_size` 长大，再去 `pg_stat_activity` 里把那个空闲事务找出来。",
+    },
     stats: { difficulty: 45, ubiquity: 92, impact: 90, ops: 50 },
     moves: [
       {
@@ -503,6 +527,10 @@ export const entries: Entry[] = [
         },
       },
     ],
+    practice: {
+      en: "Load a million keys, then run `KEYS *` while timing a simple `GET` from another connection. The GET's latency during that window is the entire lesson about single-threadedness.",
+      zh: "灌一百万个 key，然后一边跑 `KEYS *`，一边从另一个连接给一个普通的 `GET` 计时。那段时间里 GET 的延迟，就是「单线程」这一课的全部。",
+    },
     stats: { difficulty: 30, ubiquity: 85, impact: 72, ops: 40 },
     moves: [
       {
@@ -560,6 +588,10 @@ export const entries: Entry[] = [
     },
     era: 1,
     status: "settled",
+    practice: {
+      en: "Put Nginx in front of an endpoint that sleeps ninety seconds. Leave `proxy_read_timeout` at its default, then watch the client take a 504 while the backend log quietly records a success.",
+      zh: "在一个 sleep 九十秒的接口前面放一个 Nginx。把 `proxy_read_timeout` 留在默认值，然后看着客户端吃到 504，而后端日志安安静静地记录了一次成功。",
+    },
     stats: { difficulty: 38, ubiquity: 88, impact: 70, ops: 32 },
     moves: [
       {
@@ -619,6 +651,10 @@ export const entries: Entry[] = [
     },
     era: 4,
     status: "rising",
+    practice: {
+      en: "Take your last incident and try to answer, using only data you already had: which user, which endpoint, which deploy. Write down every question you could not answer. That list is your instrumentation backlog.",
+      zh: "拿你上一次事故，只用当时就已经有的数据去回答三个问题：哪个用户、哪个 endpoint、哪次发布。把答不上来的每一个问题写下来。那份清单就是你的埋点待办。",
+    },
     stats: { difficulty: 60, ubiquity: 68, impact: 86, ops: 55 },
     moves: [
       {
@@ -677,6 +713,10 @@ export const entries: Entry[] = [
     },
     era: 2,
     status: "settled",
+    practice: {
+      en: "Run a three-node cluster in Docker and `docker network disconnect` one of them. Write to the majority side, then read from the isolated node. Whatever it does is the choice its authors already made on your behalf.",
+      zh: "用 Docker 起一个三节点集群，然后 `docker network disconnect` 掉其中一个。往多数派那边写，再从被隔离的那个节点读。它的行为，就是作者早已替你做好的那个选择。",
+    },
     stats: { difficulty: 55, ubiquity: 62, impact: 80, ops: 10 },
     moves: [
       {
@@ -727,6 +767,10 @@ export const entries: Entry[] = [
     },
     era: 2,
     status: "settled",
+    practice: {
+      en: "Set up a read replica with artificial lag. Write a value, then immediately read from the replica in a loop, printing timestamps until it appears. That gap, in milliseconds, is the bug your users will report as \"it didn't save\".",
+      zh: "搭一个带人为延迟的只读副本。写入一个值，然后立刻在循环里从副本读，打印时间戳直到它出现。那段以毫秒计的间隔，就是你的用户会以「没保存上」来报的那个 bug。",
+    },
     stats: { difficulty: 65, ubiquity: 70, impact: 78, ops: 20 },
     moves: [
       {
@@ -778,6 +822,10 @@ export const entries: Entry[] = [
     },
     era: 3,
     status: "settled",
+    practice: {
+      en: "Write an endpoint that charges nothing but appends a row. Call it twice with the same idempotency key, then twice without. Then kill the process between the write and the response, and call it again.",
+      zh: "写一个不扣款、只往表里追加一行的接口。用同一个 idempotency key 调两次，再不带 key 调两次。然后在「写入完成」和「返回响应」之间把进程杀掉，再调一次。",
+    },
     stats: { difficulty: 42, ubiquity: 66, impact: 84, ops: 15 },
     moves: [
       {
@@ -830,6 +878,10 @@ export const entries: Entry[] = [
     },
     era: 4,
     status: "settled",
+    practice: {
+      en: "Send the same prompt twice: once asking for 2000 output tokens, once with 2000 extra tokens of input and a short answer. Compare latency and cost. The asymmetry you measure is the whole lesson.",
+      zh: "把同一个 prompt 发两次：一次要求输出 2000 个 token，一次在输入里多塞 2000 个 token 但只要短答案。比较延迟和成本。你量出来的那个不对称，就是这一课的全部。",
+    },
     stats: { difficulty: 85, ubiquity: 80, impact: 96, ops: 40 },
     moves: [
       {
@@ -890,6 +942,10 @@ export const entries: Entry[] = [
     },
     era: 4,
     status: "rising",
+    practice: {
+      en: "Embed five questions and the five answers to them. Print the similarity matrix. If the questions cluster with each other rather than with their answers, you have just discovered what your model was trained to consider similar.",
+      zh: "把五个问题、以及它们对应的五个答案都做成 embedding，打印相似度矩阵。如果问题之间聚在一起、而不是和各自的答案聚在一起，你就刚刚发现了你的模型被训练成认为「什么算相似」。",
+    },
     stats: { difficulty: 50, ubiquity: 82, impact: 85, ops: 35 },
     moves: [
       {
@@ -965,6 +1021,10 @@ export const entries: Entry[] = [
         },
       },
     ],
+    practice: {
+      en: "Take twenty real questions and check one thing only: is the correct chunk in the top k? Report recall as a single number before you touch a single prompt.",
+      zh: "拿二十个真实问题，只检查一件事：正确的片段在不在 top k 里。在你动任何一个 prompt 之前，先把召回率报成一个数字。",
+    },
     stats: { difficulty: 58, ubiquity: 76, impact: 88, ops: 50 },
     moves: [
       {
@@ -1032,6 +1092,10 @@ export const entries: Entry[] = [
     },
     era: 4,
     status: "rising",
+    practice: {
+      en: "Before training anything, build a hundred-example eval set and score your current prompt against it. A good share of the time this ends the project — which is exactly what it is for.",
+      zh: "在训练任何东西之前，先建一个一百条的评测集，用它给你现在的 prompt 打分。相当一部分时候，这一步就让项目结束了 —— 而这正是它存在的意义。",
+    },
     stats: { difficulty: 78, ubiquity: 48, impact: 66, ops: 65 },
     moves: [
       {
@@ -1101,6 +1165,10 @@ export const entries: Entry[] = [
         },
       },
     ],
+    practice: {
+      en: "Start a background thread from inside a request handler and touch `request` in it. Read the error. Then work out why the identical line is fine one function up.",
+      zh: "在一个请求处理函数里起一个后台线程，在线程里碰一下 `request`。读那个报错。然后想明白：为什么一模一样的一行，写在上一层函数里就没事。",
+    },
     stats: { difficulty: 22, ubiquity: 72, impact: 62, ops: 25 },
     moves: [
       {
@@ -1158,6 +1226,10 @@ export const entries: Entry[] = [
     },
     era: 4,
     status: "rising",
+    practice: {
+      en: "Write two endpoints that each sleep one second — one `async def` using `time.sleep`, one using `asyncio.sleep`. Hit each with twenty concurrent requests and compare total wall time.",
+      zh: "写两个各 sleep 一秒的接口 —— 一个 `async def` 里用 `time.sleep`，另一个用 `asyncio.sleep`。各打二十个并发请求，比较总耗时。",
+    },
     stats: { difficulty: 40, ubiquity: 70, impact: 74, ops: 30 },
     moves: [
       {
@@ -1233,6 +1305,10 @@ export const entries: Entry[] = [
         },
       },
     ],
+    practice: {
+      en: "Find a `useEffect` in your codebase that calls `setState` because a prop or state changed. Delete it and compute the value during render instead. Count the bugs that disappear with it.",
+      zh: "在你的代码库里找一个「因为 prop 或 state 变了而调用 setState」的 `useEffect`。删掉它，改成在渲染时把那个值算出来。数一数跟着一起消失的 bug。",
+    },
     stats: { difficulty: 48, ubiquity: 94, impact: 90, ops: 20 },
     moves: [
       {
@@ -1299,6 +1375,10 @@ export const entries: Entry[] = [
     },
     era: 4,
     status: "rising",
+    practice: {
+      en: "Add `'use client'` to a layout, build, and note the bundle size. Move the directive down to the one component that actually needed it, build again, and compare.",
+      zh: "在一个 layout 上加 `'use client'`，构建，记下 bundle 大小。把这条指令下移到真正需要它的那一个组件上，再构建一次，比较。",
+    },
     stats: { difficulty: 62, ubiquity: 80, impact: 82, ops: 35 },
     moves: [
       {
@@ -1359,6 +1439,10 @@ export const entries: Entry[] = [
     },
     era: 4,
     status: "rising",
+    practice: {
+      en: "Grep your codebase for hex colours. Every hit is a decision that will not follow you into dark mode.",
+      zh: "在代码库里 grep 十六进制色值。每一个命中，都是一个不会跟着你进暗色模式的决策。",
+    },
     stats: { difficulty: 25, ubiquity: 64, impact: 70, ops: 15 },
     moves: [
       {
@@ -1418,6 +1502,10 @@ export const entries: Entry[] = [
     },
     era: 4,
     status: "settled",
+    practice: {
+      en: "Count the button implementations in your repo. Then ask each team that wrote their own why they did not use the shared one. Those answers are your roadmap, and none of them will be \"we didn't know it existed\".",
+      zh: "数一数仓库里有几个按钮实现。然后去问每个写了自己那版的团队：为什么没用共享的那个。这些答案就是你的路线图 —— 而且没有一条会是「我们不知道有这个」。",
+    },
     stats: { difficulty: 55, ubiquity: 58, impact: 76, ops: 45 },
     moves: [
       {
@@ -1469,6 +1557,10 @@ export const entries: Entry[] = [
     },
     era: 1,
     status: "settled",
+    practice: {
+      en: "Unplug the mouse. Complete your product's main flow with the keyboard alone. Stop at the first place you cannot reach, because that is where a real person stops too.",
+      zh: "拔掉鼠标。只用键盘走完你产品的主流程。在第一个你到不了的地方停下 —— 因为真实的人也在那里停下。",
+    },
     stats: { difficulty: 44, ubiquity: 60, impact: 88, ops: 20 },
     moves: [
       {
@@ -1529,6 +1621,10 @@ export const entries: Entry[] = [
     },
     era: 4,
     status: "settled",
+    practice: {
+      en: "Take your most recent mockup and list every state it does not specify: empty, loading, errored, a forty-character name, 320px wide, 200% text zoom. That list is what somebody decides alone, at speed, at the end.",
+      zh: "拿你最近的那张稿子，列出它没有规定的每一个状态：空、加载中、报错、四十个字符的名字、320px 宽、文字放大到 200%。那份清单，就是最后会有人独自赶着时间决定的东西。",
+    },
     stats: { difficulty: 30, ubiquity: 86, impact: 68, ops: 10 },
     moves: [
       {
@@ -1580,6 +1676,10 @@ export const entries: Entry[] = [
     },
     era: 5,
     status: "rising",
+    practice: {
+      en: "Index a hundred thousand vectors, then query with one whose exact nearest neighbour you already know. Lower the recall setting until it stops coming back first. That number is now something you have felt rather than read.",
+      zh: "索引十万个向量，然后用一个你已经确切知道最近邻是谁的向量去查。把 recall 设置一路调低，直到它不再排第一。那个数字从此是你体感过的，而不是读到的。",
+    },
     stats: { difficulty: 55, ubiquity: 62, impact: 74, ops: 58 },
     moves: [
       {
@@ -1646,6 +1746,10 @@ export const entries: Entry[] = [
     },
     era: 1,
     status: "settled",
+    practice: {
+      en: "Point a load balancer at two backends and make one return 200 on `/health` while its database connection pool is exhausted. Watch traffic keep arriving at it.",
+      zh: "让负载均衡指向两个后端，其中一个在数据库连接池已经耗尽的情况下，`/health` 仍然返回 200。看着流量继续送到它那里。",
+    },
     stats: { difficulty: 42, ubiquity: 90, impact: 78, ops: 40 },
     moves: [
       {
@@ -1703,6 +1807,10 @@ export const entries: Entry[] = [
     },
     era: 2,
     status: "settled",
+    practice: {
+      en: "Take your slowest query and work out on paper which shard it would hit under three candidate shard keys. At least one of them turns it into a scatter-gather, and that is the one somebody would have picked.",
+      zh: "拿你最慢的那条查询，在纸上算一算：在三个候选 shard key 之下，它会打到哪个分片。其中至少有一个会把它变成 scatter-gather —— 而那个恰好就是有人会选的那个。",
+    },
     stats: { difficulty: 72, ubiquity: 55, impact: 80, ops: 82 },
     moves: [
       {
@@ -1771,6 +1879,10 @@ export const entries: Entry[] = [
     },
     era: 1,
     status: "settled",
+    practice: {
+      en: "Cache a value with a five-second TTL, then hit it with a hundred concurrent requests in a loop for a minute. Graph the database's query count. The spikes at each expiry are stampedes, and you built them.",
+      zh: "给一个值设五秒 TTL，然后用一百并发循环打它一分钟。把数据库的查询数画成图。每次过期处的那个尖峰就是击穿 —— 而它是你造出来的。",
+    },
     stats: { difficulty: 40, ubiquity: 92, impact: 84, ops: 30 },
     moves: [
       {
@@ -1837,6 +1949,10 @@ export const entries: Entry[] = [
     },
     era: 2,
     status: "settled",
+    practice: {
+      en: "Implement a fixed window of a hundred per minute, then spend the whole budget in the last second of one window and again in the first second of the next. You just did two hundred in two seconds, entirely within the rules.",
+      zh: "实现一个「每分钟一百次」的固定窗口，然后在一个窗口的最后一秒把额度花光，紧接着在下一个窗口的第一秒再花一遍。你刚刚在两秒内做了两百次 —— 完全符合规则。",
+    },
     stats: { difficulty: 38, ubiquity: 74, impact: 76, ops: 28 },
     moves: [
       {
@@ -1903,6 +2019,10 @@ export const entries: Entry[] = [
     },
     era: 3,
     status: "settled",
+    practice: {
+      en: "Write a producer faster than its consumer with an unbounded queue between them, and watch memory. Then bound the queue and be forced to decide what happens when it fills.",
+      zh: "写一个比消费者快的生产者，中间放一个无界队列，然后盯着内存。接着把队列改成有界的，逼自己决定「满了之后怎么办」。",
+    },
     stats: { difficulty: 55, ubiquity: 62, impact: 78, ops: 35 },
     moves: [
       {
@@ -1960,6 +2080,10 @@ export const entries: Entry[] = [
     },
     era: 5,
     status: "rising",
+    practice: {
+      en: "Run a schema check over your last hundred model outputs. Then read the ones that passed, and count how many are confidently wrong. The difference between those two numbers is the gap between structural and semantic.",
+      zh: "拿你最近一百条模型输出跑一遍 schema 校验。然后去读那些通过了的，数一数其中有多少是自信地错了。这两个数字之间的差，就是结构性和语义性之间的距离。",
+    },
     stats: { difficulty: 45, ubiquity: 60, impact: 82, ops: 35 },
     moves: [
       {
@@ -2026,6 +2150,10 @@ export const entries: Entry[] = [
     },
     era: 5,
     status: "rising",
+    practice: {
+      en: "Ask a model for five citations on a niche topic and check all five. Then put the real documents in the context and ask the same question again.",
+      zh: "让模型给一个冷门话题提供五条引用，然后逐条核实。接着把真实文档放进上下文，把同一个问题再问一遍。",
+    },
     stats: { difficulty: 40, ubiquity: 88, impact: 90, ops: 25 },
     moves: [
       {
@@ -2102,6 +2230,10 @@ export const entries: Entry[] = [
         },
       },
     ],
+    practice: {
+      en: "Split your examples into ten you tune against and ten you never look at. Tune until the first set is perfect, then run the second. The gap between them is your overfitting, measured.",
+      zh: "把你的样例分成两组：十个用来调，十个永远不看。调到第一组完美，然后跑第二组。两者之间的差距，就是你被量出来的过拟合。",
+    },
     stats: { difficulty: 30, ubiquity: 80, impact: 78, ops: 20 },
     moves: [
       {
@@ -2168,6 +2300,10 @@ export const entries: Entry[] = [
     },
     era: 5,
     status: "rising",
+    practice: {
+      en: "Give an agent a tool that returns an empty list on failure instead of an error, and watch it build a confident plan on nothing at all. Then fix the tool and run the identical task.",
+      zh: "给 agent 一个「失败时返回空列表而不是报错」的工具，然后看着它在彻底的虚无之上建起一个自信的计划。接着把工具修好，跑一模一样的任务。",
+    },
     stats: { difficulty: 68, ubiquity: 58, impact: 80, ops: 62 },
     moves: [
       {
@@ -2234,6 +2370,10 @@ export const entries: Entry[] = [
     },
     era: 5,
     status: "rising",
+    practice: {
+      en: "Grade a hundred outputs by hand. Then have a model grade the same hundred and measure how often they agree. Until you have done this once, the automatic number means nothing at all.",
+      zh: "手工评一百条输出。然后让一个模型评同样这一百条，量一量两者有多经常一致。在你做过一次这件事之前，那个自动化的数字什么也不代表。",
+    },
     stats: { difficulty: 58, ubiquity: 55, impact: 86, ops: 45 },
     moves: [
       {
@@ -2302,6 +2442,10 @@ export const entries: Entry[] = [
     },
     era: 4,
     status: "settled",
+    practice: {
+      en: "Define a model with an `int` field and pass it the string \"3\", then \"3.5\", then \"three\". Turn on strict mode and do all three again.",
+      zh: "定义一个带 `int` 字段的 model，先传字符串 \"3\"，再传 \"3.5\"，再传 \"three\"。打开 strict 模式，三个再来一遍。",
+    },
     stats: { difficulty: 25, ubiquity: 76, impact: 68, ops: 12 },
     moves: [
       {

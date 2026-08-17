@@ -18,6 +18,7 @@ import {
   rarityOf,
 } from "@/lib/entries";
 import { isLocale, locales, strings } from "@/lib/i18n";
+import { gymsWithEntry } from "@/lib/gyms";
 import { routesContaining } from "@/lib/routes";
 import { unitMap } from "@/lib/units";
 
@@ -60,6 +61,7 @@ export default async function EntryPage({
   const onRoutes = routesContaining(entry.id);
   const movesOut = migrationsFrom(entry.id);
   const movesIn = migrationsInto(entry.id);
+  const inGyms = gymsWithEntry(entry.id);
 
   return (
     <div
@@ -241,6 +243,28 @@ export default async function EntryPage({
 
         <MigrationList items={movesOut} locale={locale} direction="out" />
         <MigrationList items={movesIn} locale={locale} direction="in" />
+
+        {inGyms.length > 0 && (
+          <section className="card-outline rounded-2xl bg-surface p-5">
+            <h2 className="mb-3 flex items-center gap-2 text-sm font-black uppercase tracking-widest text-muted">
+              <span aria-hidden="true">🏟️</span>
+              {s("gymEntryAppearsIn")}
+            </h2>
+            <ul className="flex flex-wrap gap-2">
+              {inGyms.map((gym) => (
+                <li key={gym.id}>
+                  <Link
+                    href={`/${locale}/gyms/${gym.id}`}
+                    className="pop flex items-center gap-1.5 rounded-full border-2 border-black bg-black/5 px-3 py-1.5 text-xs font-bold dark:bg-white/10"
+                  >
+                    <span aria-hidden="true">{gym.glyph}</span>
+                    {gym.name[locale]}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         {onRoutes.length > 0 && (
           <section className="card-outline rounded-2xl bg-surface p-5">

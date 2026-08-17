@@ -12,6 +12,7 @@ import type { Locale } from "@/lib/types";
 const sections: { segment: string; label: DictKey; glyph: string }[] = [
   { segment: "", label: "navDex", glyph: "📕" },
   { segment: "routes", label: "navRoutes", glyph: "🧭" },
+  { segment: "gyms", label: "navGyms", glyph: "🏟️" },
   { segment: "lines", label: "navLines", glyph: "💬" },
   { segment: "battle", label: "navBattle", glyph: "⚔️" },
   { segment: "gacha", label: "gacha", glyph: "🎴" },

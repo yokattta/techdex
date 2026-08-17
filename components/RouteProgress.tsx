@@ -2,6 +2,7 @@
 
 import { useCaught } from "@/lib/caught";
 import { strings } from "@/lib/i18n";
+import type { DictKey } from "@/lib/i18n";
 import type { Locale } from "@/lib/types";
 
 /**
@@ -13,10 +14,13 @@ export function RouteProgress({
   entryIds,
   locale,
   compact = false,
+  label = "routeProgress",
 }: {
   entryIds: string[];
   locale: Locale;
   compact?: boolean;
+  /** Which caption to use — a gym roster is not "this route". */
+  label?: DictKey;
 }) {
   const s = strings(locale);
   const { caught } = useCaught();
@@ -26,11 +30,11 @@ export function RouteProgress({
   return (
     <div
       className={compact ? "flex items-center gap-2" : "grid gap-1.5"}
-      aria-label={`${s("routeProgress")}: ${done} / ${entryIds.length}`}
+      aria-label={`${s(label)}: ${done} / ${entryIds.length}`}
     >
       {!compact && (
         <span className="text-xs font-bold uppercase tracking-wide text-muted">
-          {s("routeProgress")}
+          {s(label)}
         </span>
       )}
       <div className="flex items-center gap-2">

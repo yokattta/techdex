@@ -62,6 +62,30 @@ const dict = {
   },
   lore: { en: "Where it came from", zh: "它是怎么来的" },
 
+  // Gyms and tracks
+  navGyms: { en: "Gyms", zh: "道馆" },
+  gymsTitle: { en: "Gyms & tracks", zh: "道馆与赛道" },
+  gymsIntro: {
+    en: "Gyms are archetype organisations — a kind of problem at a kind of scale — not named companies. 'Company X uses Y' goes stale within a year, is usually wrong from the outside, and reads as an endorsement nobody asked for. The shape is what transfers.",
+    zh: "道馆是原型组织 —— 某种规模下的某类问题 —— 而不是具体公司。「某某公司用某某」一年内就会过期，从外面看多半还是错的，而且读起来像一份没人要求的背书。真正能迁移的是形状。",
+  },
+  gymFormation: { en: "Formation", zh: "阵型" },
+  gymFormationHint: {
+    en: "The six this role is actually built on.",
+    zh: "这个角色真正立在上面的六个。",
+  },
+  gymCircuit: { en: "Circuit", zh: "巡回" },
+  gymSituation: { en: "The situation", zh: "情境" },
+  gymRoster: { en: "Their stack", zh: "他们的技术栈" },
+  gymQuestion: { en: "The leader asks", zh: "馆主提问" },
+  gymAnswer: { en: "What a good answer contains", zh: "好的回答里有什么" },
+  gymReveal: { en: "Show the answer", zh: "看答案" },
+  gymAppearsOn: { en: "On these tracks", zh: "属于这些赛道" },
+  gymBackToGyms: { en: "All gyms", zh: "全部道馆" },
+  gymEntryAppearsIn: { en: "Used by these gyms", zh: "这些道馆在用" },
+  gymGap: { en: "What this track is missing", zh: "这条赛道缺什么" },
+  gymCaught: { en: "Roster caught", zh: "阵容已收服" },
+
   // Migrations
   migrationsOut: { en: "People move to", zh: "人们会迁到" },
   migrationsIn: { en: "People arrive from", zh: "人们从这里迁来" },

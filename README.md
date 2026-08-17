@@ -114,6 +114,31 @@ entry, not a route, and should be rewritten.
 Progress reuses the existing caught store, so marking a card anywhere moves
 every route it appears on.
 
+## Gyms and tracks
+
+`/[locale]/gyms` is eight **archetype organisations** — a kind of problem at a
+kind of scale — grouped into five role tracks: SDE, DE, AI Engineer, Frontend
+and DS.
+
+They are deliberately not named companies. "Company X uses Y" goes stale inside
+a year, is usually wrong from the outside, and reads as an endorsement nobody
+asked for. An archetype teaches the shape, and the shape is what transfers.
+
+Each gym carries a **leader question** — the thing you would actually be asked,
+chosen so that reading the roster does not get you through it. *"The cache is
+there to protect the database. What happens the moment a very popular key
+expires?"* The answer is behind a `details` toggle, so it works without
+JavaScript.
+
+Each track also has a **formation**: the six entries that role is genuinely
+built on, which is a different question from what any one gym runs.
+
+The DS track carries a `gap` note listing what the dex would need before that
+circuit means anything — experiment design, statistical power, A/B testing and
+its failure modes, data leakage, feature engineering, and the distance between
+a notebook and something that runs on a schedule. Same principle as the eras
+page: a visible gap is a to-do list, not a claim that the role is small.
+
 ## Type chart
 
 `/[locale]/matrix` is a 6×6 grid read in one direction only: **a decision in the
@@ -209,6 +234,8 @@ app/
     dex/[id]/page.tsx    one entry
     routes/page.tsx      the five learning paths
     routes/[id]/page.tsx one path, step by step
+    gyms/page.tsx        tracks, formations and circuits
+    gyms/[id]/page.tsx   one archetype org and its leader question
     lines/page.tsx       one-liner cheat sheet
     eras/page.tsx        the generation timeline
     gacha/page.tsx       booster pack opening
@@ -220,6 +247,7 @@ lib/
   units.ts               the six units and their colours
   entries.ts             all content, plus evolution and clash resolution
   routes.ts              curated paths, and why each step sits where it does
+  gyms.ts                archetype orgs, role tracks and formations
   eras.ts                the five generations and what each one changed
   matrix.ts              the 6x6 coupling grid and its reasons
   battles.ts             scenarios, options and verdicts

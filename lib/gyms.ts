@@ -168,6 +168,31 @@ export const gyms: Gym[] = [
     roster: ["agents", "guardrails", "model-eval", "idempotency", "rate-limiting", "observability"],
   },
   {
+    id: "customer-deployment",
+    name: { en: "The Customer Deployment", zh: "客户现场" },
+    glyph: "🧳",
+    situation: {
+      en: "You are building inside somebody else's environment: their cloud, their auth, their security review, their data. The export arrives nightly as a CSV with inconsistent encodings, half the fields you need are in a system nobody has admin on, and the demo is Friday.",
+      zh: "你在别人的环境里做东西：他们的云、他们的鉴权、他们的安全评审、他们的数据。导出文件每晚以 CSV 送来，编码还不一致；你需要的字段有一半在一个没人有管理员权限的系统里；而演示定在周五。",
+    },
+    question: {
+      en: "The pilot works. What has to be true before it survives without you in the room?",
+      zh: "试点跑通了。在你不在场的情况下它还要活下去 —— 什么必须先成立？",
+    },
+    answer: {
+      en: "The reflex answer is documentation, and it is the weakest one — nobody reads it and it describes a system that has already changed. What actually holds: telemetry the customer can read themselves, an eval they can rerun when their data shifts under them, and every integration made idempotent because a nightly export will double-deliver eventually. The real test is subtractive — anything you would have to fly back to fix is something you built wrong, so the bespoke part has to shrink into configuration before you leave.",
+      zh: "条件反射的答案是文档，而它是最弱的那个 —— 没人读，而且它描述的系统已经变了。真正撑得住的是：客户自己读得懂的遥测、一套他们能在数据变化后自己重跑的评测，以及每一处都做了幂等的集成 —— 因为每晚的导出迟早会重复投递一次。真正的检验标准是减法式的：任何「你得飞回去才能修」的东西，都是你当初建错了 —— 所以在你离开之前，定制的那部分必须收缩成配置。",
+    },
+    roster: [
+      "docker",
+      "idempotency",
+      "observability",
+      "eventual-consistency",
+      "guardrails",
+      "model-eval",
+    ],
+  },
+  {
     id: "design-system-org",
     name: { en: "The Design System Org", zh: "设计系统组织" },
     glyph: "🧱",
@@ -239,6 +264,30 @@ export const tracks: Track[] = [
     },
     gyms: ["design-system-org"],
     formation: ["react", "nextjs", "design-tokens", "design-system", "accessibility", "figma"],
+  },
+  {
+    id: "fde",
+    role: "FDE",
+    name: { en: "Forward deployed engineer", zh: "前置部署工程师" },
+    glyph: "🟠",
+    hue: "24 90% 44%",
+    intro: {
+      en: "The role where you do not control the environment. Published descriptions of it split the work roughly into rapid prototyping, architecture, and discovery with the customer — so the formation here is deliberately the LLM application stack rather than general infrastructure, and the circuit ends on the question that defines the job: does it survive without you in the room?",
+      zh: "你控制不了环境的那个角色。公开的岗位描述大致把工作切成快速原型、架构设计、以及与客户一起做发现 —— 所以这里的阵型刻意是 LLM 应用栈而不是通用基础设施，而巡回的终点是定义这份工作的那个问题：你不在场，它还活得下去吗？",
+    },
+    gyms: ["rag-product", "agent-platform", "customer-deployment"],
+    formation: [
+      "prompt-engineering",
+      "rag",
+      "agents",
+      "model-eval",
+      "guardrails",
+      "fastapi",
+    ],
+    gap: {
+      en: "Roughly a third of this job is not in any dex and never will be: discovery with a customer, working under ambiguity, and representing your employer in someone else's building. The dex can prepare the other two thirds. Treat a full formation here as necessary and not sufficient.",
+      zh: "这份工作大约三分之一的内容不在任何图鉴里、也永远不会在：和客户一起做需求发现、在模糊中推进、以及在别人的办公楼里代表你的雇主。图鉴能帮你准备另外三分之二。把这里的满阵型当作必要条件，而不是充分条件。",
+    },
   },
   {
     id: "ds",

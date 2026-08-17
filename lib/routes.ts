@@ -214,6 +214,103 @@ export const routes: Route[] = [
   },
 
   {
+    id: "fde",
+    name: {
+      en: "Forward deployed engineer",
+      zh: "前置部署工程师",
+    },
+    glyph: "🧳",
+    hue: "24 90% 44%",
+    outcome: {
+      en: "You can build an LLM application on a customer's own data, prove to them that it works, and hand it over so that it keeps working when you leave.",
+      zh: "你能基于客户自己的数据做出一个 LLM 应用、向他们证明它确实有效，并且把它交接出去 —— 让它在你离开之后继续有效。",
+    },
+    intro: {
+      en: "Ordered as build → prove → hand over, because that is the sequence the job runs in and the last third is the part people skip. Published descriptions of this role name prompt engineering, agent development and evaluation frameworks explicitly, so those are not optional here.",
+      zh: "顺序是「做出来 → 证明它有效 → 交接出去」，因为工作本身就是按这个顺序跑的，而最后三分之一恰恰是大家会跳过的部分。这个角色的公开描述明确点名了 prompt engineering、agent 开发和评测框架 —— 所以它们在这里不是可选项。",
+    },
+    steps: [
+      {
+        entry: "fastapi",
+        why: {
+          en: "Start with shipping, not with models. The baseline this role asks for is a Python service that actually runs in production; everything after this is something you put behind it.",
+          zh: "从「能交付」开始，而不是从模型开始。这个角色要求的基线是一个真的能在生产跑起来的 Python 服务；之后的一切都是你放在它后面的东西。",
+        },
+      },
+      {
+        entry: "pydantic",
+        why: {
+          en: "Immediately after, because a model's output is untrusted input and a schema is the cheapest thing that makes it testable. Structured output turns a demo into something you can write an assertion about.",
+          zh: "紧接着，因为模型的输出是不可信输入，而 schema 是让它变得可测试的最便宜手段。结构化输出把一个 demo 变成了你能对它写断言的东西。",
+        },
+      },
+      {
+        entry: "prompt-engineering",
+        why: {
+          en: "The first LLM lever and the one to exhaust before anything expensive. In a customer engagement it is also the only lever that changes an answer in the meeting rather than next sprint.",
+          zh: "第一个 LLM 杠杆，也是在动任何昂贵东西之前该榨干的那个。在客户现场，它还是唯一一个能在会议进行中就改变答案、而不用等下个迭代的杠杆。",
+        },
+      },
+      {
+        entry: "rag",
+        why: {
+          en: "Where the customer's own data enters. Almost every engagement is some version of 'answer questions over documents we cannot send you', so this is the shape most prototypes take.",
+          zh: "客户自己的数据从这里进来。几乎每一次交付都是「基于我们不能发给你的文档来回答问题」的某个版本 —— 所以大多数原型都是这个形状。",
+        },
+      },
+      {
+        entry: "hallucination",
+        why: {
+          en: "Before the demo rather than after it. A confidently invented answer in front of the person paying for the pilot costs more than any latency problem, and understanding why 'be accurate' does nothing is what stops you promising it.",
+          zh: "在演示之前而不是之后。在为试点付钱的那个人面前自信地编造一个答案，代价比任何延迟问题都大 —— 而理解「请准确」为什么毫无作用，才能让你不去承诺它。",
+        },
+      },
+      {
+        entry: "guardrails",
+        why: {
+          en: "The deterministic layer around all of the above. In someone else's environment this is also the thing that makes the output safe to act on, which is the bar for touching their systems at all.",
+          zh: "包在上面这一切外面的确定性层。在别人的环境里，它同时也是「让输出可以被安全执行」的那个东西 —— 而那是你能碰他们系统的最低门槛。",
+        },
+      },
+      {
+        entry: "model-eval",
+        why: {
+          en: "The step that turns your opinion into their evidence. This is the difference between a pilot that renews and one that dies quietly, because the customer needs a number they can rerun themselves after their data shifts.",
+          zh: "把你的意见变成他们的证据的那一步。这是「续约的试点」和「悄悄死掉的试点」之间的区别 —— 因为客户需要一个在自己数据变化之后能自己重跑的数字。",
+        },
+      },
+      {
+        entry: "agents",
+        why: {
+          en: "Named explicitly in this role's description, and placed after evaluation on purpose: an agent multiplies every failure mode by the number of steps, so you want the eval in place before you can no longer tell which step went wrong.",
+          zh: "这个角色的描述里明确点了名，而且刻意放在评测之后：agent 会把每一种失败模式乘以步数 —— 所以你要在「已经分不清是哪一步错了」之前，先把评测建好。",
+        },
+      },
+      {
+        entry: "idempotency",
+        why: {
+          en: "The first of the handover steps. You are wiring into systems you did not write, and a nightly export will double-deliver eventually — which is a data corruption bug that surfaces weeks after you have left.",
+          zh: "交接阶段的第一步。你在往一些不是你写的系统里接线，而每晚的导出迟早会重复投递一次 —— 那是一个在你离开几周之后才浮现的数据损坏 bug。",
+        },
+      },
+      {
+        entry: "observability",
+        why: {
+          en: "Because you cannot debug interactively in their environment, and often cannot get access at all once the engagement ends. Telemetry the customer can read themselves is the only version of this that survives handover.",
+          zh: "因为你没法在他们的环境里交互式排查，而且交付结束后往往连访问权限都没有了。只有「客户自己读得懂的遥测」这一种版本能活过交接。",
+        },
+      },
+      {
+        entry: "docker",
+        why: {
+          en: "Last, because packaging is the final act of the job: the same artifact has to run in an environment you have never seen, behind a proxy you did not configure. Anything you would have to fly back to fix belongs here instead.",
+          zh: "放最后，因为打包是这份工作的最后一幕：同一个产物必须在一个你从没见过的环境里、在一个不是你配置的代理后面跑起来。任何「你得飞回去才能修」的东西，都该在这一步被解决掉。",
+        },
+      },
+    ],
+  },
+
+  {
     id: "ship-it",
     name: {
       en: "Ship it and keep it up",

@@ -7,11 +7,14 @@ import { EraBadge, StatusBadge } from "@/components/EraBadge";
 import { RarityStars, rarityLabel } from "@/components/RarityStars";
 import { StatBars } from "@/components/StatBars";
 import { UnitBadge } from "@/components/UnitBadge";
+import { MigrationList } from "@/components/MigrationList";
 import {
   clashesFor,
   entries,
   evolutionChain,
   getEntry,
+  migrationsFrom,
+  migrationsInto,
   rarityOf,
 } from "@/lib/entries";
 import { isLocale, locales, strings } from "@/lib/i18n";
@@ -55,6 +58,8 @@ export default async function EntryPage({
   const clashes = clashesFor(entry.id);
   const rarity = rarityOf(entry);
   const onRoutes = routesContaining(entry.id);
+  const movesOut = migrationsFrom(entry.id);
+  const movesIn = migrationsInto(entry.id);
 
   return (
     <div
@@ -233,6 +238,9 @@ export default async function EntryPage({
             </ol>
           </section>
         )}
+
+        <MigrationList items={movesOut} locale={locale} direction="out" />
+        <MigrationList items={movesIn} locale={locale} direction="in" />
 
         {onRoutes.length > 0 && (
           <section className="card-outline rounded-2xl bg-surface p-5">

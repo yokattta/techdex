@@ -62,6 +62,17 @@ const dict = {
   },
   lore: { en: "Where it came from", zh: "它是怎么来的" },
 
+  // Migrations
+  migrationsOut: { en: "People move to", zh: "人们会迁到" },
+  migrationsIn: { en: "People arrive from", zh: "人们从这里迁来" },
+  migrationsHint: {
+    en: "Leaving something that already works. The last line is the one worth reading.",
+    zh: "离开一个本来就能用的东西。最后那一行才是值得读的。",
+  },
+  migrationWhy: { en: "What you gain", zh: "你得到什么" },
+  migrationCost: { en: "What it costs", zh: "代价是什么" },
+  migrationDontIf: { en: "Don't, if", zh: "什么时候别迁" },
+
   // Routes
   navRoutes: { en: "Routes", zh: "路线" },
   routesTitle: { en: "Routes", zh: "路线" },

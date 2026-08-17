@@ -33,6 +33,24 @@ they own the same object.
 A clash is declared on one entry only; `clashesFor()` resolves it in both
 directions so each card shows the full picture.
 
+## Migrations
+
+The third edge type, and it sits between the other two. `evolvesFrom` is a
+learning order. `clashes` is a choice between two things competing for one job.
+A **migration** is leaving something that already works.
+
+Each one carries `why`, `cost` and `dontIf` — and `dontIf` is the field that
+earns the type. Every vendor page already tells you what you gain; knowing when
+the move is a downgrade is the part that is hard to find. Flask to FastAPI is a
+downgrade if your bottleneck is the database and your driver is synchronous.
+Postgres to a dedicated vector store is a downgrade under a few million vectors,
+where you have bought a second store to keep in sync for an advantage you cannot
+measure yet.
+
+Migrations are directional, so unlike clashes the reverse view is not a mirror:
+`migrationsInto()` gives a destination card a genuinely different section — who
+usually arrives here, and what they were told to check before setting off.
+
 ## Logos and glyphs
 
 Products show their real logo; concepts show an emoji glyph. That split is
@@ -154,7 +172,7 @@ Each entry needs six pieces of prose, and they answer different questions:
 `tagline` (one line), `description` (what it is), `oneLiner` (what to say),
 `lore` (where it came from), `deepDive` (how it actually works and what that
 costs), and `pitfall` (the specific way people get it wrong). Optionally
-`clashes` — see above.
+`clashes` and `migrations` — see above.
 
 One rule for `oneLiner`: it has to carry something specific — a mechanism, a
 limit, the question a practitioner asks first. "Kafka is good for streaming" is

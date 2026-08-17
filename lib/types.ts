@@ -51,6 +51,26 @@ export type Clash = {
   note: L10n;
 };
 
+/**
+ * A move people actually make, from this entry to another. Distinct from both
+ * neighbours it sits between: `evolvesFrom` is a learning order, `clashes` is a
+ * choice between two things competing for one job, and a migration is leaving
+ * something that already works.
+ *
+ * `dontIf` is the field that earns the type. Anyone can list what you gain —
+ * knowing when the move is a downgrade is the part that is hard to find.
+ */
+export type Migration = {
+  /** The entry being migrated to. */
+  to: string;
+  /** What you gain. */
+  why: L10n;
+  /** What it actually costs, concretely. */
+  cost: L10n;
+  /** When making this move leaves you worse off. */
+  dontIf: L10n;
+};
+
 export type Entry = {
   id: string;
   dex: number;
@@ -94,6 +114,8 @@ export type Entry = {
    * directions, the same way `evolutionChain()` walks `evolvesFrom` backwards.
    */
   clashes?: Clash[];
+  /** Declared on the source; `migrationsInto()` gives the destination its view. */
+  migrations?: Migration[];
   links?: { label: string; url: string }[];
 };
 

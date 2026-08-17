@@ -1,4 +1,4 @@
-import type { Clash, Entry, Rarity } from "./types";
+import type { Clash, Entry, Migration, Rarity } from "./types";
 
 /**
  * The dex. Adding an entry is just appending an object here — `dex` numbers are
@@ -44,6 +44,23 @@ export const entries: Entry[] = [
     },
     era: 3,
     status: "settled",
+    migrations: [
+      {
+        to: "kubernetes",
+        why: {
+          en: "Rescheduling, rolling updates and horizontal scaling stop being things a person does by hand at the wrong hour.",
+          zh: "重新调度、滚动发布、水平扩缩容，不再是某个人在不合适的时间点手动做的事。",
+        },
+        cost: {
+          en: "A control plane to run, a networking model to learn, and every deployment concern re-expressed as declarative objects. Budget the ongoing operational surface, not the migration — the migration is the easy week.",
+          zh: "多一个要运维的控制平面、一套要学的网络模型，以及把每一项部署关注点重新表达成声明式对象。要预算的是长期的运维面积，不是迁移本身 —— 迁移只是轻松的那一周。",
+        },
+        dontIf: {
+          en: "The work it automates is not work you were doing. Deploying weekly to three machines that have never needed rescheduling means adopting a distributed system in order to run a program that fits on one box.",
+          zh: "它自动化的那些活，本来就不是你在干的。一周部署一次、三台机器、从没需要过重新调度 —— 那是为了跑一个单机装得下的程序，引进一整套分布式系统。",
+        },
+      },
+    ],
     stats: { difficulty: 35, ubiquity: 95, impact: 90, ops: 30 },
     moves: [
       {
@@ -371,6 +388,38 @@ export const entries: Entry[] = [
     },
     era: 1,
     status: "settled",
+    migrations: [
+      {
+        to: "vector-database",
+        why: {
+          en: "Purpose-built approximate-nearest-neighbour indexes, a tunable recall knob, and index types Postgres does not have. Past tens of millions of vectors this stops being optional.",
+          zh: "专门的近似最近邻索引、可调的 recall 旋钮，以及 Postgres 没有的索引类型。过了几千万向量，这就不再是可选项。",
+        },
+        cost: {
+          en: "A second store to keep in step with the first. Every write becomes two writes, and the failure you will actually hit is the two drifting apart — a document deleted in Postgres that still answers queries out of the index.",
+          zh: "多一个必须和主库保持同步的存储。每次写入变成两次写入，而你真正会遇到的失败是两边漂移 —— 一份在 Postgres 里已删除的文档，仍然在索引里回答查询。",
+        },
+        dontIf: {
+          en: "You are under a few million vectors. pgvector shares your transactions, your backups and your access control, and at that size the dedicated engine's advantage is smaller than the cost of the synchronisation you just signed up for.",
+          zh: "你的向量数在几百万以内。pgvector 共用你的事务、备份和权限，而在这个量级上，专用引擎的优势小于你刚签下的那份同步成本。",
+        },
+      },
+      {
+        to: "sharding",
+        why: {
+          en: "Capacity stops being bounded by the largest single machine you can buy.",
+          zh: "容量不再被「你能买到的最大那一台机器」限死。",
+        },
+        cost: {
+          en: "Every query has to answer 'which shard'. Cross-shard transactions stop being available, joins across shards become scatter-gather, and rebalancing without stopping writes is a project of its own.",
+          zh: "每条查询都得回答「哪个分片」。跨分片事务不再可用，跨分片 join 变成 scatter-gather，而在不停写的情况下再平衡，本身就是一个独立项目。",
+        },
+        dontIf: {
+          en: "One machine is not actually exhausted yet. Read the query plans and the index list first — a large share of 'we need to shard' turns out to be a missing index, and current hardware with a well-tuned Postgres goes remarkably far.",
+          zh: "单机其实还没榨干。先去读查询计划和索引列表 —— 相当大一部分「我们得分片了」，最后发现是缺了个索引；而当下的硬件配上一个调好的 Postgres，能走得非常远。",
+        },
+      },
+    ],
     stats: { difficulty: 45, ubiquity: 92, impact: 90, ops: 50 },
     moves: [
       {
@@ -437,6 +486,23 @@ export const entries: Entry[] = [
     },
     era: 2,
     status: "settled",
+    migrations: [
+      {
+        to: "kafka",
+        why: {
+          en: "Messages stop disappearing when nobody is listening. Consumers hold independent offsets, so a new service can replay history and a recovered one resumes exactly where it stopped.",
+          zh: "没人在听的时候，消息不再消失。消费者各持独立 offset，于是新服务可以重放历史，恢复的服务能从停下的位置精确续上。",
+        },
+        cost: {
+          en: "Real operational weight: brokers, partitions, retention policy, consumer group rebalancing. Plus a modelling shift — ordering is per partition, so you now have to choose a key and live with everything it does not guarantee.",
+          zh: "实打实的运维重量：broker、partition、保留策略、consumer group 再平衡。外加一次建模转变 —— 有序是 partition 级的，于是你必须选一个 key，并接受它不保证的一切。",
+        },
+        dontIf: {
+          en: "You want fan-out to whoever is connected right now and genuinely do not care about the ones who are not. Live cursors, presence, typing indicators — replay is worthless there, and you would be paying for it forever.",
+          zh: "你要的就是广播给此刻连着的人，并且真的不在乎没连着的那些。实时光标、在线状态、正在输入 —— 这些场景里重放毫无价值，而你会为它永远付费。",
+        },
+      },
+    ],
     stats: { difficulty: 30, ubiquity: 85, impact: 72, ops: 40 },
     moves: [
       {
@@ -882,6 +948,23 @@ export const entries: Entry[] = [
     },
     era: 5,
     status: "rising",
+    migrations: [
+      {
+        to: "agents",
+        why: {
+          en: "The model can go and look again based on what it just found, instead of answering from a single fixed retrieval.",
+          zh: "模型可以根据刚找到的东西再去找一次，而不是靠一次固定的检索来回答。",
+        },
+        cost: {
+          en: "Reliability now decays multiplicatively with the number of steps, latency becomes a loop rather than a call, and cost is unbounded until you cap it. Every tool has to fail loudly, because an empty result is something the model will quietly paper over.",
+          zh: "可靠性现在随步数乘法式衰减，延迟从一次调用变成一个循环，成本在你设上限之前是无界的。每个工具都必须大声失败 —— 因为空结果是模型会悄悄圆过去的东西。",
+        },
+        dontIf: {
+          en: "One retrieval was already enough and you are chasing the last few percent. You would be trading a bounded, debuggable system for one whose failures read as entirely reasonable in the transcript.",
+          zh: "一次检索本来就够了，你只是在追最后那几个百分点。你会用一个有界、可排查的系统，换来一个「失败起来在对话记录里读着完全合理」的系统。",
+        },
+      },
+    ],
     stats: { difficulty: 58, ubiquity: 76, impact: 88, ops: 50 },
     moves: [
       {
@@ -1001,6 +1084,23 @@ export const entries: Entry[] = [
     },
     era: 2,
     status: "settled",
+    migrations: [
+      {
+        to: "fastapi",
+        why: {
+          en: "Type annotations start enforcing the contract instead of describing it, and async handlers hold far more concurrent connections than a thread-per-request server.",
+          zh: "类型标注从描述契约变成强制契约，而 async handler 能撑住的并发连接数，远超「一请求一线程」的服务器。",
+        },
+        cost: {
+          en: "Every handler signature changes, and dependencies you were pulling from module scope become injected parameters. The real cost is the async discipline: one synchronous database driver anywhere inside an `async def` erases the benefit for that entire worker.",
+          zh: "每个 handler 的签名都要改，原本从模块作用域取的依赖变成注入参数。真正的成本是异步纪律：`async def` 里任何一处同步数据库驱动，都会把那个 worker 的全部收益抹掉。",
+        },
+        dontIf: {
+          en: "Your bottleneck is the database, not concurrency. Migrating to async without an async driver lands you measurably slower than the Flask you left — and the profile you should have taken first would have said so.",
+          zh: "你的瓶颈是数据库而不是并发。在没有异步驱动的情况下迁到 async，会比你离开的那个 Flask 明显更慢 —— 而本该先做的那次 profile 早就能告诉你。",
+        },
+      },
+    ],
     stats: { difficulty: 22, ubiquity: 72, impact: 62, ops: 25 },
     moves: [
       {
@@ -1116,6 +1216,23 @@ export const entries: Entry[] = [
     },
     era: 3,
     status: "settled",
+    migrations: [
+      {
+        to: "nextjs",
+        why: {
+          en: "First paint stops waiting for JavaScript, and the page becomes something a crawler can actually read.",
+          zh: "首屏不再等 JavaScript，页面也变成了爬虫真正读得懂的东西。",
+        },
+        cost: {
+          en: "A boundary you hold in your head in every file. Data fetching moves out of effects and onto the server, and one misplaced `'use client'` near the top of a tree quietly ships the whole subtree to the browser — undoing the reason you migrated.",
+          zh: "一条你在每个文件里都要记着的边界。数据获取从 effect 挪到服务端，而一个位置放错的 `'use client'`（靠近树顶）会悄悄把整棵子树发到浏览器 —— 把你迁移的理由抵消掉。",
+        },
+        dontIf: {
+          en: "The app lives entirely behind a login. No crawler will ever see it and users load it once a day, so you are paying the boundary tax for benefits that do not apply to you.",
+          zh: "应用完全在登录之后。没有爬虫会看到它，用户一天加载一次 —— 你是在为一堆和自己无关的收益缴纳边界税。",
+        },
+      },
+    ],
     stats: { difficulty: 48, ubiquity: 94, impact: 90, ops: 20 },
     moves: [
       {
@@ -1968,6 +2085,23 @@ export const entries: Entry[] = [
     },
     era: 5,
     status: "rising",
+    migrations: [
+      {
+        to: "fine-tuning",
+        why: {
+          en: "Behaviour you could not make stable through instructions gets baked into the weights, and the prompt gets shorter — which at volume is a genuine cost saving.",
+          zh: "靠指令怎么都稳不下来的行为被烤进权重，prompt 也变短了 —— 在大批量下这是实打实的省钱。",
+        },
+        cost: {
+          en: "A training pipeline, a data pipeline, and a model version that is now yours to maintain. The prompt you could change in a minute becomes a change that takes a day and a retrain.",
+          zh: "一条训练流水线、一条数据流水线，以及一个从此归你维护的模型版本。原本一分钟能改的 prompt，变成了要一天外加一次重训的变更。",
+        },
+        dontIf: {
+          en: "No eval set exists yet. Without one you cannot tell whether the fine-tune helped, and 'it feels better' is at its least trustworthy in the week right after you built it. Build the eval first — it quite often shows the remaining gap was knowledge, which fine-tuning does not fix.",
+          zh: "评测集还不存在。没有它，你根本判断不了这次 fine-tune 有没有帮上忙，而「感觉好一点」在你刚做完它的那一周里最不可信。先把评测做出来 —— 它相当经常会显示，剩下的差距其实是知识，而那不是 fine-tuning 能修的。",
+        },
+      },
+    ],
     stats: { difficulty: 30, ubiquity: 80, impact: 78, ops: 20 },
     moves: [
       {
@@ -2240,6 +2374,30 @@ export function evolutionChain(id: string): Entry[] {
 
   const chain = [...back, start, ...forward];
   return chain.length > 1 ? chain : [];
+}
+
+/** Moves away from this entry — what people leave it for. */
+export function migrationsFrom(
+  id: string,
+): { entry: Entry; migration: Migration }[] {
+  return (getEntry(id)?.migrations ?? []).flatMap((migration) => {
+    const target = getEntry(migration.to);
+    return target ? [{ entry: target, migration }] : [];
+  });
+}
+
+/**
+ * Moves toward this entry. Migrations are directional, so unlike clashes this
+ * is not a mirror — the destination gets a genuinely different view: who
+ * usually arrives here, and what they were told to check before setting off.
+ */
+export function migrationsInto(
+  id: string,
+): { entry: Entry; migration: Migration }[] {
+  return entries.flatMap((candidate) => {
+    const migration = candidate.migrations?.find((m) => m.to === id);
+    return migration ? [{ entry: candidate, migration }] : [];
+  });
 }
 
 /**

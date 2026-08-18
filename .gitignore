@@ -54,8 +54,12 @@ next-env.d.ts
 !/.github/
 !/.claude/
 
-# per-machine Claude Code settings
+# Per-machine Claude Code settings. launch.json is ignored too: every session
+# in this folder appends its own dev-server entry, so the file accumulates the
+# names and paths of unrelated projects — which then sit in a public repo.
+# `npm run dev` is documented in the README; nothing is lost by not shipping it.
 .claude/settings.local.json
+.claude/launch.json
 
 # static export output
 /out/

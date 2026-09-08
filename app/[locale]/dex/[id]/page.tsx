@@ -309,7 +309,7 @@ export default async function EntryPage({
             <h2 className="mb-3 text-sm font-black uppercase tracking-widest text-muted">
               {s("learnMore")}
             </h2>
-            <ul className="grid gap-1.5">
+            <ul className="grid gap-3">
               {entry.links.map((link) => (
                 <li key={link.url}>
                   <a
@@ -320,6 +320,13 @@ export default async function EntryPage({
                   >
                     {link.label} ↗
                   </a>
+                  {/* Why this one, and what to skip inside it — a bare URL
+                      pushes "is this worth my afternoon?" back onto the reader. */}
+                  {link.why && (
+                    <p className="mt-0.5 text-sm leading-relaxed text-muted">
+                      {link.why[locale]}
+                    </p>
+                  )}
                 </li>
               ))}
             </ul>

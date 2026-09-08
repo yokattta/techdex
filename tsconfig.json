@@ -22,13 +22,18 @@
       "@/*": ["./*"]
     }
   },
+  "//": "Scoped to this project's own directories. `**/*.ts` would also pull in the unrelated projects that share this folder, and their Cloudflare Workers types fail to resolve here. Adding a real top-level directory means adding a line.",
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
+    "*.ts",
+    "*.mts",
+    "app/**/*.ts",
+    "app/**/*.tsx",
+    "components/**/*.ts",
+    "components/**/*.tsx",
+    "lib/**/*.ts",
     ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }

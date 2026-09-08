@@ -125,7 +125,18 @@ export type Entry = {
   clashes?: Clash[];
   /** Declared on the source; `migrationsInto()` gives the destination its view. */
   migrations?: Migration[];
-  links?: { label: string; url: string }[];
+  links?: Link[];
+};
+
+/**
+ * An outward link. `why` is what makes it worth having — a bare list of URLs
+ * pushes the reader's real question ("is this one worth my afternoon?") onto
+ * them. Naming the chapter, or saying what to skip, is the whole value.
+ */
+export type Link = {
+  label: string;
+  url: string;
+  why?: L10n;
 };
 
 /** Derived from `stats.impact` — see `rarityOf()`. Never stored on an entry. */

@@ -98,7 +98,16 @@ export const entries: Entry[] = [
         },
       },
     ],
-    links: [{ label: "docs.docker.com", url: "https://docs.docker.com/" }],
+    links: [
+      {
+        label: "docs.docker.com",
+        url: "https://docs.docker.com/",
+        why: {
+          en: "Skip the tutorials and read \"Storage\" first. Volumes are the one concept the getting-started path leaves you actively confused about.",
+          zh: "跳过教程，先读 Storage 那一章。Volume 是入门路径唯一一个会让你越读越糊涂的概念。",
+        },
+      },
+    ],
   },
   {
     id: "kubernetes",
@@ -177,7 +186,16 @@ export const entries: Entry[] = [
         },
       },
     ],
-    links: [{ label: "kubernetes.io", url: "https://kubernetes.io/docs/home/" }],
+    links: [
+      {
+        label: "kubernetes.io",
+        url: "https://kubernetes.io/docs/home/",
+        why: {
+          en: "Read \"Concepts\", not \"Tasks\". The task pages hand you commands that work without ever explaining the reconciliation loop that makes them work.",
+          zh: "读 Concepts，别读 Tasks。Task 那些页面给你的是能跑通的命令，却从不解释让它们跑通的那个 reconciliation 循环。",
+        },
+      },
+    ],
   },
   {
     id: "terraform",
@@ -373,7 +391,14 @@ export const entries: Entry[] = [
       },
     ],
     links: [
-      { label: "kafka.apache.org", url: "https://kafka.apache.org/documentation/" },
+      {
+        label: "kafka.apache.org",
+        url: "https://kafka.apache.org/documentation/",
+        why: {
+          en: "Section 4, Design, is the part worth your afternoon. Everything before it is configuration you can look up when you need it.",
+          zh: "第 4 节 Design 才值得你一个下午。它之前的全是配置项 —— 需要的时候再查就行。",
+        },
+      },
     ],
   },
   {
@@ -679,7 +704,16 @@ export const entries: Entry[] = [
         },
       },
     ],
-    links: [{ label: "opentelemetry.io", url: "https://opentelemetry.io/docs/" }],
+    links: [
+      {
+        label: "opentelemetry.io",
+        url: "https://opentelemetry.io/docs/",
+        why: {
+          en: "Read the specification's data model before any language SDK. The SDKs make sense only once you know what a span actually is.",
+          zh: "在碰任何语言的 SDK 之前，先读规范里的数据模型。只有知道 span 到底是什么之后，那些 SDK 才讲得通。",
+        },
+      },
+    ],
   },
   {
     id: "cap-theorem",
@@ -907,7 +941,14 @@ export const entries: Entry[] = [
       },
     ],
     links: [
-      { label: "Attention Is All You Need", url: "https://arxiv.org/abs/1706.03762" },
+      {
+        label: "Attention Is All You Need",
+        url: "https://arxiv.org/abs/1706.03762",
+        why: {
+          en: "Eight pages, and 3.2 is the one that matters. Worth reading the original even after ten explanations of it, because the explanations all skip the same thing.",
+          zh: "八页纸，真正重要的是 3.2 节。哪怕已经读过十篇解读也值得读原文 —— 因为那些解读跳过的都是同一处。",
+        },
+      },
     ],
   },
   {
@@ -1586,7 +1627,14 @@ export const entries: Entry[] = [
       },
     ],
     links: [
-      { label: "WCAG quick reference", url: "https://www.w3.org/WAI/WCAG22/quickref/" },
+      {
+        label: "WCAG quick reference",
+        url: "https://www.w3.org/WAI/WCAG22/quickref/",
+        why: {
+          en: "A reference, not a read. Filter it to Level A and AA — the unfiltered list is why people bounce off this and conclude accessibility is unmanageable.",
+          zh: "这是速查表，不是拿来通读的。筛到 Level A 和 AA —— 不筛的那份完整列表，正是让人望而却步、然后断定「可访问性搞不定」的原因。",
+        },
+      },
     ],
   },
   {
@@ -2470,7 +2518,16 @@ export const entries: Entry[] = [
         },
       },
     ],
-    links: [{ label: "docs.pydantic.dev", url: "https://docs.pydantic.dev/" }],
+    links: [
+      {
+        label: "docs.pydantic.dev",
+        url: "https://docs.pydantic.dev/",
+        why: {
+          en: "Go straight to the Conversion Table. It answers what actually happens to your data, and it is buried three levels deep.",
+          zh: "直接去看 Conversion Table。它回答的是「你的数据到底会被怎么处理」，而它藏在三层之下。",
+        },
+      },
+    ],
   },
 ];
 

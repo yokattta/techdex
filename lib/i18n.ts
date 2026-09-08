@@ -116,6 +116,13 @@ const dict = {
   routeStart: { en: "Start the route", zh: "开始这条路线" },
   routeBackToRoutes: { en: "All routes", zh: "全部路线" },
   routeAppearsOn: { en: "On these routes", zh: "出现在这些路线上" },
+  routeDetours: { en: "Side-trips", zh: "支线" },
+  routeDetourHint: {
+    en: "Worth taking, not required to reach the outcome above. Detour counts differ by route on purpose — trimming them all to the same length would mean demoting steps a route's own argument depends on.",
+    zh: "值得走，但不是达成上面那个结果的必需项。各条路线的支线数量不同是有意的 —— 把它们都削到一样长，就意味着要把某条路线自己的论证所依赖的步骤降级。",
+  },
+  routeDetourBadge: { en: "Side-trip", zh: "支线" },
+  routeCoreSteps: { en: "core steps", zh: "主线步骤" },
 
   // Eras
   navEras: { en: "Eras", zh: "世代" },

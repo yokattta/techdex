@@ -11,6 +11,16 @@ export type RouteStep = {
   /** Entry id. */
   entry: string;
   why: L10n;
+  /**
+   * `detour` marks a genuine side-trip: worth taking, not required to reach the
+   * route's stated outcome. Absent means core.
+   *
+   * Detour counts vary on purpose. Trimming every route to the same length
+   * would mean demoting steps the route's own argument depends on — the FDE
+   * route claims the handover third is what people skip, so its handover steps
+   * cannot be optional without contradicting it.
+   */
+  depth?: "core" | "detour";
 };
 
 export type Route = {
@@ -66,6 +76,7 @@ export const routes: Route[] = [
       },
       {
         entry: "sharding",
+        depth: "detour",
         why: {
           en: "One database stopped being enough. This is the step that converts a capacity problem into a routing problem, and the key choice inside it is close to irreversible.",
           zh: "一个数据库不够用了。这一步把容量问题变成路由问题，而其中最关键的那个选择基本不可逆。",
@@ -74,8 +85,8 @@ export const routes: Route[] = [
       {
         entry: "cap-theorem",
         why: {
-          en: "Now that your data lives on more than one machine, the theorem stops being a reading assignment. You are already making this trade — this step is about naming which side you picked.",
-          zh: "数据一旦跨多台机器，这个定理就不再是读物了。你其实已经在做这个取舍了；这一步是给你选的那一边命名。",
+          en: "The moment your data lives in more than one place — a replica, a cache, a shard — the theorem stops being a reading assignment. You have already made this trade; this step is about naming which side you picked.",
+          zh: "只要你的数据存在于不止一个地方 —— 一个副本、一层缓存、一个分片 —— 这个定理就不再是读物了。这个取舍你已经做了；这一步是给你选的那一边命名。",
         },
       },
       {
@@ -87,6 +98,7 @@ export const routes: Route[] = [
       },
       {
         entry: "kafka",
+        depth: "detour",
         why: {
           en: "The first thing here that is not a database. Decoupling services through a log buys you replay and independent consumers, and it hands you at-least-once delivery — which is precisely the problem the next step exists to solve.",
           zh: "这条路线上第一个不是数据库的东西。用一份日志把服务解耦，换来重放和互不干扰的消费者，同时也塞给你 at-least-once 投递 —— 而那恰好就是下一步存在的理由。",
@@ -108,6 +120,7 @@ export const routes: Route[] = [
       },
       {
         entry: "backpressure",
+        depth: "detour",
         why: {
           en: "The other answer to more work than you can do: keep it, and slow the source down. Knowing when to reject and when to slow is the actual skill; the algorithms are the easy half.",
           zh: "对付「活比你能做的多」的另一个答案：留住它，让源头慢下来。真正的本事是知道什么时候拒绝、什么时候减速；算法反而是简单的那一半。",
@@ -156,6 +169,7 @@ export const routes: Route[] = [
       },
       {
         entry: "vector-database",
+        depth: "detour",
         why: {
           en: "Where those vectors live at scale, and where the word 'approximate' enters your system. Recall is a setting, and it silently caps everything downstream of it.",
           zh: "这些向量在规模上住的地方，也是「近似」这个词进入你系统的地方。Recall 是一个设置项，而它无声地给下游一切设了上限。",
@@ -164,8 +178,8 @@ export const routes: Route[] = [
       {
         entry: "rag",
         why: {
-          en: "The previous two assembled into an answer. Debug it as two systems, because a retrieval failure and a generation failure look identical from the outside.",
-          zh: "把前两步组装成一个答案。要当两个系统来排查 —— 检索失败和生成失败，从外面看长得一模一样。",
+          en: "Retrieval and generation assembled into one answer. Debug it as two systems, because a retrieval failure and a generation failure look identical from the outside.",
+          zh: "把检索和生成组装成一个答案。要当两个系统来排查 —— 检索失败和生成失败，从外面看长得一模一样。",
         },
       },
       {
@@ -198,6 +212,7 @@ export const routes: Route[] = [
       },
       {
         entry: "agents",
+        depth: "detour",
         why: {
           en: "Second to last, because it multiplies every failure mode above by the number of steps in the loop. Reach for it only when one retrieval genuinely was not enough.",
           zh: "倒数第二，因为它把上面每一种失败模式都乘以循环的步数。只有在一次检索确实不够的时候，才伸手去拿它。",
@@ -205,9 +220,117 @@ export const routes: Route[] = [
       },
       {
         entry: "fine-tuning",
+        depth: "detour",
         why: {
           en: "Deliberately last, and most people never arrive. Everything before it is cheaper, reversible and testable in an afternoon. Come here only once an eval exists and it says the remaining gap is behaviour rather than knowledge — because fine-tuning fixes the first and not the second.",
           zh: "刻意放在最后，而且大多数人根本走不到这里。它之前的每一步都更便宜、可逆、一个下午就能测。只有在评测集已经存在、并且它告诉你剩下的差距是行为而不是知识时，才来这一步 —— 因为 fine-tuning 修的是前者，不是后者。",
+        },
+      },
+    ],
+  },
+
+  {
+    id: "ai-infra",
+    name: {
+      en: "AI infrastructure",
+      zh: "AI 基础设施",
+    },
+    glyph: "⚙️",
+    hue: "266 60% 44%",
+    outcome: {
+      en: "You can serve a model at a cost and a latency you chose deliberately, and say which knob you turned to get each of them.",
+      zh: "你能以一个自己有意选定的成本和延迟去服务一个模型，并且说得出每一项分别是拧了哪个旋钮换来的。",
+    },
+    intro: {
+      en: "The sibling of the AI engineer route, pointed the other way: that one is about building on a model, this one is about running one. Almost every step here is a consequence of the first, so the order is unusually load-bearing — the cost model decides the packaging, the packaging decides the scheduling, and so on down.",
+      zh: "AI 工程师那条路线的兄弟，方向相反：那条讲的是在模型之上做东西，这条讲的是把模型跑起来。这里几乎每一步都是第一步的推论，所以顺序格外承重 —— 成本模型决定打包方式，打包方式决定调度，一路往下。",
+    },
+    steps: [
+      {
+        entry: "transformer",
+        why: {
+          en: "Start with the cost model, because every decision below is a consequence of it. Attention grows with the square of length, and each output token costs a full forward pass — so long input is cheap and long output is not. You cannot size anything before you know this.",
+          zh: "从成本模型开始，因为下面每一个决定都是它的推论。Attention 随长度平方增长，而每个输出 token 都要一次完整前向 —— 所以长输入便宜，长输出不便宜。不知道这一点，你什么容量都算不出来。",
+        },
+      },
+      {
+        entry: "docker",
+        why: {
+          en: "The artifact, except a model image is tens of gigabytes and pull time becomes cold-start time. This is the first place serving a model stops resembling serving a web app, and it is why scale-to-zero is a much worse idea here than it sounds.",
+          zh: "同样是产物，只不过模型镜像有几十 GB，拉取时间会直接变成冷启动时间。这是「服务模型」开始不再像「服务 web 应用」的第一个地方 —— 也是为什么 scale-to-zero 在这里比听上去糟糕得多。",
+        },
+      },
+      {
+        entry: "kubernetes",
+        why: {
+          en: "Where the replicas live, and where the scheduler stops being an implementation detail. GPUs are scarce, expensive and slow to attach, so how long a pod waits to be placed is not an ops statistic — it is your cost structure.",
+          zh: "副本住的地方，也是 scheduler 不再只是实现细节的地方。GPU 稀缺、昂贵、挂载慢，所以一个 pod 等多久才被调度，不是一项运维统计 —— 它就是你的成本结构。",
+        },
+      },
+      {
+        entry: "load-balancing",
+        why: {
+          en: "Routing across those replicas, and the place round-robin fails hardest. A fifty-token completion and a four-thousand-token one are the same request to a balancer that takes turns, so least-connections is not a refinement here, it is the difference between even load and a stampede onto one replica.",
+          zh: "在这些副本之间做路由，也是轮询失败得最惨的地方。对一个轮流分发的负载均衡器来说，一个 50 token 的补全和一个 4000 token 的补全是同一个请求 —— 所以「最少连接」在这里不是优化，而是「负载均匀」和「一窝蜂压到某一个副本」之间的分界。",
+        },
+      },
+      {
+        entry: "caching",
+        why: {
+          en: "The cheapest win available: identical prefixes do not need recomputing. Same staleness question as any other cache, with one difference worth sitting with — a stale cached answer here is not old data, it is a generated claim that was true about a document you have since changed.",
+          zh: "手上最便宜的一个胜利：相同的前缀不需要重算。和任何缓存一样要面对过期问题，但有一处值得多想一会儿的差别 —— 这里过期的缓存不是旧数据，而是一句「针对某份你后来改过的文档」生成出来的、曾经为真的断言。",
+        },
+      },
+      {
+        entry: "backpressure",
+        why: {
+          en: "GPUs saturate, and unlike a web server they do not degrade gracefully — they queue, and the queue is invisible until it is minutes deep. Choosing what happens when it fills is the difference between a system that is slow and one that is indistinguishable from down.",
+          zh: "GPU 会被打满，而且和 web 服务器不同，它不会优雅降级 —— 它排队，而这个队列在深到以分钟计之前是看不见的。选择「队列满了会怎样」，是「系统变慢」和「系统和挂了没区别」之间的分界。",
+        },
+      },
+      {
+        entry: "rate-limiting",
+        why: {
+          en: "Now that capacity is genuinely scarce, someone has to not get it. Per-key limits are how one tenant stops being able to consume the fleet — and unlike a web API, here the limit protects a resource you cannot simply add more of this afternoon.",
+          zh: "既然容量是真的稀缺，就必须有人拿不到。按 key 限流是让单个租户没法吃掉整个集群的手段 —— 而且和 web API 不同，这里限流保护的是一种「你今天下午没法直接多买一些」的资源。",
+        },
+      },
+      {
+        entry: "observability",
+        why: {
+          en: "Aggregate latency is close to useless here because the distribution is bimodal — a cached prefix and a cold four-thousand-token generation are the same metric and nothing alike. What you need instead is per-request token counts, queue depth, and time to first token.",
+          zh: "在这里聚合延迟几乎没用，因为分布是双峰的 —— 一个命中缓存的前缀和一次冷启动的 4000 token 生成，在指标里是同一个数字，实际却毫无相似之处。你真正需要的是逐请求的 token 数、队列深度，以及首 token 时间。",
+        },
+      },
+      {
+        entry: "model-eval",
+        why: {
+          en: "Last, and the step that keeps the rest honest. Quantising, changing batch size or moving to a different accelerator all change the output — so without an eval you cannot tell whether you shipped a cost saving or a quality regression, and those two look identical on a cost dashboard.",
+          zh: "放在最后，也是让前面一切保持诚实的那一步。量化、改 batch size、换一种加速器，都会改变输出 —— 所以没有评测，你分不清自己上线的是一次降本还是一次质量退化，而这两者在成本看板上长得一模一样。",
+        },
+      },
+      {
+        entry: "idempotency",
+        depth: "detour",
+        why: {
+          en: "A side-trip that becomes core the moment generations get expensive. A retried request is not just a correctness problem here — it is a second bill for work you already paid for, and the client that timed out will never see either answer.",
+          zh: "一条在「生成变贵」之后就会转正的支线。在这里，一个被重试的请求不只是正确性问题 —— 它是一份你已经付过的工作的第二张账单，而那个已经超时的客户端，两个答案都不会看到。",
+        },
+      },
+      {
+        entry: "kafka",
+        depth: "detour",
+        why: {
+          en: "For the workloads that were never interactive. Moving batch inference behind a log lets you run it when capacity is cheap instead of when the request arrived, which is often the single largest cost lever available.",
+          zh: "给那些本来就不需要交互的负载准备的。把批量推理放到一份日志后面，你就能在容量便宜的时候跑它，而不是在请求到达的时候跑 —— 这往往是手上最大的一根成本杠杆。",
+        },
+      },
+      {
+        entry: "vector-database",
+        depth: "detour",
+        why: {
+          en: "Only if you serve retrieval next to generation. Worth knowing that its latency lands in the same request budget as the model call, so a recall setting tuned in isolation can quietly spend the headroom you were saving for generation.",
+          zh: "只有当你在生成旁边还要服务检索时才需要。值得知道的是：它的延迟和模型调用花的是同一份请求预算 —— 所以一个单独调优出来的 recall 设置，可能悄悄花掉你本来留给生成的余量。",
         },
       },
     ],
@@ -281,6 +404,7 @@ export const routes: Route[] = [
       },
       {
         entry: "agents",
+        depth: "detour",
         why: {
           en: "Named explicitly in this role's description, and placed after evaluation on purpose: an agent multiplies every failure mode by the number of steps, so you want the eval in place before you can no longer tell which step went wrong.",
           zh: "这个角色的描述里明确点了名，而且刻意放在评测之后：agent 会把每一种失败模式乘以步数 —— 所以你要在「已经分不清是哪一步错了」之前，先把评测建好。",
@@ -501,12 +625,29 @@ export function getRoute(id: string): Route | undefined {
   return routes.find((route) => route.id === id);
 }
 
+export type ResolvedStep = {
+  entry: Entry;
+  why: L10n;
+  detour: boolean;
+};
+
 /** Steps with their entries resolved; unknown ids are dropped rather than thrown. */
-export function routeEntries(route: Route): { entry: Entry; why: L10n }[] {
+export function routeEntries(route: Route): ResolvedStep[] {
   return route.steps.flatMap((step) => {
     const entry = getEntry(step.entry);
-    return entry ? [{ entry, why: step.why }] : [];
+    return entry
+      ? [{ entry, why: step.why, detour: step.depth === "detour" }]
+      : [];
   });
+}
+
+/** The default path — what the route promises if you take nothing optional. */
+export function coreSteps(route: Route): ResolvedStep[] {
+  return routeEntries(route).filter((step) => !step.detour);
+}
+
+export function detourSteps(route: Route): ResolvedStep[] {
+  return routeEntries(route).filter((step) => step.detour);
 }
 
 /** Routes that include a given entry, for cross-linking from a card. */

@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { BrandMark } from "@/components/BrandMark";
 import { RouteProgress } from "@/components/RouteProgress";
 import { isLocale, locales, strings } from "@/lib/i18n";
-import { routeEntries, routes } from "@/lib/routes";
+import { coreSteps, detourSteps, routes } from "@/lib/routes";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -39,7 +39,8 @@ export default async function RoutesPage({
 
       <ul className="grid gap-4">
         {routes.map((route) => {
-          const steps = routeEntries(route);
+          const steps = coreSteps(route);
+          const detours = detourSteps(route);
           return (
             <li key={route.id} style={{ ["--route" as string]: route.hue }}>
               <Link
@@ -53,6 +54,7 @@ export default async function RoutesPage({
                   <h2 className="text-xl font-black">{route.name[locale]}</h2>
                   <span className="font-mono text-xs font-bold text-muted">
                     {steps.length} {s("routeSteps")}
+                    {detours.length > 0 && ` +${detours.length}`}
                   </span>
                 </div>
 

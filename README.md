@@ -33,6 +33,16 @@ they own the same object.
 A clash is declared on one entry only; `clashesFor()` resolves it in both
 directions so each card shows the full picture.
 
+## Outward links
+
+`links[].why` is what makes a link worth having. A bare URL pushes the reader's
+real question — *is this worth my afternoon?* — straight back at them. Naming
+the chapter, or saying what to skip, is the entire value: read Kafka's section 4
+and treat everything before it as configuration; go straight to Pydantic's
+conversion table, which is buried three levels deep; filter WCAG to Level A and
+AA, because the unfiltered list is why people conclude accessibility is
+unmanageable.
+
 ## Training
 
 `practice` is the depth layer, and the rule is that it must be **something you
@@ -119,9 +129,13 @@ first batch of new entries was written by reading that page.
 
 ## Routes
 
-`/[locale]/routes` is five ordered paths through the dex: system design, AI
-engineering, shipping and running things, a Python backend, a frontend that
-lasts. Every entry sits on at least one.
+`/[locale]/routes` is seven ordered paths through the dex: system design, AI
+engineering, AI infrastructure, forward deployed engineering, shipping and
+running things, a Python backend, a frontend that lasts. Every entry sits on at
+least one.
+
+AI engineering and AI infrastructure are deliberately siblings pointed opposite
+ways — one is about building on a model, the other about running one.
 
 The ordered list is the cheap part. Each step carries a `why` that has to
 justify its **position** — what the previous step left you holding, and what
@@ -130,6 +144,16 @@ delivery is precisely what makes idempotency necessary. Accessibility sits in
 the middle of the frontend route rather than at the end, because that is when
 it is cheap. A step whose `why` merely re-describes the card is a playlist
 entry, not a route, and should be rewritten.
+
+A step can be marked `depth: "detour"` — worth taking, not required to reach
+the route's stated outcome. Core steps render numbered; side-trips sit
+collapsed underneath, and progress counts the core path only, so finishing a
+route does not read as incomplete because you skipped an optional branch.
+
+Detour counts differ by route on purpose. Trimming them all to the same length
+would mean demoting steps a route's own argument depends on — the FDE route
+claims the handover third is what people skip, so its handover steps cannot be
+optional without contradicting it.
 
 Progress reuses the existing caught store, so marking a card anywhere moves
 every route it appears on.

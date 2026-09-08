@@ -6,7 +6,9 @@ import { EraBadge } from "@/components/EraBadge";
 import { RouteProgress } from "@/components/RouteProgress";
 import { UnitBadge } from "@/components/UnitBadge";
 import { isLocale, locales, strings } from "@/lib/i18n";
-import { getRoute, routeEntries, routes } from "@/lib/routes";
+import { coreSteps, detourSteps, getRoute, routes } from "@/lib/routes";
+import type { ResolvedStep } from "@/lib/routes";
+import type { Locale } from "@/lib/types";
 import { unitMap } from "@/lib/units";
 
 export function generateStaticParams() {
@@ -38,7 +40,8 @@ export default async function RoutePage({
   if (!route) notFound();
 
   const s = strings(locale);
-  const steps = routeEntries(route);
+  const core = coreSteps(route);
+  const detours = detourSteps(route);
 
   return (
     <div
@@ -71,62 +74,114 @@ export default async function RoutePage({
         </p>
       </section>
 
+      {/* Progress counts the core path only. A route you have finished should
+          not read as incomplete because you skipped an optional side-trip. */}
       <div className="card-outline rounded-2xl bg-surface px-4 py-3">
         <RouteProgress
-          entryIds={steps.map((step) => step.entry.id)}
+          entryIds={core.map((step) => step.entry.id)}
           locale={locale}
         />
       </div>
 
       <ol className="grid gap-4">
-        {steps.map(({ entry, why }, index) => (
-          <li
-            key={entry.id}
-            className="card-outline grid gap-3 rounded-2xl bg-surface p-4 sm:grid-cols-[auto_1fr] sm:gap-5"
-          >
-            <div className="flex items-center gap-3 sm:flex-col sm:items-center sm:gap-2">
-              <span className="grid size-8 shrink-0 place-items-center rounded-full border-2 border-black bg-[hsl(var(--route))] font-mono text-sm font-black text-white">
-                {index + 1}
-              </span>
-              <Link
-                href={`/${locale}/dex/${entry.id}`}
-                style={{ ["--unit" as string]: unitMap[entry.units[0]].hue }}
-                className="pop"
-              >
-                <BrandTile
-                  entry={entry}
-                  size={26}
-                  className="size-14 shrink-0 rounded-xl"
-                />
-              </Link>
-            </div>
-
-            <div className="grid gap-2">
-              <div className="flex flex-wrap items-center gap-2">
-                <Link
-                  href={`/${locale}/dex/${entry.id}`}
-                  className="text-lg font-extrabold hover:underline"
-                >
-                  {entry.name}
-                </Link>
-                {entry.units.map((unit) => (
-                  <UnitBadge key={unit} unit={unit} locale={locale} />
-                ))}
-                <EraBadge era={entry.era} locale={locale} />
-              </div>
-
-              <p className="text-sm text-muted">{entry.tagline[locale]}</p>
-
-              <div className="rounded-xl border-2 border-black bg-[hsl(var(--route)/0.08)] p-3">
-                <h3 className="mb-1 text-[10px] font-black uppercase tracking-widest text-muted">
-                  {s("routeWhyHere")}
-                </h3>
-                <p className="text-sm leading-relaxed">{why[locale]}</p>
-              </div>
-            </div>
+        {core.map((step, index) => (
+          <li key={step.entry.id}>
+            <StepCard step={step} locale={locale} marker={String(index + 1)} />
           </li>
         ))}
       </ol>
+
+      {detours.length > 0 && (
+        <details className="card-outline rounded-2xl bg-surface p-5">
+          <summary className="flex cursor-pointer flex-wrap items-center gap-2 text-sm font-black uppercase tracking-widest text-muted">
+            <span aria-hidden="true">🔀</span>
+            {s("routeDetours")}
+            <span className="font-mono">+{detours.length}</span>
+          </summary>
+          <p className="mt-3 mb-4 max-w-3xl text-xs text-muted">
+            {s("routeDetourHint")}
+          </p>
+          <ul className="grid gap-4">
+            {detours.map((step) => (
+              <li key={step.entry.id}>
+                <StepCard step={step} locale={locale} marker="🔀" />
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
+    </div>
+  );
+}
+
+/**
+ * One step. The marker is the position on the core path, or a branch glyph for
+ * a side-trip — detours are deliberately unnumbered so the core path keeps a
+ * clean 1..N and skipping one leaves no gap.
+ */
+function StepCard({
+  step,
+  locale,
+  marker,
+}: {
+  step: ResolvedStep;
+  locale: Locale;
+  marker: string;
+}) {
+  const s = strings(locale);
+  const { entry, why, detour } = step;
+
+  return (
+    <div className="card-outline grid gap-3 rounded-2xl bg-surface p-4 sm:grid-cols-[auto_1fr] sm:gap-5">
+      <div className="flex items-center gap-3 sm:flex-col sm:items-center sm:gap-2">
+        <span
+          className={[
+            "grid size-8 shrink-0 place-items-center rounded-full border-2 border-black font-mono text-sm font-black",
+            detour
+              ? "bg-surface"
+              : "bg-[hsl(var(--route))] text-white",
+          ].join(" ")}
+          aria-hidden={detour}
+        >
+          {marker}
+        </span>
+        <Link
+          href={`/${locale}/dex/${entry.id}`}
+          style={{ ["--unit" as string]: unitMap[entry.units[0]].hue }}
+          className="pop"
+        >
+          <BrandTile entry={entry} size={26} className="size-14 shrink-0 rounded-xl" />
+        </Link>
+      </div>
+
+      <div className="grid gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <Link
+            href={`/${locale}/dex/${entry.id}`}
+            className="text-lg font-extrabold hover:underline"
+          >
+            {entry.name}
+          </Link>
+          {entry.units.map((unit) => (
+            <UnitBadge key={unit} unit={unit} locale={locale} />
+          ))}
+          <EraBadge era={entry.era} locale={locale} />
+          {detour && (
+            <span className="rounded-full border-2 border-black bg-black/5 px-2 py-0.5 text-[10px] font-black uppercase tracking-wide dark:bg-white/10">
+              {s("routeDetourBadge")}
+            </span>
+          )}
+        </div>
+
+        <p className="text-sm text-muted">{entry.tagline[locale]}</p>
+
+        <div className="rounded-xl border-2 border-black bg-[hsl(var(--route)/0.08)] p-3">
+          <h3 className="mb-1 text-[10px] font-black uppercase tracking-widest text-muted">
+            {s("routeWhyHere")}
+          </h3>
+          <p className="text-sm leading-relaxed">{why[locale]}</p>
+        </div>
+      </div>
     </div>
   );
 }

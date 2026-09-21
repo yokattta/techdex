@@ -160,9 +160,9 @@ every route it appears on.
 
 ## Gyms and tracks
 
-`/[locale]/gyms` is eight **archetype organisations** — a kind of problem at a
-kind of scale — grouped into five role tracks: SDE, DE, AI Engineer, Frontend
-and DS.
+`/[locale]/gyms` is ten **archetype organisations** — a kind of problem at a
+kind of scale — grouped into seven role tracks: SDE, DE, AI Engineer, AI Infra,
+FDE, Frontend and DS.
 
 They are deliberately not named companies. "Company X uses Y" goes stale inside
 a year, is usually wrong from the outside, and reads as an endorsement nobody
@@ -177,8 +177,11 @@ JavaScript.
 Each track also has a **formation**: the six entries that role is genuinely
 built on, which is a different question from what any one gym runs.
 
-The DS track carries a `gap` note listing what the dex would need before that
-circuit means anything — experiment design, statistical power, A/B testing and
+Two tracks carry a `gap` note. AI Infra's says the dex covers the systems half
+of that role and stops where the hardware starts — continuous batching, KV cache
+management, quantisation and what it costs in quality, model parallelism, and
+the accelerator-level work that decides whether any of it matters. The DS one
+lists what the dex would need before that circuit means anything — experiment design, statistical power, A/B testing and
 its failure modes, data leakage, feature engineering, and the distance between
 a notebook and something that runs on a schedule. Same principle as the eras
 page: a visible gap is a to-do list, not a claim that the role is small.

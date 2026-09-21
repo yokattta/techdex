@@ -168,6 +168,31 @@ export const gyms: Gym[] = [
     roster: ["agents", "guardrails", "model-eval", "idempotency", "rate-limiting", "observability"],
   },
   {
+    id: "inference-fleet",
+    name: { en: "The Inference Fleet", zh: "推理集群" },
+    glyph: "⚙️",
+    situation: {
+      en: "One model behind an API, serving interactive requests that need a first token inside a second alongside batch jobs that could wait until midnight. The accelerators cost more per hour than the people do, and they sit idle between bursts.",
+      zh: "一个模型架在 API 后面，既要服务「一秒内必须出首 token」的交互请求，也要跑那些其实等到半夜也无所谓的批量任务。加速器每小时的成本比人还贵，而它们在流量波峰之间闲着。",
+    },
+    question: {
+      en: "Your p50 latency is fine and your p99 is thirty seconds. Where is the time going, and why doesn't the average show it?",
+      zh: "你的 p50 延迟很好看，p99 是三十秒。时间花在哪了，以及为什么平均值看不出来？",
+    },
+    answer: {
+      en: "The distribution is bimodal, so the mean describes a request nobody makes: a cached prefix returning in eighty milliseconds and a cold four-thousand-token generation are the same metric and nothing alike. The p99 is almost always queue depth rather than compute — accelerators saturate and then queue invisibly, and a round-robin balancer deepens it by handing a long request to the replica already working on one. The instrumentation that answers this splits time-to-first-token from time-per-output-token and treats queue depth as a first-class signal, which is the point at which you can finally say which knob buys which millisecond.",
+      zh: "分布是双峰的，所以平均值描述的是一个没人会发出的请求：一个命中缓存、八十毫秒返回的前缀，和一次冷启动的四千 token 生成，在指标里是同一个数字，实际毫无相似之处。而 p99 几乎总是队列深度而不是算力 —— 加速器被打满之后会无声地排队，而轮询的负载均衡器还会把一个长请求丢给正在处理另一个长请求的副本，让队列更深。能回答这个问题的埋点，会把「首 token 时间」和「每输出 token 时间」拆开，并把队列深度当成一等信号 —— 到那时你才终于说得出哪个旋钮买到了哪一毫秒。",
+    },
+    roster: [
+      "transformer",
+      "load-balancing",
+      "caching",
+      "backpressure",
+      "rate-limiting",
+      "observability",
+    ],
+  },
+  {
     id: "customer-deployment",
     name: { en: "The Customer Deployment", zh: "客户现场" },
     glyph: "🧳",
@@ -264,6 +289,30 @@ export const tracks: Track[] = [
     },
     gyms: ["design-system-org"],
     formation: ["react", "nextjs", "design-tokens", "design-system", "accessibility", "figma"],
+  },
+  {
+    id: "ai-infra",
+    role: "AI Infra",
+    name: { en: "AI infrastructure engineer", zh: "AI 基础设施工程师" },
+    glyph: "⚙️",
+    hue: "266 60% 44%",
+    intro: {
+      en: "The AI engineer's counterpart: that role builds on a model, this one runs it. The formation is picked for what makes the job different rather than what a platform engineer would list anyway — two of the six are about a model's cost and correctness, which is exactly the part generic infrastructure experience does not transfer into.",
+      zh: "AI 工程师的对位：那个角色在模型之上做东西，这个角色把模型跑起来。阵型是按「这份工作和别的不一样在哪」挑的，而不是按「一个平台工程师本来也会列的东西」—— 六个里有两个关于模型的成本和正确性，而那恰好是通用基础设施经验迁移不过来的部分。",
+    },
+    gyms: ["kubernetes-shop", "inference-fleet", "agent-platform"],
+    formation: [
+      "transformer",
+      "kubernetes",
+      "caching",
+      "backpressure",
+      "observability",
+      "model-eval",
+    ],
+    gap: {
+      en: "The dex covers the systems half of this role and stops where the hardware starts. Missing, and worth writing before this circuit is complete: continuous batching, KV cache management, quantisation and what it costs you in quality, model and tensor parallelism, and the accelerator-level work — memory bandwidth, kernel fusion — that decides whether any of the above matters.",
+      zh: "图鉴覆盖了这个角色里系统的那一半，到硬件开始的地方就停了。缺的、值得在这条巡回算完整之前先写的：continuous batching、KV cache 管理、量化以及它在质量上的代价、模型并行与张量并行，还有加速器层面的工作 —— 显存带宽、kernel 融合 —— 那些决定了上面这一切到底有没有意义。",
+    },
   },
   {
     id: "fde",

@@ -254,6 +254,27 @@ export const routes: Route[] = [
         },
       },
       {
+        entry: "memory-bandwidth",
+        why: {
+          en: "Immediately after, because it is the mechanism behind the fact you just learned. Generation reads every weight to produce one token, so the accelerator spends most of its time waiting rather than computing — and every optimisation further down this route is a way of reading fewer bytes or reading them once for more work.",
+          zh: "紧接着，因为它是你刚学到的那个事实背后的机制。生成一个 token 要把每个权重都读一遍，所以加速器大部分时间在等而不是在算 —— 而这条路线后面的每一项优化，都是在「少读一些字节」或者「读一次干更多活」。",
+        },
+      },
+      {
+        entry: "kv-cache",
+        why: {
+          en: "The first thing you stop recomputing, and the first thing that competes for memory. Before this step concurrency looks like a compute question; after it you can see that the number of sequences you can serve at once is a division problem with free memory on top.",
+          zh: "你停止重算的第一样东西，也是第一样来抢显存的东西。在这一步之前，并发看起来是个算力问题；之后你就能看出来：你能同时服务多少条序列，是一道分子为可用显存的除法题。",
+        },
+      },
+      {
+        entry: "continuous-batching",
+        why: {
+          en: "The single largest throughput lever, and it only makes sense once the two steps above are in place — it works because weights are read once per step regardless of how many sequences ride along, and it is bounded by how many KV caches fit.",
+          zh: "吞吐上最大的一根杠杆，而且只有在上面两步到位之后才讲得通 —— 它之所以有效，是因为不管搭多少条序列，权重每步只读一次；而它的上限，是能装下多少份 KV cache。",
+        },
+      },
+      {
         entry: "docker",
         why: {
           en: "The artifact, except a model image is tens of gigabytes and pull time becomes cold-start time. This is the first place serving a model stops resembling serving a web app, and it is why scale-to-zero is a much worse idea here than it sounds.",
@@ -276,6 +297,7 @@ export const routes: Route[] = [
       },
       {
         entry: "caching",
+        depth: "detour",
         why: {
           en: "The cheapest win available: identical prefixes do not need recomputing. Same staleness question as any other cache, with one difference worth sitting with — a stale cached answer here is not old data, it is a generated claim that was true about a document you have since changed.",
           zh: "手上最便宜的一个胜利：相同的前缀不需要重算。和任何缓存一样要面对过期问题，但有一处值得多想一会儿的差别 —— 这里过期的缓存不是旧数据，而是一句「针对某份你后来改过的文档」生成出来的、曾经为真的断言。",
@@ -290,6 +312,7 @@ export const routes: Route[] = [
       },
       {
         entry: "rate-limiting",
+        depth: "detour",
         why: {
           en: "Now that capacity is genuinely scarce, someone has to not get it. Per-key limits are how one tenant stops being able to consume the fleet — and unlike a web API, here the limit protects a resource you cannot simply add more of this afternoon.",
           zh: "既然容量是真的稀缺，就必须有人拿不到。按 key 限流是让单个租户没法吃掉整个集群的手段 —— 而且和 web API 不同，这里限流保护的是一种「你今天下午没法直接多买一些」的资源。",
@@ -307,6 +330,22 @@ export const routes: Route[] = [
         why: {
           en: "Last, and the step that keeps the rest honest. Quantising, changing batch size or moving to a different accelerator all change the output — so without an eval you cannot tell whether you shipped a cost saving or a quality regression, and those two look identical on a cost dashboard.",
           zh: "放在最后，也是让前面一切保持诚实的那一步。量化、改 batch size、换一种加速器，都会改变输出 —— 所以没有评测，你分不清自己上线的是一次降本还是一次质量退化，而这两者在成本看板上长得一模一样。",
+        },
+      },
+      {
+        entry: "quantization",
+        depth: "detour",
+        why: {
+          en: "A side-trip only until the model stops fitting, at which point it becomes the first thing to try. Fewer bytes per weight is a near-proportional speedup on a bandwidth-bound workload — and the only optimisation on this route that changes what the model says, which is why it sits after the eval rather than before it.",
+          zh: "在模型还装得下之前它只是支线；一旦装不下，它就是第一个该试的。在带宽受限的负载上，每个权重少几个字节几乎是等比例的提速 —— 而它也是这条路线上唯一会改变模型说什么的优化，所以它排在评测之后而不是之前。",
+        },
+      },
+      {
+        entry: "model-parallelism",
+        depth: "detour",
+        why: {
+          en: "The other answer to a model that does not fit, and the more expensive one. Take this branch only after quantisation has failed to make it fit, because splitting a model puts the interconnect permanently on your critical path.",
+          zh: "「模型装不下」的另一个答案，也是更贵的那个。只有在量化也没能让它装下之后才走这条支线 —— 因为把模型切开，会把互连永久地放到你的关键路径上。",
         },
       },
       {

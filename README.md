@@ -11,9 +11,9 @@ Every entry belongs to one or two units, the way a Pokémon has one or two types
 | Unit | What lives there |
 | --- | --- |
 | 🚀 DevOps | Docker, Kubernetes, Terraform, CI/CD |
-| 🧠 Model | Transformer, Embeddings, RAG, Fine-tuning, Prompt Engineering, Agents, Model Eval |
-| 🏗️ Platform | Kafka, PostgreSQL, Redis, Nginx, Vector Database, Load Balancing, Sharding |
-| 💡 Concept | Observability, CAP Theorem, Idempotency, Eventual Consistency, Caching, Rate Limiting, Backpressure, Guardrails, Hallucination |
+| 🧠 Model | Transformer, Embeddings, RAG, Fine-tuning, Prompt Engineering, Agents, Model Eval, KV Cache, Quantization, Model Parallelism |
+| 🏗️ Platform | Kafka, PostgreSQL, Redis, Nginx, Vector Database, Load Balancing, Sharding, Continuous Batching |
+| 💡 Concept | Observability, CAP Theorem, Idempotency, Eventual Consistency, Caching, Rate Limiting, Backpressure, Guardrails, Hallucination, Memory Bandwidth |
 | 🧩 App | Flask, FastAPI, React, Next.js, Pydantic |
 | 🎨 UI / UX | Design Tokens, Design System, Accessibility, Figma |
 
@@ -177,11 +177,11 @@ JavaScript.
 Each track also has a **formation**: the six entries that role is genuinely
 built on, which is a different question from what any one gym runs.
 
-Two tracks carry a `gap` note. AI Infra's says the dex covers the systems half
-of that role and stops where the hardware starts — continuous batching, KV cache
-management, quantisation and what it costs in quality, model parallelism, and
-the accelerator-level work that decides whether any of it matters. The DS one
-lists what the dex would need before that circuit means anything — experiment design, statistical power, A/B testing and
+Two tracks carry a `gap` note. AI Infra's now points below the serving layer —
+speculative decoding, scheduling policy beyond first-come-first-served,
+multi-tenant isolation, and the kernel-level work that decides whether any of it
+lands. The DS one lists what the dex would need before that circuit means
+anything — experiment design, statistical power, A/B testing and
 its failure modes, data leakage, feature engineering, and the distance between
 a notebook and something that runs on a schedule. Same principle as the eras
 page: a visible gap is a to-do list, not a claim that the role is small.

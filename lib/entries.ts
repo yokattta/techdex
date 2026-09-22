@@ -1885,6 +1885,13 @@ export const entries: Entry[] = [
     ],
     clashes: [
       {
+        with: "model-parallelism",
+        note: {
+          en: "The same word, opposite coupling — which is exactly why distributed-systems intuition misleads here. Database shards are independent; the bad case is a scatter-gather that waits for the slowest one. Model-parallel shards synchronise on every single token, so there is no independent case at all and the interconnect sits permanently on the critical path. Sizing one the way you would size the other produces a system that is slow in a way no amount of adding devices fixes.",
+          zh: "同一个词，相反的耦合 —— 而这恰恰是分布式系统的直觉在这里会误导人的原因。数据库分片是独立的，最坏情况是一次要等最慢那个的 scatter-gather。模型并行的分片在每一个 token 上都要同步，所以根本不存在「独立」的情况，互连永久地待在关键路径上。用给前者估容量的方式去估后者，你会得到一个「加多少设备都治不好」的慢系统。",
+        },
+      },
+      {
         with: "cap-theorem",
         note: {
           en: "Sharding is the moment CAP stops being a reading assignment. One machine gave you transactions across all your data for free; the instant there are two, a write spanning both needs coordination, and you are choosing between a distributed transaction's latency and giving the guarantee up. Most teams pick the second by accident and discover it during an incident.",
@@ -2525,6 +2532,330 @@ export const entries: Entry[] = [
         why: {
           en: "Go straight to the Conversion Table. It answers what actually happens to your data, and it is buried three levels deep.",
           zh: "直接去看 Conversion Table。它回答的是「你的数据到底会被怎么处理」，而它藏在三层之下。",
+        },
+      },
+    ],
+  },
+  // ── The hardware half of Gen 5 ────────────────────────────────────────────
+  {
+    id: "memory-bandwidth",
+    dex: 37,
+    units: ["concept", "platform"],
+    name: "Memory Bandwidth",
+    glyph: "🚰",
+    tagline: {
+      en: "The number that decides inference speed, and it is not FLOPs.",
+      zh: "决定推理速度的那个数字 —— 而它不是 FLOPs。",
+    },
+    description: {
+      en: "To produce one token a model reads all of its weights out of memory; to produce the next one it reads them again. Arithmetic is cheap and plentiful; moving those bytes is neither. Almost every inference optimisation that actually works is a way of reading fewer bytes, or reading them once for more work.",
+      zh: "为了产出一个 token，模型要把自己全部权重从显存里读一遍；为了产出下一个，再读一遍。算术又便宜又管够，而搬运这些字节两者都不是。几乎每一项真正有效的推理优化，本质都是「少读一些字节」或者「读一次干更多活」。",
+    },
+    oneLiner: {
+      en: "We're bandwidth-bound, not compute-bound — the accelerator is mostly idle waiting on weights.",
+      zh: "我们是带宽受限不是算力受限 —— 加速器大部分时间在等权重，闲着。",
+    },
+    deepDive: {
+      en: "The arithmetic intensity of single-sequence decoding is close to the worst case you can hand a processor: one full pass over billions of parameters to produce a few hundred floating-point results. The compute units sit idle through most of it, which is why utilisation percentages can look healthy while throughput is dismal. This single fact explains the entire optimisation catalogue — batching amortises one weight read across many sequences, quantisation shrinks the bytes to read, and the KV cache exists so you do not re-stream what you already have. None of them buy you arithmetic, because you were never short of arithmetic.",
+      zh: "单序列解码的算术强度，接近你能交给处理器的最差情况：完整走一遍几十亿个参数，只为产出几百个浮点结果。计算单元在其中大部分时间闲着 —— 这也是为什么利用率的百分比看起来可以很健康，而吞吐一塌糊涂。就这一个事实，解释了整本优化目录：批处理把一次权重读摊给很多条序列，量化减少要读的字节数，KV cache 的存在是为了不把已经搬过的东西再搬一遍。它们都不是在给你买算术 —— 因为你从来就不缺算术。",
+    },
+    pitfall: {
+      en: "Choosing hardware on peak FLOPs. Two accelerators with the same headline compute can differ twofold in memory bandwidth, and for generation that ratio is close to the ratio of their real throughput.",
+      zh: "按峰值 FLOPs 选硬件。两块标称算力相同的加速器，显存带宽可能差两倍 —— 而对生成任务来说，那个比值基本就是它们真实吞吐的比值。",
+    },
+    lore: {
+      en: "The \"memory wall\" was named by Wulf and McKee in 1995, arguing that processors would keep outrunning memory until memory was the only thing that mattered. It spent thirty years as a warning to chip architects. LLM inference is where it finally landed on application engineers' desks.",
+      zh: "「内存墙」这个说法是 Wulf 和 McKee 在 1995 年命名的，他们论证处理器会一直跑过内存，直到最后只有内存还重要。它给芯片架构师当了三十年的警告。而 LLM 推理，是它终于落到应用工程师桌上的地方。",
+    },
+    practice: {
+      en: "Compute two numbers for your model: parameters times bytes per parameter, and your accelerator's memory bandwidth. Divide the second by the first. That is roughly your ceiling on tokens per second for a single sequence, and it usually lands within a factor of two of what you measure.",
+      zh: "给你的模型算两个数：参数量 × 每参数字节数，以及你的加速器的显存带宽。用后者除以前者。那大致就是单序列每秒 token 数的上限 —— 而它通常和你实测的结果相差不到两倍。",
+    },
+    era: 5,
+    status: "rising",
+    stats: { difficulty: 50, ubiquity: 58, impact: 88, ops: 20 },
+    moves: [
+      {
+        name: "Arithmetic intensity",
+        effect: {
+          en: "The ratio of compute done to bytes moved. Decoding sits at the bad end of it.",
+          zh: "完成的计算量和搬运的字节数之比。解码处在它糟糕的那一端。",
+        },
+      },
+      {
+        name: "Weight streaming",
+        effect: {
+          en: "Every token reads the whole model — that is the cost you are actually paying.",
+          zh: "每生成一个 token 都要把整个模型读一遍 —— 那才是你真正在付的成本。",
+        },
+      },
+      {
+        name: "Roofline",
+        effect: {
+          en: "Plots where a kernel is bound. Most inference kernels are on the memory slope, not under the compute ceiling.",
+          zh: "画出一个 kernel 卡在哪里。大多数推理 kernel 在内存那道斜坡上，不在算力那条天花板下。",
+        },
+      },
+    ],
+  },
+  {
+    id: "kv-cache",
+    dex: 38,
+    units: ["model", "platform"],
+    name: "KV Cache",
+    glyph: "📇",
+    tagline: {
+      en: "The reason the hundredth token is not a hundred times slower than the first.",
+      zh: "第一百个 token 不比第一个慢一百倍的原因。",
+    },
+    description: {
+      en: "Attention needs the keys and values of every previous token. Recomputing them at each step would make generation quadratic; keeping them makes it linear, at the price of memory that grows with sequence length and with every concurrent request. That memory is what your serving system is really scheduling.",
+      zh: "Attention 需要此前每一个 token 的 key 和 value。每一步都重算会让生成变成平方级；把它们留着则是线性的，代价是一块随序列长度、也随并发请求数增长的显存。而那块显存，才是你的服务系统真正在调度的东西。",
+    },
+    oneLiner: {
+      en: "Our concurrency limit isn't compute, it's how many KV caches fit in memory.",
+      zh: "我们的并发上限不是算力，是显存里能塞下几份 KV cache。",
+    },
+    deepDive: {
+      en: "The size is calculable and usually larger than people expect: two tensors per layer per token, times layers, times heads, times head dimension, times bytes. At a long context and a modest batch it can exceed the weights themselves. Naive implementations reserve for the maximum sequence length up front, so a request that stops after fifty tokens still holds an allocation sized for four thousand — which is where most of the waste lives. PagedAttention borrows the operating system's trick, allocating fixed blocks behind a lookup table, and the gain is not subtle: it is the difference between a handful of concurrent sequences on a card and dozens.",
+      zh: "它的大小是能算出来的，而且通常比人们预期的大：每层每 token 两个张量，乘以层数、头数、head 维度、字节数。在长上下文加不大的 batch 下，它能超过权重本身。朴素实现会按最大序列长度预先占好，于是一个五十个 token 就结束的请求，仍然占着按四千个 token 划出的额度 —— 大部分浪费就在这里。PagedAttention 借了操作系统的老办法：在一张查找表后面按固定块分配。收益一点也不微妙 —— 那是「一张卡上几条并发序列」和「几十条」之间的差别。",
+    },
+    pitfall: {
+      en: "Sizing the batch from compute and discovering the real limit is memory. You hit out-of-memory well below what the arithmetic suggested, and it arrives as a crash under load rather than as a slowdown.",
+      zh: "按算力去定 batch 大小，然后发现真正的限制是显存。你会在远低于算术推算值的地方撞上 OOM，而它是以「压力下崩溃」的形式到来的，不是以变慢的形式。",
+    },
+    lore: {
+      en: "It is not really a cache in the usual sense — nothing is reused across requests and there is no hit rate. It is closer to a continuation: the state that lets a sequence be resumed rather than restarted. The name stuck anyway, and it sends people looking for an eviction policy before they have understood the allocation.",
+      zh: "它其实不是通常意义上的缓存 —— 没有任何东西在请求之间被复用，也没有命中率。它更接近一份「续接状态」：让一条序列可以被恢复而不是重启。但这个名字还是流传了下来，并且把人引向「淘汰策略」，而他们还没搞懂「分配」。",
+    },
+    practice: {
+      en: "Compute the KV cache size for one sequence at your maximum context, then divide your free memory by it. That integer is your real concurrency ceiling — compare it to the batch size you configured.",
+      zh: "按你的最大上下文算一条序列的 KV cache 大小，再用可用显存除以它。那个整数就是你真实的并发上限 —— 拿它和你配置的 batch size 比一比。",
+    },
+    era: 5,
+    status: "rising",
+    stats: { difficulty: 60, ubiquity: 55, impact: 84, ops: 45 },
+    moves: [
+      {
+        name: "PagedAttention",
+        effect: {
+          en: "Allocates fixed blocks behind a lookup table, the way an OS pages memory.",
+          zh: "在一张查找表后面按固定块分配 —— 就像操作系统做分页。",
+        },
+      },
+      {
+        name: "Prefix sharing",
+        effect: {
+          en: "Two requests with the same system prompt share its blocks instead of holding two copies.",
+          zh: "两个带同样 system prompt 的请求共享那部分块，而不是各存一份。",
+        },
+      },
+      {
+        name: "Eviction",
+        effect: {
+          en: "Drops a suspended sequence's cache and recomputes it later — compute traded for headroom.",
+          zh: "丢掉一条挂起序列的 cache、之后再重算 —— 用算力换余量。",
+        },
+      },
+    ],
+    clashes: [
+      {
+        with: "continuous-batching",
+        note: {
+          en: "They compete for exactly the same bytes, and the competition is zero-sum. Every sequence the scheduler admits needs its own KV cache, so a batch size tuned for throughput is a batch size that eventually cannot allocate. This is why admission control belongs in the scheduler rather than in a config file — the limit is not a number you can pick in advance, it moves with how long the sequences in flight happen to be.",
+          zh: "它们争的是同一批字节，而且这场竞争是零和的。调度器每放进来一条序列，就要给它一份自己的 KV cache —— 所以一个按吞吐调出来的 batch size，是一个迟早会分配不出显存的 batch size。这也是为什么准入控制该在调度器里而不是在配置文件里：那个上限不是你能事先选定的数字，它随着「此刻在飞的序列恰好有多长」而移动。",
+        },
+      },
+    ],
+  },
+  {
+    id: "continuous-batching",
+    dex: 39,
+    units: ["platform", "model"],
+    name: "Continuous Batching",
+    glyph: "🪢",
+    tagline: {
+      en: "Sequences join and leave the batch mid-flight instead of waiting for each other.",
+      zh: "序列在飞行途中加入和离开批次，而不是互相等待。",
+    },
+    description: {
+      en: "Static batching waits for a full group, runs it to completion and returns everything at once — so every request pays for the slowest one beside it. Continuous batching schedules at the token level instead: a finished sequence leaves immediately and a waiting one takes its slot on the next step. The effect on throughput is larger than most other optimisations put together.",
+      zh: "静态批处理要凑够一组、整组跑完、一起返回 —— 于是每个请求都要为旁边最慢的那个买单。连续批处理改成在 token 粒度上调度：跑完的序列立刻离开，等待中的在下一步补上它的位置。它对吞吐的提升，比其他大多数优化加起来还大。",
+    },
+    oneLiner: {
+      en: "Are we batching per request or per token? Per request, everybody waits for the longest generation in the batch.",
+      zh: "我们是按请求批处理还是按 token 批处理？按请求的话，所有人都在等这批里最长的那次生成。",
+    },
+    deepDive: {
+      en: "It works because of the bandwidth argument: the weights are read once per step no matter how many sequences are in flight, so adding one to the step is nearly free along the dimension that is actually scarce. The scheduler is the entire product — each step it decides which waiting requests to admit, and admitting too many is not a throughput win but an out-of-memory, because each one needs its KV cache. Throughput and per-request latency also part company here: a larger step serves more sequences and makes every individual token arrive a little later, which is a product decision wearing a configuration flag.",
+      zh: "它之所以成立，靠的是带宽那套论证：不管有多少条序列在飞，权重每步只读一次 —— 所以往这一步里多加一条，在真正稀缺的那个维度上几乎免费。调度器就是这个产品的全部：它每一步决定放哪些等待中的请求进来，而放得太多不是吞吐的胜利，是一次 OOM —— 因为每一条都要自己的 KV cache。吞吐和单请求延迟也在这里分道扬镳：更大的一步服务更多序列，同时让每一个 token 都晚一点点到 —— 这是一个穿着配置项外衣的产品决策。",
+    },
+    pitfall: {
+      en: "Tuning maximum batch size against throughput alone. The value that maximises tokens per second is usually one that makes time-to-first-token unacceptable for anything interactive, and the dashboard showing the throughput win will not show that.",
+      zh: "只对着吞吐去调最大 batch。让每秒 token 数最大的那个值，通常会让首 token 时间对任何交互场景都不可接受 —— 而显示这次吞吐胜利的看板，不会显示后面这件事。",
+    },
+    lore: {
+      en: "It was published as \"iteration-level scheduling\" in the Orca paper in 2022, which describes what it does far better than the name that stuck. It reached most people through vLLM the following year, bundled with PagedAttention — which is why the two are so often assumed to be one thing.",
+      zh: "它在 2022 年的 Orca 论文里以「iteration-level scheduling」发表 —— 那个名字比后来流传开的这个更准确地描述了它做的事。它在第二年通过 vLLM 抵达大多数人，和 PagedAttention 捆在一起 —— 这也是为什么很多人以为两者是同一个东西。",
+    },
+    practice: {
+      en: "Serve one model twice, once with static batching and once with continuous, then send a mix of twenty-token and two-thousand-token requests. Measure throughput and the p99 of the short ones. The short requests are where the difference is visible.",
+      zh: "把同一个模型用静态批处理和连续批处理各服务一遍，然后混着发 20 token 和 2000 token 的请求。同时测吞吐和短请求的 p99。差别就体现在那些短请求上。",
+    },
+    era: 5,
+    status: "rising",
+    stats: { difficulty: 62, ubiquity: 60, impact: 90, ops: 50 },
+    moves: [
+      {
+        name: "Iteration-level scheduling",
+        effect: {
+          en: "Decides admissions every step instead of once per batch.",
+          zh: "每一步都决定放谁进来，而不是每一批决定一次。",
+        },
+      },
+      {
+        name: "Admission control",
+        effect: {
+          en: "Refuses a waiting request when its KV cache would not fit, rather than discovering it afterwards.",
+          zh: "在 KV cache 装不下时就拒绝一个等待中的请求，而不是装不下之后才发现。",
+        },
+      },
+      {
+        name: "Chunked prefill",
+        effect: {
+          en: "Splits a long prompt across steps so it does not stall everyone else's decoding.",
+          zh: "把一个长 prompt 拆到多步里，免得它把其他人的解码全卡住。",
+        },
+      },
+    ],
+  },
+  {
+    id: "quantization",
+    dex: 40,
+    units: ["model"],
+    name: "Quantization",
+    glyph: "🗜️",
+    tagline: {
+      en: "Fewer bits per weight, and the question is what you lost.",
+      zh: "每个权重少用几位 —— 而问题是你丢了什么。",
+    },
+    description: {
+      en: "Store and compute the model at lower precision: sixteen bits instead of thirty-two, or eight, or four. Memory halves or quarters, and since inference is bandwidth-bound that is close to a proportional speedup. It is the highest-leverage single change available, and the only one that silently alters what the model says.",
+      zh: "用更低的精度存储和计算模型：16 位而不是 32 位，或者 8 位、4 位。显存减半或减到四分之一 —— 而既然推理是带宽受限的，那基本就是等比例的提速。它是手上杠杆率最高的单项改动，也是唯一一个会悄悄改变模型说什么的改动。",
+    },
+    oneLiner: {
+      en: "What did the eval say before and after? This is the one optimisation that changes the output.",
+      zh: "量化前后评测分别是多少？这是唯一一项会改变输出的优化。",
+    },
+    deepDive: {
+      en: "Not all weights tolerate it equally. A small number of outlier activations carry disproportionate signal, and naive uniform quantisation flattens them — which is why the methods that work either treat those channels separately or calibrate against real data instead of assuming a distribution. The damage also does not appear where you look first: perplexity often barely moves while the specific behaviours you care about degrade, so a benchmark can report that everything is fine while your extraction task has quietly started dropping fields.",
+      zh: "不是所有权重都同样耐受。少数离群激活携带了不成比例的信号，而朴素的均匀量化会把它们压平 —— 所以真正有效的方法，要么单独对待那些通道，要么拿真实数据去校准而不是假设一个分布。损伤也不会出现在你最先看的地方：困惑度往往几乎不动，而你真正在乎的那些具体行为在退化 —— 于是一个基准可以报告一切正常，而你的抽取任务已经开始悄悄丢字段了。",
+    },
+    pitfall: {
+      en: "Shipping a quantised model on a benchmark score. Aggregate metrics are exactly where this damage hides; the regression lands in the narrow capability your product depends on, which no public benchmark measures.",
+      zh: "凭一个基准分数就把量化后的模型上线。聚合指标恰恰是这种损伤藏身的地方；退化落在你产品依赖的那项很窄的能力上，而没有任何公开基准在测它。",
+    },
+    lore: {
+      en: "It arrived in computer vision years earlier, where eight-bit inference was routine by the late 2010s and the accuracy cost was a rounding error. Language models turned out to be less forgiving, and the reason — a handful of outlier features that only emerge with scale — was not understood until after people had shipped the naive version.",
+      zh: "它在计算机视觉里早几年就到了：2010 年代后期 8 位推理已是常规，精度代价小到可以忽略。语言模型没那么宽容，而原因 —— 一小撮只在规模上去之后才涌现的离群特征 —— 是在人们已经上线了朴素版本之后才被搞明白的。",
+    },
+    practice: {
+      en: "Quantise a model, then run your own eval set rather than a public benchmark. Look hardest at the longest and most structured outputs, because that is where degradation surfaces first.",
+      zh: "量化一个模型，然后跑你自己的评测集而不是公开基准。最用力看那些最长、结构性最强的输出 —— 退化最先在那里浮现。",
+    },
+    era: 5,
+    status: "rising",
+    stats: { difficulty: 58, ubiquity: 62, impact: 80, ops: 35 },
+    moves: [
+      {
+        name: "Outlier handling",
+        effect: {
+          en: "Keeps the few high-magnitude channels at higher precision, which is most of why a method works.",
+          zh: "把少数高幅值通道留在更高精度上 —— 一个方法之所以有效，大半靠这个。",
+        },
+      },
+      {
+        name: "Calibration set",
+        effect: {
+          en: "Fits the ranges against real data instead of an assumed distribution.",
+          zh: "拿真实数据去拟合取值范围，而不是假设一个分布。",
+        },
+      },
+      {
+        name: "Weight-only quantisation",
+        effect: {
+          en: "Shrinks what you read while computing at full precision — the trade that suits a bandwidth-bound workload.",
+          zh: "只压缩要读的东西，计算仍用全精度 —— 正适合带宽受限负载的那种取舍。",
+        },
+      },
+    ],
+    clashes: [
+      {
+        with: "model-parallelism",
+        note: {
+          en: "Both answer \"the model does not fit\", and they charge you in different currencies. Quantisation pays in quality you cannot see without an eval; parallelism pays in interconnect latency and an operational surface that doubles. Reaching for parallelism first is the common mistake, because halving the precision often makes the model fit on one device and removes the entire problem.",
+          zh: "两者回答的都是「模型放不下」，而它们收的是不同的货币。量化付的是「没有评测就看不见的质量」；并行付的是互连延迟和翻倍的运维面积。先伸手去拿并行是常见的错误 —— 因为把精度减半往往就能让模型装进一块设备，整个问题随之消失。",
+        },
+      },
+    ],
+  },
+  {
+    id: "model-parallelism",
+    dex: 41,
+    units: ["model", "platform"],
+    name: "Model Parallelism",
+    glyph: "⛓️",
+    tagline: {
+      en: "The model does not fit on one device, so it lives on several at once.",
+      zh: "模型在一块设备上放不下，于是它同时住在好几块上。",
+    },
+    description: {
+      en: "Split the model itself across accelerators — whole layers on different devices, or individual matrices cut across devices and recombined every step. Unlike splitting data, these pieces are not independent: they synchronise on every single token, which puts the interconnect between devices directly into your inference latency.",
+      zh: "把模型本身切开分到多块加速器上 —— 整层整层地放在不同设备上，或者把单个矩阵横着切开、每一步再合回来。和切数据不同，这些切片彼此并不独立：它们在每一个 token 上都要同步，于是设备之间的互连被直接放进了你的推理延迟里。",
+    },
+    oneLiner: {
+      en: "These shards aren't independent — they synchronise every token, so the interconnect is on the critical path.",
+      zh: "这些分片不是独立的 —— 它们每个 token 都要同步，所以互连在关键路径上。",
+    },
+    deepDive: {
+      en: "Tensor parallelism cuts each matrix across devices and needs an all-reduce after essentially every layer, so it only pays inside one machine where the links are fast; stretched across a network it loses to almost anything else. Pipeline parallelism puts whole layers on different devices and tolerates slow links far better, at the cost of a bubble — devices idling while they wait for the stage in front, which microbatching only partly fills. Choosing between them is really choosing which hardware topology you are optimising for, which is why the answer changes the moment the cluster does.",
+      zh: "张量并行把每个矩阵横切到多块设备上，基本每一层之后都要做一次 all-reduce —— 所以它只有在机内、链路够快时才划算；拉到网络上去，它几乎输给任何别的方案。流水线并行把整层整层放到不同设备上，对慢链路宽容得多，代价是气泡 —— 设备闲着等前一级，而 microbatching 只能填掉一部分。在两者之间做选择，其实是在选你为哪种硬件拓扑优化 —— 所以集群一变，答案就变。",
+    },
+    pitfall: {
+      en: "Reaching for it before trying quantisation. Halving the precision often makes the model fit on one device, which removes an entire class of latency and failure that parallelism would have introduced.",
+      zh: "在试过量化之前就伸手去拿它。把精度减半往往就能让模型装进一块设备 —— 而那会消掉并行本来要引入的一整类延迟和故障。",
+    },
+    lore: {
+      en: "The techniques come from training, where Megatron and GPipe made billion-parameter models practical around 2019. Serving inherited them along with an assumption that does not survive the move: in training you are throughput-bound and a pipeline bubble amortises away, whereas in serving somebody is sitting there waiting.",
+      zh: "这些技术来自训练 —— 2019 年前后 Megatron 和 GPipe 让十亿参数级的模型变得可行。服务侧继承了它们，同时也继承了一个搬不过来的假设：训练时你是吞吐受限的，流水线气泡会被摊掉；而在服务时，有个人正坐在那儿等着。",
+    },
+    practice: {
+      en: "Measure the same model on one device, then split across two with tensor parallelism. If tokens per second does not roughly double, you have measured your interconnect rather than your compute.",
+      zh: "把同一个模型先在一块设备上测一遍，再用张量并行切到两块上测。如果每秒 token 数没有大致翻倍，你测到的是互连，不是算力。",
+    },
+    era: 5,
+    status: "rising",
+    stats: { difficulty: 75, ubiquity: 45, impact: 74, ops: 70 },
+    moves: [
+      {
+        name: "Tensor parallelism",
+        effect: {
+          en: "Cuts each matrix across devices, with an all-reduce after almost every layer.",
+          zh: "把每个矩阵横切到多块设备上，几乎每层之后都要一次 all-reduce。",
+        },
+      },
+      {
+        name: "Pipeline parallelism",
+        effect: {
+          en: "Puts whole layers on different devices — tolerant of slow links, but it leaves a bubble.",
+          zh: "把整层整层放到不同设备上 —— 对慢链路宽容，但会留下气泡。",
+        },
+      },
+      {
+        name: "All-reduce",
+        effect: {
+          en: "The synchronisation every step waits on, which is why the interconnect is your latency floor.",
+          zh: "每一步都要等的那次同步 —— 也是为什么互连成了你的延迟下限。",
         },
       },
     ],
